@@ -213,7 +213,7 @@ async def search_guides(q: str = Query(min_length=2)):
 
 
 # Frontend
-frontend_dir = Path(__file__).parent.parent / "frontend"
+frontend_dir = Path(__file__).parent / "frontend"
 
 
 @app.get("/frontend")
