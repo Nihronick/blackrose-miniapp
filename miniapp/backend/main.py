@@ -1,7 +1,3 @@
-"""
-BlackRose Mini App Backend - Clean API
-"""
-
 import os
 import re
 import sys
@@ -70,7 +66,7 @@ def format_guide_text(text: str) -> str:
                     return (
                         f'<img src="{icon_url}" alt="{icon_name}" '
                         f'class="inline-icon" '
-                        f"onerror=\"this.style.display='none'\">"
+                        f"onerror=\'this.style.display='none'\'>"
                     )
             except Exception:
                 pass

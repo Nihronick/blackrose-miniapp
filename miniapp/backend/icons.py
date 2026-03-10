@@ -26,25 +26,33 @@ CLASS_ETC = {
     "class_c17": _url("class_etc/c17.png"),
     "class_c18": _url("class_etc/c18.png"),
     "class_c19": _url("class_etc/c19.png"),
+    "class_c20": _url("class_etc/c20.png"),
     "class_terra": _url("class_etc/Tera.png"),
     "class_nova": _url("class_etc/Nova.png"),
     "class_sid": _url("class_etc/Seed.png"),
-    # Мечи — пробелы теперь безопасно кодируются
-    "sword_m1": _url("class_etc/m1 sword.png"),
+    # Мечи 
+    "sword_m1": _url("class_etc/m1_sword.png"),
     "sword_opp": _url("class_etc/orr.png"),
     "sword_orb": _url("class_etc/orb.png"),
     "sword_awaken": _url("class_etc/awaken.png"),
     "sword_absolutev1": _url("class_etc/AbsoluteV1.png"),
     "sword_absolutev2": _url("class_etc/AbsoluteV2.gif"),
     "sword_immortal": _url("class_etc/immortl_sword.png"),
+    # Спутники
+    "luna": _url("class_etc/luna.png"),
+    "ellie": _url("class_etc/ellie.png"),
+    "miho": _url("class_etc/miho.png"),
+    "zeke": _url("class_etc/zeke.png"),
     # Другое
     "soul_sword": _url("class_etc/soul_sword.png"),
     "stage": _url("class_etc/stage.png"),
-    "ds": _url("class_etc/ds.png"),
-    "attack": _url("class_etc/attack.png"),
-    "crit_damage": _url("class_etc/crit_damage.png"),
-    "hp": _url("class_etc/hp.png"),
-    "rxp": _url("class_etc/rxp.png"),
+    "acc": _url("class_etc/ACC.png"),
+    "ds": _url("class_etc/DEATH_STRIKE.png"),
+    "atk": _url("class_etc/ATK.png"),
+    "crit": _url("class_etc/CRIT_DMG.png"),
+    "crit%": _url("class_etc/CRIT%.png"),
+    "hp": _url("class_etc/HP.png"),
+    "hpr": _url("class_etc/HP_RECOVERY.png"),
     "check": _url("class_etc/check.png"),
     "cross": _url("class_etc/cross.png"),
     "warning": _url("class_etc/warning.png"),
@@ -57,6 +65,12 @@ CLASS_ETC = {
     "fire": _url("class_etc/FIRE_GEM.png"),
     "water": _url("class_etc/luna_gem.png"),
     "wind": _url("class_etc/ellie_gem.png"),
+    "farm": _url("class_etc/afk.png"),
+    "pero_viol": _url("class_etc/Pero_viol.png"),
+    "pero_berez": _url("class_etc/Pero_berez.png"),
+    "legendary_spirit": _url("class_etc/legendary_spirir.png"),
+    "random_epic_spirit": _url("class_etc/random_epic_spirit.png"),
+    "legendary_skill": _url("class_etc/legendary_skill.png"),
 }
 
 # ═══════════════════════════════════════════════════════
@@ -95,7 +109,7 @@ SKILLS = {
     "FlameWave": _url("skills/FlameWave.png"),
     "FlowingBlade": _url("skills/FlowingBlade.png"),
     "Fulgurous": _url("skills/Fulgurous.png"),
-    "Gigalmact": _url("skills/Gigalmact.png"),
+    "GigaImpact": _url("skills/GigaImpact.png"),
     "GigaStrike": _url("skills/GigaStrike.png"),
     "GroundsBlessing": _url("skills/GroundsBlessing.png"),
     "HellfireSlash": _url("skills/HellfireSlash.png"),
@@ -157,7 +171,7 @@ SPIRIT = {
     "skill_luga": _url("spirits/luga_skill.png"),
     "skill_ark": _url("spirits/ark_skill.png"),
     # Фамильяры — папка "spirits"
-    "fam_hi": _url("spirits/familiar_HI.png"),
+    "fam_hi": _url("spirits/HI.png"),
     "fam_je": _url("spirits/JE.png"),
     "fam_ku": _url("spirits/KU.png"),
     "fam_a": _url("spirits/A.png"),
@@ -199,7 +213,7 @@ ADVENTURES = {
     "adv_cave": _url("class_etc/exp.png"),
     "adv_rift": _url("class_etc/violet_cube.png"),
     "adv_shelter": _url("class_etc/latent_power.png"),
-    "adv_mind": _url("class_etc/coin.png"),
+    "adv_mind": _url("class_etc/gold.png"),
     "adv_forest": _url("class_etc/circulation_gem.png"),
 }
 
@@ -207,7 +221,7 @@ ADVENTURES = {
 # ГИЛЬДИЯ
 # ═══════════════════════════════════════════════════════
 GUILD = {
-    "guild_guild": _url("guild_guild.png"),
+    "guild_guild": _url("118.png"),
     "guild_wyvern": _url("guild_wyvern.png"),
     "guild_cooking": _url("guild_cooking.png"),
 }
