@@ -770,7 +770,7 @@ End Game
 {{LightningBody}}{{Rage}}{{BurningSword}}{{FireSword}}{{Fulgurous}}
 
 {{spirit_ark}}Духи:
-Предпочтительнее использовать {{spirit_todd}}, {{spirit_mum}} и {{spirit_zappy}}. При необходимости, вы также можете использовать {{spirit_radnon}}, {{spirit_kart}}, или {{spirit_luga}} , или ваш высший пробужденный дух"""
+Предпочтительнее использовать {{spirit_todd}}, {{spirit_mum}} и {{spirit_zappy}}. При необходимости, вы также можете использовать {{spirit_radnon}}, {{spirit_kart}}, или {{spirit_luga}} , или ваш высший пробужденный дух""",
         "photo": [],
         "video": None,
         "document": None,
