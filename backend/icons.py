@@ -112,7 +112,7 @@ SKILLS = {
     "IceTime": _url("skills/IceTime.png"),
     "IronWill": _url("skills/IronWill.png"),
     "LifeMana": _url("skills/LifeMana.png"),
-    "LightingStroke": _url("skills/LightingStroke.png"),
+    "LightningStroke": _url("skills/LightingStroke.png"),
     "LightningBody": _url("skills/LightningBody.png"),
     "ManasBlessing": _url("skills/ManasBlessing.png"),
     "Mantra": _url("skills/Mantra.png"),

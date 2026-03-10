@@ -497,7 +497,7 @@ CONTENT = {
 Меч: {{sword_absolutev2}} 4-5{{starv2}} → {{sword_immortal}}
 Реликвии: 100 крит, урон
 Навыки:
-1.({{BurningSword}}{{EarthsWill}}{{CurvedBlade}}{{SpeedSword}}({{HellfireSlash}}/{{LightingStroke}}/{{RedLightning}}/{{DemonHunt}})
+1.({{BurningSword}}{{EarthsWill}}{{CurvedBlade}}{{SpeedSword}}({{HellfireSlash}}/{{LightningStroke}}/{{RedLightning}}/{{DemonHunt}})
 ({{GigaImpact}}/{{Blizzard}}){{WrathOfGods}}{{Meditation}}{{Rave}}{{FlameSlash}})
 {{ellie}}**Спутники:**
 Эльфийская песня: 100
@@ -671,11 +671,11 @@ Nerh,Ark,Boo,Kart,Sala,Luga
         "text": """
 **Навыки:**
 Начало игры
-{{FlameSlash}} {{HellfireSlash}} {{Meditation}} {{FireSword}} {{SpeedSword}} {{EarthsWill}} {{CurvedBlade}} {{BurningSword}} 
+{{FlameSlash}}{{HellfireSlash}}{{Meditation}}{{FireSword}}{{SpeedSword}}{{EarthsWill}}{{CurvedBlade}}{{BurningSword}} 
 
 Середина игры +
-{{FlameSlash}} {{HellfireSlash}} {{PillarofFire}} {{DemonHunt}} {{Meditation}} 
-{{FlowingBlade}} {{SpeedSword}} {{EarthsWill}} {{BurningSword}} {{StrongCurrent}} / {{WrathOfGods}}
+{{FlameSlash}}{{HellfireSlash}}{{PillarofFire}} {{DemonHunt}} {{Meditation}} 
+{{FlowingBlade}}{{SpeedSword}}{{EarthsWill}}{{BurningSword}}{{StrongCurrent}}/{{WrathOfGods}}
 
 {{spirit_ark}}Духи:
 {{spirit_luga}} {{spirit_mum}} {{spirit_zappy}} предпочтительнее использовать их, но {{spirit_radon}} {{spirit_kart}} также подойдет в этом подземелье, вы также можете использовать любого пробужденного духа, если заметите, что наносите больше урона. 
@@ -697,8 +697,8 @@ Nerh,Ark,Boo,Kart,Sala,Luga
 
 Навыки:
 Origin of Chaos Rave build
-:{{Rave}}{{Meditation}}({{FlameSlash}}/{{HellfireSlash}}/{{RedLightning}}/{{LightningStroke}}/{{PowerStrike}}/{{GigaStrike}})
-:{{WrathOfGods}}{{SpeedSword}}{{CurvedBlade}}{{BurningSword}}{{EarthsWill}}
+{{Rave}}{{Meditation}}({{FlameSlash}}/{{HellfireSlash}}/{{RedLightning}}/{{LightningStroke}}/{{PowerStrike}}/{{GigaStrike}})
+{{WrathOfGods}}{{SpeedSword}}{{CurvedBlade}}{{BurningSword}}{{EarthsWill}}
 
 Origin of Chaos Raveless build
 Earlygame
