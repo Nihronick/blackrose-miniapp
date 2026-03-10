@@ -7,7 +7,7 @@ from urllib.parse import quote
 # ═══════════════════════════════════════════════════════
 # БАЗОВЫЙ URL ДЛЯ ИЗОБРАЖЕНИЙ
 # ═══════════════════════════════════════════════════════
-BASE_URL = "https://raw.githubusercontent.com/Nihronick/blackrose-miniapp/main/public/images/icons"
+BASE_URL = "https://raw.githubusercontent.com/Nihronick/blackrose-miniapp/main/assets/images/icons"
 
 
 def _url(path: str) -> str:
