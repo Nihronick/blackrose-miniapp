@@ -321,7 +321,7 @@ CONTENT = {
 2.({{BurningSword}}{{CurvedBlade}}{{EarthsWill}}{{SpeedSword}}{{LightningBody}}
 {{WrathOfGods}}{{Meditation}}{{Rave}}{{FlameSlash}}{{Rave}}) если Адский удар слабый
 
-3.({{BurningSword}}{{CurvedBlade}}{{EarthsWill}}{{SpeedSword}}{{RedLighting}}
+3.({{BurningSword}}{{CurvedBlade}}{{EarthsWill}}{{SpeedSword}}{{RedLightning}}
 {{WrathOfGods}}{{Meditation}}{{Rave}}{{FlameSlash}}{{Rave}}) если возвышены Молнии
 {{ellie}}**Спутники:**
 Эльфийская песня: 70+
@@ -350,7 +350,7 @@ CONTENT = {
 Реликвии: 60-70
 Навыки:
 Если были возвышены Молнии и используй {{FlowingBlade}} если {{FlameSlash}} очень хорошо прокачен
-1.{{FlameSlash}}({{HellfireSlash}}/{{RedLighting}}/{{FlowingBlade}}){{DancingWaves}}
+1.{{FlameSlash}}({{HellfireSlash}}/{{RedLightning}}/{{FlowingBlade}}){{DancingWaves}}
 ({{Blizzard}}/{{GigaImpact}}){{Meditation}}{{WrathOfGods}}{{CurvedBlade}}{{EarthsWill}}{{SpeedSword}}{{BurningSword}}
 
 2.({{FlameSlash}}{{Rave}}{{DancingWaves}}({{Blizzard}}/{{GigaImpact}}){{Meditation}}
@@ -387,7 +387,7 @@ CONTENT = {
 1.({{FlameSlash}}{{HellfireSlash}}{{DancingWaves}}{{Blizzard}}{{Meditation}}
 {{WrathOfGods}}{{CurvedBlade}}{{EarthsWill}}{{SpeedSword}}{{BurningSword}})
 
-2.({{FlameSlash}}{{RedLighting}}{{DancingWaves}}{{Blizzard}}{{Meditation}}
+2.({{FlameSlash}}{{RedLightning}}{{DancingWaves}}{{Blizzard}}{{Meditation}}
 {{WrathOfGods}}{{CurvedBlade}}{{EarthsWill}}{{SpeedSword}}{{BurningSword}}) Если были возвышены Молнии
 
 3.({{FlameSlash}}{{Rave}}{{DancingWaves}}{{Blizzard}}{{Meditation}}
@@ -423,10 +423,10 @@ CONTENT = {
 Меч: {{sword_absolutev2}} 3-5{{starv2}} → {{sword_immortal}}
 Реликвии: крит, урон 100
 Навыки:
-1.({{FlameSlash}}({{HellfireSlash}}/{{RedLighting}})({{Blizzard}}/{{LifeMana}}){{FlowingBlade}}{{Meditation}}
+1.({{FlameSlash}}({{HellfireSlash}}/{{RedLightning}})({{Blizzard}}/{{LifeMana}}){{FlowingBlade}}{{Meditation}}
 {{Meditation}}{{WrathOfGods}}{{CurvedBlade}}{{EarthsWill}}{{SpeedSword}}{{BurningSword}}
 
-2.({{FlameSlash}}({{HellfireSlash}}/{{RedLighting}}){{FlowingBlade}}{{Rave}}{{Meditation}}
+2.({{FlameSlash}}({{HellfireSlash}}/{{RedLightning}}){{FlowingBlade}}{{Rave}}{{Meditation}}
 {{WrathOfGods}}{{CurvedBlade}}{{EarthsWill}}{{SpeedSword}}{{BurningSword}}) Если сможешь убить фазу 2 во время Бреда, чтобы мгновенно убить фазу 3 с Бреда
 
 {{ellie}}**Спутники:**
@@ -497,7 +497,7 @@ CONTENT = {
 Меч: {{sword_absolutev2}} 4-5{{starv2}} → {{sword_immortal}}
 Реликвии: 100 крит, урон
 Навыки:
-1.({{BurningSword}}{{EarthsWill}}{{CurvedBlade}}{{SpeedSword}}({{HellfireSlash}}/{{LightingStroke}}/{{RedLighting}}/{{DemonHunt}})
+1.({{BurningSword}}{{EarthsWill}}{{CurvedBlade}}{{SpeedSword}}({{HellfireSlash}}/{{LightingStroke}}/{{RedLightning}}/{{DemonHunt}})
 ({{GigaImpact}}/{{Blizzard}}){{WrathOfGods}}{{Meditation}}{{Rave}}{{FlameSlash}})
 {{ellie}}**Спутники:**
 Эльфийская песня: 100
@@ -668,7 +668,22 @@ Nerh,Ark,Boo,Kart,Sala,Luga
     "adv_cave": {
         "title": "Учебная пещера",
         "icon": get_icon("adv_cave"),
-        "text": """**Учебная пещера**""",
+        "text": """
+**Навыки:**
+Начало игры
+{{FlameSlash}} {{HellfireSlash}} {{Meditation}} {{FireSword}} {{SpeedSword}} {{EarthsWill}} {{CurvedBlade}} {{BurningSword}} 
+
+Середина игры +
+{{FlameSlash}} {{HellfireSlash}} {{PillarofFire}} {{DemonHunt}} {{Meditation}} 
+{{FlowingBlade}} {{SpeedSword}} {{EarthsWill}} {{BurningSword}} {{StrongCurrent}} / {{WrathOfGods}}
+
+{{spirit_ark}}Духи:
+{{spirit_luga}} {{spirit_mum}} {{spirit_zappy}} предпочтительнее использовать их, но {{spirit_radon}} {{spirit_kart}} также подойдет в этом подземелье, вы также можете использовать любого пробужденного духа, если заметите, что наносите больше урона. 
+
+💡 **Советы:**
+Эта сборка предназначена для земных этапов - 5/10 : от "Плавающего клинка" до "Огненного меча", так как без "Охоты на демонов" увеличение скорости атаки будет незначительным.
+Зоны
+(Зона 1 нейтральная -> Зона 2 Пожарная -> Зона 3 водная -> Зона 4 Ветровая -> Зона 5 Земная -> повторить.)""",
         "photo": [],
         "video": None,
         "document": None,
@@ -676,7 +691,31 @@ Nerh,Ark,Boo,Kart,Sala,Luga
     "adv_rift": {
         "title": "Межпространственный разлом",
         "icon": get_icon("adv_rift"),
-        "text": """**Межпространственный разлом**""",
+        "text": """
+{{spirit_ark}}Духи:
+{{spirit_noah}}{{spirit_herh}} предпочтительно использовать их, но подойдут любые духи с более высоким пробуждением. 
+
+Навыки:
+Origin of Chaos Rave build
+:{{Rave}}{{Meditation}}({{FlameSlash}}/{{HellfireSlash}}/{{RedLightning}/{{LightningStroke}}/{{PowerStrike}}/{{GigaStrike}})
+:{{WrathOfGods}}{{SpeedSword}}{{CurvedBlade}}{{BurningSword}}{{EarthsWill}}
+
+Origin of Chaos Raveless build
+Earlygame
+{{FlowingBlade}}{{Meditation}}({{FlameSlash}}/{{HellfireSlash}}/{{RedLightning}}/{{GigaStrike}})
+{{FireSword}}{{SpeedSword}}{{CurvedBlade}}{{BurningSword}}{{EarthsWill}}
+
+Mid-lategame
+{{FlowingBlade}}{{Meditation}}({{FlameSlash}}/{{HellfireSlash}}/{{RedLightning}}/{{LightningStroke}}/{{PowerStrike}}/{{GigaStrike}})
+{{WrathOfGods}}{{SpeedSword:}}{{CurvedBlade}}{{BurningSword}}{{EarthsWill}}
+
+Если вы используете фамильяра, попробуйте использовать его против слабости стихий + {{spirit_noah}} + {{WrathOfGods}}
+камни: земля/земля/огонь для ударов {{WrathOfGods}} и Огненных ударов
+
+💡 **Советы:**
+У босса Рифта есть несколько умений по очереди, оранжевая полоска под боссом указывает, когда умение будет активировано. 
+Если босс использует атаку, активируйте "танцующие волны"({{DancingWaves}}), чтобы уклониться от нее, если это удобно, активируйте "танцующие волны", но навык все равно будет обновлен при следующей атаке. 
+Если вы не хотите запускать Rift вручную, не используйте {{DancingWaves}}.""",
         "photo": [],
         "video": None,
         "document": None,
@@ -684,7 +723,24 @@ Nerh,Ark,Boo,Kart,Sala,Luga
     "adv_shelter": {
         "title": "Приют Спящего Пламени",
         "icon": get_icon("adv_shelter"),
-        "text": """**Приют Спящего Пламени**""",
+        "text": """
+Навыки: Раняя стадия - Средняя стадия игры {{HellfireSlash}}{{GigaStrike}}{{RedLightning}}{{Meditation}}{{SpeedSword}}{{EarthsWill}}{{CurvedBlade}}{{BurningSword}}
+
+Поздняя стадия: {{FlameSlash}}{{RedLightning}}{{Blizzard}}{{WrathOfGods}}{{Meditation}}{{SpeedSword}}{{EarthsWill}}{{CurvedBlade}}{{BurningSword}}{{DancingWaves}}
+
+Авто билд:{{HellfireSlash}}{{FlameSlash}}{{Meditation}}{{WrathOfGods}}{{FlowingBlade}}{{SpeedSword}}{{EarthsWill}}{{CurvedBlade}}{{BurningSword}}({{LifeMana}}/{{FireSword}})      
+
+Ручной билд: {{FlameSlash}}{{GigaStrike}}{{DancingWaves}}{{WrathOfGods}}{{Rave}}{{Meditation}}{{SpeedSword}}{{EarthsWill}}{{CurvedBlade}}{{BurningSword}}
+
+{{spirit_ark}}Духи: {{spirit_noah}}{{spirit_bo}} предпочтительнее использовать их, но подойдут любые духи с сильным пробуждением. 
+
+💡 **Советы:**
+Ранняя игра
+Используйте: {{Blizzard}} чтобы оглушить дракона, когда он наносит ответный удар, и {{DancingWaves}} чтобы уклониться от него и других его атак.
+Предлагаемые навыки являются минимальными и не учитывают ваш элементарный навык, урон от улучшенных навыков или что-либо еще, обязательно измените это в соответствии со своими потребностями.
+Поздняя игра
+При использовании поздней сборки {{Rave}} вы сможете: совершить {{Rave}} один раз в начале с помощью {{WrathOfGods}} и еще раз в конце с помощью {{WrathOfGods}} и {{spirit_noah}} не забудьте сохранить урон вашего фамильяра для финального рейва.
+Босс нападет на вас ровно через 5 секунд и, скорее всего, убьет вас, если вы будете на низком уровне, поэтому используйте {{DancingWaves}}, чтобы избежать этой атаки""",
         "photo": [],
         "video": None,
         "document": None,
@@ -699,7 +755,22 @@ Nerh,Ark,Boo,Kart,Sala,Luga
 Старайтесь фармить нечетные этажи, где ресурсы увеличиваются. После закрытия 250-го этажа шахты выделите 4n+1 этаж, так как кубические усиления закончились.,
 Проверьте свою ситуацию. Каждый раз, когда вы будете фармить закрытую шахту, ваш урон будет разным, поэтому больше ресурсов вы сможете получить на разных участках или этажах. Это простые рекомендации.,
 лучшее время для запуска закрытой шахты - это когда вы можете накапливать ежедневные свитки + "горячее время выходных" + бонусы за события, получая 12-кратное золото и 6-кратный опыт.,
-Использование усилителя событий для получения большего количества кубов в закрытой шахте бесполезно, потому что большинство кубов в Закрытой шахте добывается из сундука. Использование обычной ежедневной прокрутки кубов все еще может быть полезным, потому что мы обычно получаем больше кубов от мобов в закрытой шахте, чем от обычных 18mpw.""",
+Использование усилителя событий для получения большего количества кубов в закрытой шахте бесполезно, потому что большинство кубов в Закрытой шахте добывается из сундука. Использование обычной ежедневной прокрутки кубов все еще может быть полезным, потому что мы обычно получаем больше кубов от мобов в закрытой шахте, чем от обычных 18mpw.
+**Навыки:**
+Early Game
+{{Fulgurous}}{{Flamewave}}{{ThunderSlash}}{{LightningStroke}}{{Agile}}
+{{BurningSword}}{{IronWill}}{{FireSword}}{{LifeMana}}/{{ManasBlessing}}
+
+Mid Game
+{{Fulgurous}}{{Supersonic}}{{Flamewave}}{{ThunderboltSlash}}{{RedLightning}}
+{{Meditation}}{{Agile}}{{FireSword}}{{BurningSword}} 
+
+End Game
+{{Agile}}{{Supersonic}}{{RedLightning}}{{Blizzard}}{{Meditation}}
+{{LightningBody}}{{Rage}}{{BurningSword}}{{FireSword}}{{Fulgurous}}
+
+{{spirit_ark}}Духи:
+Предпочтительнее использовать {{spirit_todd}}, {{spirit_mum}} и {{spirit_zappy}}. При необходимости, вы также можете использовать {{spirit_radnon}}, {{spirit_kart}}, или {{spirit_luga}} , или ваш высший пробужденный дух"""
         "photo": [],
         "video": None,
         "document": None,
@@ -707,7 +778,40 @@ Nerh,Ark,Boo,Kart,Sala,Luga
     "adv_forest": {
         "title": "Лес циркуляции",
         "icon": get_icon("adv_forest"),
-        "text": """ **Лес циркуляции**""",
+        "text": """
+Навыки:
+Начало игры
+{{LightningStroke}}{{RedLightning}}{{SpeedSword}}{{EarthsWill}}{{CurvedBlade}}{{BurningSword}} 
+
+Середина игры
+{{Supersonic}}{{LightningStroke}}{{RedLightning}}{{Meditation}}{{FireSword}}
+{{SpeedSword}}{{EarthsWill}}{{CurvedBlade}}{{BurningSword}}{{StrongCurrent}}/{{LightningBody}}
+
+Поздняя игра
+{{Supersonic}}{{LightningStroke}}{{RedLightning}}{{Meditation}}{{Rage}}
+{{SpeedSword}}{{EarthsWill}}{{CurvedBlade}}{{BurningSword}}{{FlowingBlade}}/{{LightningBody}}
+
+Овладение навыком(Skill Mastery)
+если {{FlameSlash}}{{HellfireSlash}} пробужден, используйте его вместо {{RedLightning}}{{LightningStroke}} 
+если {{RedLightning}}{{LightningStroke}} пробудился, используйте его вместо {{FlameSlash}}{{HellfireSlash}}
+Та же логика с Awaken 2
+{{spirit_ark}}Духи:
+Начало игры
+{{spirit_zappy}}{{spirit_sala}}{{spirit_loar}} 
+
+Середина игры
+{{spirit_zappy}}{{spirit_mum}}{{spirit_noah}} 
+
+Конец игры
+{{spirit_zappy}}{{spirit_mum}}{{spirit_kart}} 
+
+{{spirit_zappy}}{{spirit_mum}}{{spirit_kart}} является предпочтительным на всех этапах игры, однако это требует больших вложений в духов. Вы можете использовать {{spirit_sala}} {{spirit_noah}} {{spirit_radon}} или любые другие высокоразвитые духи в качестве 2-го или 3-го слота. 
+{{spirit_kart}} обгонит {{spirit_noah}} по производительности примерно на e3-4, если у вас улучшенный Карт, рекомендуется протестировать его на 3-м слоте.
+{{spirit_radon}} может работать лучше при высоком пробуждении / усилении в качестве 3-го слота, если использовать {{FlameSlash}}{{HellfireSlash}}
+
+💡 **Советы:**
+В ручную {{Supersonic}} после победы над группой кристаллов, чтобы быстрее перейти к следующей группе, вы также можете использовать ручное заклинание{{Meditation}}, чтобы оптимизировать время действия баффов{{Supersonic}}{{Blizzard}}. 
+Вы можете выйти из Леса без штрафных санкций, так что смело проверяйте свои возможности.""",
         "photo": [],
         "video": None,
         "document": None,
@@ -728,6 +832,7 @@ Nerh,Ark,Boo,Kart,Sala,Luga
     },
     "guild_cooking": {
         "title": "Приготовление блюд",
+        "icon": get_icon("guild_cooking"),
         "text": """🍲 **Приготовление блюд**
 Приоритет еды, будет озвучен ГМ, т.к каждый сезон блюда меняются, но есть опредленные свойства блюд, которые не меняются.
 9- еда дает больше ресурсов в дальнейшем фарме, готовится первоочередно.
