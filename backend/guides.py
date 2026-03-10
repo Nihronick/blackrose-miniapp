@@ -37,15 +37,15 @@ MAIN_CATEGORIES = {
     "cat_promoutes": {"title": "Промоуты", "icon": get_icon("promo_nox")},
     "info_general": {
         "title": "Общая информация",
-        "icon": "https://raw.githubusercontent.com/Nihronick/blackrose-miniapp/main/public/images/icons/class_etc/sl_icon.png",
+        "icon": "https://raw.githubusercontent.com/Nihronick/blackrose-miniapp/main/assets/images/icons/class_etc/sl_icon.png",
     },
     "adv_adventures": {
         "title": "Приключения",
-        "icon": "https://raw.githubusercontent.com/Nihronick/blackrose-miniapp/main/public/images/icons/class_etc/adventure.png",
+        "icon": "https://raw.githubusercontent.com/Nihronick/blackrose-miniapp/main/assets/images/icons/class_etc/adventure.png",
     },
     "guild_guild": {
         "title": "Гильдия",
-        "icon": "https://raw.githubusercontent.com/Nihronick/blackrose-miniapp/main/public/images/icons/class_etc/118.png",
+        "icon": "https://raw.githubusercontent.com/Nihronick/blackrose-miniapp/main/assets/images/icons/class_etc/118.png",
     },
 }
 
@@ -697,7 +697,7 @@ Nerh,Ark,Boo,Kart,Sala,Luga
 
 Навыки:
 Origin of Chaos Rave build
-:{{Rave}}{{Meditation}}({{FlameSlash}}/{{HellfireSlash}}/{{RedLightning}/{{LightningStroke}}/{{PowerStrike}}/{{GigaStrike}})
+:{{Rave}}{{Meditation}}({{FlameSlash}}/{{HellfireSlash}}/{{RedLightning}}/{{LightningStroke}}/{{PowerStrike}}/{{GigaStrike}})
 :{{WrathOfGods}}{{SpeedSword}}{{CurvedBlade}}{{BurningSword}}{{EarthsWill}}
 
 Origin of Chaos Raveless build
@@ -707,7 +707,7 @@ Earlygame
 
 Mid-lategame
 {{FlowingBlade}}{{Meditation}}({{FlameSlash}}/{{HellfireSlash}}/{{RedLightning}}/{{LightningStroke}}/{{PowerStrike}}/{{GigaStrike}})
-{{WrathOfGods}}{{SpeedSword:}}{{CurvedBlade}}{{BurningSword}}{{EarthsWill}}
+{{WrathOfGods}}{{SpeedSword}}{{CurvedBlade}}{{BurningSword}}{{EarthsWill}}
 
 Если вы используете фамильяра, попробуйте использовать его против слабости стихий + {{spirit_noah}} + {{WrathOfGods}}
 камни: земля/земля/огонь для ударов {{WrathOfGods}} и Огненных ударов
@@ -724,7 +724,8 @@ Mid-lategame
         "title": "Приют Спящего Пламени",
         "icon": get_icon("adv_shelter"),
         "text": """
-Навыки: Раняя стадия - Средняя стадия игры {{HellfireSlash}}{{GigaStrike}}{{RedLightning}}{{Meditation}}{{SpeedSword}}{{EarthsWill}}{{CurvedBlade}}{{BurningSword}}
+Навыки: 
+Раняя стадия - Средняя стадия игры {{HellfireSlash}}{{GigaStrike}}{{RedLightning}}{{Meditation}}{{SpeedSword}}{{EarthsWill}}{{CurvedBlade}}{{BurningSword}}
 
 Поздняя стадия: {{FlameSlash}}{{RedLightning}}{{Blizzard}}{{WrathOfGods}}{{Meditation}}{{SpeedSword}}{{EarthsWill}}{{CurvedBlade}}{{BurningSword}}{{DancingWaves}}
 
