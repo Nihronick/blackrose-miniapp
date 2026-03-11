@@ -396,51 +396,6 @@ async def get_category(
         "items": items,
     }
 
-@app.get("/api/debug")
-async def debug_auth(request: Request):
-    """Временный — УДАЛИТЬ после отладки!"""
-    init_data = (
-        request.headers.get("X-Telegram-Init-Data", "")
-        or request.query_params.get("initData", "")
-    )
-    
-    result = {
-        "has_bot_token": bool(BOT_TOKEN),
-        "bot_token_start": BOT_TOKEN[:10] + "..." if BOT_TOKEN else "EMPTY",
-        "has_init_data": bool(init_data),
-        "init_data_length": len(init_data) if init_data else 0,
-    }
-    
-    if init_data and BOT_TOKEN:
-        # Детальная проверка
-        try:
-            parsed = parse_qs(init_data, keep_blank_values=True)
-            result["parsed_keys"] = list(parsed.keys())
-            result["has_hash"] = "hash" in parsed
-            result["has_user"] = "user" in parsed
-            
-            auth_date = parsed.get("auth_date", [None])[0]
-            if auth_date:
-                import time as _time
-                age = _time.time() - int(auth_date)
-                result["auth_date_age_seconds"] = round(age)
-            
-            # Попробуем верифицировать
-            user = verify_telegram_init_data(init_data)
-            result["verified"] = user is not None
-            if user:
-                result["user_id"] = user.get("id")
-                result["user_name"] = user.get("first_name")
-            else:
-                result["verify_error"] = "HMAC mismatch or expired"
-                
-        except Exception as e:
-            result["error"] = str(e)
-        logger.info(f"DEBUG: {result}")
-    
-    return result
-
-
 @app.get("/api/guide/{guide_key}")
 async def get_guide(
     guide_key: str,

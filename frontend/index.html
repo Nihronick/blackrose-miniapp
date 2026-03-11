@@ -35,7 +35,7 @@
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Roboto', sans-serif;
             background: var(--bg); color: var(--text);
             font-size: 16px; line-height: 1.5;
-            padding-bottom: env(safe-area-inset-bottom, 20px);
+            padding-bottom: 80px;
             -webkit-font-smoothing: antialiased;
         }
         .app { max-width: 640px; margin: 0 auto; padding: 0 16px; }
@@ -77,28 +77,150 @@
         .card-subtitle { font-size: 13px; color: var(--hint); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .card-arrow { color: var(--hint); font-size: 20px; flex-shrink: 0; opacity: 0.4; }
 
-        /* ═══ FLOATING BACK ═══ */
+        /* ═══ FLOATING BACK BUTTON ═══ */
+        .fab-container {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 300;
+            display: none;
+        }
+        .fab-container.visible { display: block; }
+
         .fab-back {
-            position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-            z-index: 200; display: none; align-items: center; gap: 8px;
-            padding: 12px 24px; font-size: 16px; font-weight: 600;
-            color: var(--btn-text); background: var(--btn); border: none;
-            border-radius: 50px; cursor: pointer;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.25);
-            transition: transform 0.15s ease, opacity 0.15s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--btn-text);
+            background: var(--btn);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: none;
+            position: relative;
+        }
+        .fab-back svg {
+            width: 20px; height: 20px; fill: currentColor;
+            transition: transform 0.2s ease;
+        }
+        .fab-back:active { transform: scale(0.93); }
+
+        /* Индикатор удержания — кольцо вокруг кнопки */
+        .fab-hold-ring {
+            position: absolute;
+            inset: -4px;
+            border-radius: 54px;
+            border: 3px solid transparent;
+            border-top-color: var(--btn-text);
+            opacity: 0;
+            transition: opacity 0.15s;
+            pointer-events: none;
+        }
+        .fab-back.holding .fab-hold-ring {
+            opacity: 1;
+            animation: holdSpin 3s linear forwards;
+        }
+        @keyframes holdSpin {
+            0% { transform: rotate(0deg); border-color: rgba(255,255,255,0.3); border-top-color: var(--btn-text); }
+            100% { transform: rotate(1080deg); border-color: var(--btn-text); }
+        }
+
+        /* Подсказка удержания */
+        .fab-hold-hint {
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--card-bg);
+            color: var(--hint);
+            font-size: 12px;
+            font-weight: 500;
+            padding: 4px 10px;
+            border-radius: 8px;
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+        }
+        .fab-back.holding .fab-hold-hint {
+            opacity: 1;
+        }
+
+        /* ═══ QUICK NAV POPUP ═══ */
+        .quick-nav {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            z-index: 310;
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 8px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+            border: 1px solid var(--separator);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            min-width: 220px;
+            max-width: 300px;
+        }
+        .quick-nav.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(-50%) translateY(0);
+        }
+        .quick-nav-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--hint);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 12px 8px;
+        }
+        .quick-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.12s;
             user-select: none;
         }
-        .fab-back:active { transform: translateX(-50%) scale(0.93); }
-        .fab-back svg { width: 20px; height: 20px; fill: currentColor; }
-        .fab-back.visible { display: flex; }
-
-        /* Верхняя кнопка «назад» */
-        .btn-back {
-            display: inline-flex; align-items: center; gap: 6px;
-            padding: 10px 14px; margin: 4px 0 12px -12px; font-size: 22px;
-            color: var(--link); background: none; border: none; cursor: pointer; border-radius: 8px;
+        .quick-nav-item:active {
+            background: var(--secondary);
         }
-        .btn-back:active { background: var(--secondary); }
+        .quick-nav-item-icon {
+            width: 36px; height: 36px;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--secondary); border-radius: 10px; overflow: hidden;
+            flex-shrink: 0;
+        }
+        .quick-nav-item-icon img { width: 28px; height: 28px; object-fit: contain; }
+        .quick-nav-item-title {
+            font-size: 15px; font-weight: 500;
+        }
+        .quick-nav-item-home {
+            border-top: 1px solid var(--separator);
+            margin-top: 4px;
+            padding-top: 12px;
+        }
+
+        /* Overlay для закрытия попапа */
+        .quick-nav-overlay {
+            position: fixed; inset: 0; z-index: 305;
+            display: none;
+        }
+        .quick-nav-overlay.active { display: block; }
 
         /* ═══ GUIDE ═══ */
         .guide { padding: 8px 0; }
@@ -186,7 +308,7 @@
             .card-icon { width: 50px; height: 50px; border-radius: 10px; }
             .card-icon img { width: 45px; height: 45px; }
             .guide-title { font-size: 20px; }
-            .fab-back { bottom: 20px; padding: 10px 20px; font-size: 15px; }
+            .fab-back { padding: 12px 22px; font-size: 15px; }
         }
     </style>
 </head>
@@ -201,8 +323,12 @@
     <div id="access-denied-view" class="hidden">
         <div class="access-denied">
             <div class="access-denied-icon">🔒</div>
-            <h2>Доступ ограничен</h2>
-            <p id="access-denied-msg">Откройте приложение через Telegram бота BlackRose.</p>
+            <h2>Требуется авторизация</h2>
+            <p id="access-denied-msg">
+                Откройте бота <b>@blackrosesl1_bot</b>,
+                нажмите /start и используйте кнопку
+                <b>«📖 Открыть гайды»</b> внизу экрана.
+            </p>
         </div>
     </div>
 
@@ -216,14 +342,12 @@
 
     <!-- GUIDES LIST -->
     <div id="guides-view" class="hidden">
-        <button class="btn-back" id="btn-back-categories">← Назад</button>
         <h2 id="category-title" style="margin:0 0 16px;font-size:22px;font-weight:700;"></h2>
         <div class="list" id="guides-list"></div>
     </div>
 
     <!-- SINGLE GUIDE -->
     <div id="guide-view" class="hidden">
-        <button class="btn-back" id="btn-back-guides">← Назад</button>
         <div class="guide">
             <div class="guide-header">
                 <div class="guide-icon" id="guide-icon"></div>
@@ -234,11 +358,22 @@
     </div>
 </div>
 
-<!-- FLOATING BACK -->
-<button class="fab-back" id="fab-back">
-    <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-    Назад
-</button>
+<!-- FLOATING BACK BUTTON -->
+<div class="fab-container" id="fab-container">
+    <button class="fab-back" id="fab-back">
+        <div class="fab-hold-ring"></div>
+        <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        <span id="fab-label">Назад</span>
+        <span class="fab-hold-hint">Удерживайте для быстрого перехода</span>
+    </button>
+</div>
+
+<!-- QUICK NAV POPUP -->
+<div class="quick-nav-overlay" id="quick-nav-overlay"></div>
+<div class="quick-nav" id="quick-nav">
+    <div class="quick-nav-title">Перейти в раздел</div>
+    <div id="quick-nav-items"></div>
+</div>
 
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox">
@@ -250,8 +385,7 @@
 const API = (() => {
     const h = window.location.hostname;
     return (h === 'localhost' || h === '127.0.0.1')
-        ? 'http://127.0.0.1:8000'
-        : window.location.origin;
+        ? 'http://127.0.0.1:8000' : window.location.origin;
 })();
 
 const tg = window.Telegram?.WebApp;
@@ -260,8 +394,7 @@ const getInitData = () => tg?.initData || '';
 function initTheme() {
     if (!tg) return;
     try {
-        tg.ready();
-        tg.expand();
+        tg.ready(); tg.expand();
         document.documentElement.setAttribute('data-theme', tg.colorScheme || 'light');
         const r = document.documentElement.style;
         const p = tg.themeParams || {};
@@ -290,7 +423,7 @@ document.getElementById('lightbox').addEventListener('click', e => {
     if (e.target === e.currentTarget) closeLightbox();
 });
 
-// ═══ RENDER ═══
+// ═══ RENDER HELPERS ═══
 function renderCardIcon(url) {
     return url ? `<img src="${url}" onerror="this.style.display='none'" alt="">` : '';
 }
@@ -299,9 +432,8 @@ function renderVideo(url) {
     if (!url) return '';
     const yt = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
     if (yt) return `<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${yt[1]}" allowfullscreen></iframe></div>`;
-    if (url.match(/\.(mp4|webm|ogg)(\?|$)/i)) {
+    if (url.match(/\.(mp4|webm|ogg)(\?|$)/i))
         return `<div class="video-wrapper"><video controls preload="metadata" playsinline><source src="${url}"></video></div>`;
-    }
     return `<a href="${url}" target="_blank" class="guide-document"><span class="guide-document-icon">🎬</span><div class="guide-document-info"><div class="guide-document-name">Видео</div><div class="guide-document-hint">Открыть</div></div></a>`;
 }
 
@@ -309,9 +441,128 @@ function renderDocument(url) {
     if (!url) return '';
     const name = decodeURIComponent(url.split('/').pop().split('?')[0]) || 'Документ';
     const ext = name.split('.').pop().toLowerCase();
-    const icons = { pdf: '📕', doc: '📘', docx: '📘', xls: '📊', xlsx: '📊', png: '🖼', jpg: '🖼', jpeg: '🖼' };
-    return `<a href="${url}" target="_blank" class="guide-document"><span class="guide-document-icon">${icons[ext] || '📄'}</span><div class="guide-document-info"><div class="guide-document-name">${name}</div><div class="guide-document-hint">Скачать · ${ext.toUpperCase()}</div></div></a>`;
+    const icons = { pdf:'📕', doc:'📘', docx:'📘', xls:'📊', xlsx:'📊', png:'🖼', jpg:'🖼', jpeg:'🖼' };
+    return `<a href="${url}" target="_blank" class="guide-document"><span class="guide-document-icon">${icons[ext]||'📄'}</span><div class="guide-document-info"><div class="guide-document-name">${name}</div><div class="guide-document-hint">Скачать · ${ext.toUpperCase()}</div></div></a>`;
 }
+
+// ═══ FAB BACK BUTTON WITH HOLD ═══
+const fab = {
+    el: document.getElementById('fab-back'),
+    container: document.getElementById('fab-container'),
+    label: document.getElementById('fab-label'),
+    holdTimer: null,
+    holdTriggered: false,
+    HOLD_DURATION: 3000,
+
+    init() {
+        // Pointer events — работают на touch и mouse
+        this.el.addEventListener('pointerdown', (e) => this.onDown(e));
+        this.el.addEventListener('pointerup', (e) => this.onUp(e));
+        this.el.addEventListener('pointerleave', () => this.cancelHold());
+        this.el.addEventListener('pointercancel', () => this.cancelHold());
+
+        // Предотвращаем контекстное меню на long press
+        this.el.addEventListener('contextmenu', (e) => e.preventDefault());
+    },
+
+    onDown(e) {
+        e.preventDefault();
+        this.holdTriggered = false;
+        this.el.classList.add('holding');
+
+        this.holdTimer = setTimeout(() => {
+            this.holdTriggered = true;
+            this.el.classList.remove('holding');
+            // Вибрация (если поддерживается)
+            if (navigator.vibrate) navigator.vibrate(50);
+            if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+            quickNav.show();
+        }, this.HOLD_DURATION);
+    },
+
+    onUp(e) {
+        e.preventDefault();
+        this.cancelHold();
+        if (!this.holdTriggered) {
+            // Обычное нажатие — назад
+            app.goBack();
+        }
+    },
+
+    cancelHold() {
+        if (this.holdTimer) {
+            clearTimeout(this.holdTimer);
+            this.holdTimer = null;
+        }
+        this.el.classList.remove('holding');
+    },
+
+    show(labelText) {
+        this.container.classList.add('visible');
+        if (labelText) this.label.textContent = labelText;
+    },
+
+    hide() {
+        this.container.classList.remove('visible');
+        this.cancelHold();
+    }
+};
+
+// ═══ QUICK NAV POPUP ═══
+const quickNav = {
+    el: document.getElementById('quick-nav'),
+    overlay: document.getElementById('quick-nav-overlay'),
+    itemsEl: document.getElementById('quick-nav-items'),
+    categories: [], // заполняется при загрузке
+
+    init() {
+        this.overlay.addEventListener('click', () => this.hide());
+    },
+
+    show() {
+        if (!this.categories.length) return;
+
+        this.itemsEl.innerHTML = '';
+
+        // Категории
+        this.categories.forEach(cat => {
+            const item = document.createElement('div');
+            item.className = 'quick-nav-item';
+            item.innerHTML = `
+                <div class="quick-nav-item-icon">${renderCardIcon(cat.icon)}</div>
+                <div class="quick-nav-item-title">${cat.title}</div>
+            `;
+            item.onclick = () => {
+                this.hide();
+                app.showGuides(cat.key, cat.title);
+            };
+            this.itemsEl.appendChild(item);
+        });
+
+        // Домой
+        const home = document.createElement('div');
+        home.className = 'quick-nav-item quick-nav-item-home';
+        home.innerHTML = `
+            <div class="quick-nav-item-icon" style="background:var(--btn);">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--btn-text)"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            </div>
+            <div class="quick-nav-item-title">🏠 Главное меню</div>
+        `;
+        home.onclick = () => {
+            this.hide();
+            app.showCategories();
+        };
+        this.itemsEl.appendChild(home);
+
+        this.el.classList.add('active');
+        this.overlay.classList.add('active');
+    },
+
+    hide() {
+        this.el.classList.remove('active');
+        this.overlay.classList.remove('active');
+    }
+};
 
 // ═══ APP ═══
 const app = {
@@ -322,9 +573,7 @@ const app = {
         const headers = {};
         const initData = getInitData();
         if (initData) headers['X-Telegram-Init-Data'] = initData;
-
         const res = await fetch(`${API}${endpoint}`, { headers });
-
         if (res.status === 403) {
             const data = await res.json().catch(() => ({}));
             this.showAccessDenied(data.detail);
@@ -340,17 +589,21 @@ const app = {
         window.scrollTo({ top: 0 });
 
         // FAB
-        const fab = document.getElementById('fab-back');
-        fab.classList.toggle('visible', viewId !== 'categories-view' && viewId !== 'access-denied-view');
-
-        // Telegram native back button
-        if (tg?.BackButton) {
-            (viewId === 'categories-view' || viewId === 'access-denied-view')
-                ? tg.BackButton.hide()
-                : tg.BackButton.show();
+        if (viewId === 'categories-view' || viewId === 'access-denied-view') {
+            fab.hide();
+        } else if (viewId === 'guides-view') {
+            fab.show('Категории');
+        } else if (viewId === 'guide-view') {
+            fab.show('Назад');
         }
 
-        // Push history state для Android back
+        // Telegram native back
+        if (tg?.BackButton) {
+            (viewId === 'categories-view' || viewId === 'access-denied-view')
+                ? tg.BackButton.hide() : tg.BackButton.show();
+        }
+
+        // History для Android back
         if (viewId !== 'categories-view') {
             history.pushState({ view: viewId }, '');
         }
@@ -383,6 +636,10 @@ const app = {
         try {
             const { categories } = await this.apiFetch('/api/categories');
             if (!categories.length) { list.innerHTML = '<div class="empty">Нет категорий</div>'; return; }
+
+            // Сохраняем для Quick Nav
+            quickNav.categories = categories;
+
             list.innerHTML = '';
             categories.forEach(cat => {
                 const card = document.createElement('div');
@@ -452,7 +709,6 @@ const app = {
             const data = await this.apiFetch(`/api/guide/${key}`);
             titleEl.textContent = data.title;
             if (data.icon) iconEl.innerHTML = `<img src="${data.icon}" onerror="this.style.display='none'" alt="">`;
-
             content.innerHTML = data.text || '<p>Контент отсутствует</p>';
 
             // Photos
@@ -482,9 +738,8 @@ const app = {
             });
 
         } catch (e) {
-            if (e.message !== 'ACCESS_DENIED') {
-                content.innerHTML = `<div class="error">${e.message}<br><button class="btn-back" onclick="app.showGuides()" style="margin-top:12px">← Назад</button></div>`;
-            }
+            if (e.message !== 'ACCESS_DENIED')
+                content.innerHTML = `<div class="error">${e.message}</div>`;
         }
     },
 
@@ -523,8 +778,7 @@ const app = {
     esc(text) {
         if (!text) return '';
         const d = document.createElement('div');
-        d.textContent = text;
-        return d.innerHTML;
+        d.textContent = text; return d.innerHTML;
     },
     pluralize(n, one, few, many) {
         const m10 = n % 10, m100 = n % 100;
@@ -534,45 +788,23 @@ const app = {
         return many;
     }
 };
-document.addEventListener('DOMContentLoaded', async () => {
-    initTheme();
 
-    // ═══ ВРЕМЕННАЯ ОТЛАДКА — УДАЛИТЬ ПОСЛЕ ═══
-    try {
-        const headers = {};
-        const initData = getInitData();
-        console.log('initData length:', initData?.length || 0);
-        console.log('initData:', initData?.substring(0, 100));
-        if (initData) headers['X-Telegram-Init-Data'] = initData;
-        const debugRes = await fetch(`${API}/api/debug`, { headers });
-        const debugData = await debugRes.json();
-        console.log('DEBUG AUTH:', JSON.stringify(debugData));
-    } catch (e) {
-        console.error('DEBUG ERROR:', e);
-    }
-});
 // ═══ INIT ═══
 document.addEventListener('DOMContentLoaded', async () => {
     initTheme();
+    fab.init();
+    quickNav.init();
 
     // Telegram native back
     if (tg?.BackButton) tg.BackButton.onClick(() => app.goBack());
 
-    // FAB back
-    document.getElementById('fab-back').onclick = () => app.goBack();
-
-    // Inline backs
-    document.getElementById('btn-back-categories').onclick = () => app.showCategories();
-    document.getElementById('btn-back-guides').onclick = () => app.showGuides();
-
     // Android back
     window.addEventListener('popstate', e => { e.preventDefault(); app.goBack(); });
 
-    // Auth → load
     const ok = await app.checkAuth();
     if (ok) { app.showCategories(); app.initSearch(); }
 
-    console.log('BlackRose Guides v2, API:', API);
+    console.log('BlackRose Guides v2.1, API:', API);
 });
 </script>
 </body>
