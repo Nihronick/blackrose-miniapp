@@ -575,7 +575,7 @@ CONTENT = {
         "icon": get_icon("Rage"),
         "text": """Обучающее видео, смотрите на тайминги нажатия кнопок""",
         "photo": [],
-        "video": ["https://clck.ru/3SUhac","https://clck.ru/3SUhdw"],  # 🔽 Добавьте URL видео
+        "video": ["https://raw.githubusercontent.com/Nihronick/blackrose-bot/main/assets/guides/rage1.mp4","https://raw.githubusercontent.com/Nihronick/blackrose-bot/main/assets/guides/rage2.mp4"],  # 🔽 Добавьте URL видео
         "document": None,
     },
     "info_ads": {
@@ -607,9 +607,10 @@ CONTENT = {
 Золотые блоки в начале и середине игры (I-образной формы) могут значительно увеличить ваш процент золота. Из-за этого может оказаться полезным сохранить 2 набора гравюр в начале игры: 1 для увеличения количества золотых монет (используется во время фермерства) и 1 для увеличения урона (используется во время толкания(стадии) или ежедневной работы по мере необходимости).,
 Поздняя игра: Оружие Дущи уровня 1500+ может отдавать предпочтение критическим блокам из-за худшего вычисления блоков Atk,
 как в начале игры: Если у вас уровень ниже Dragonos, крит может временно превышать ATK из-за вычисления.""",
-        "photo": [],
+        "photo": ["https://raw.githubusercontent.com/Nihronick/blackrose-bot/main/assets/guides/soul_sword1.png",
+        "https://raw.githubusercontent.com/Nihronick/blackrose-bot/main/assets/guides/soul_sword2.png"],
         "video": None,
-        "document": ["https://raw.githubusercontent.com/Nihronick/blackrose-bot/main/assets/guides/soul_sword1.png","https://raw.githubusercontent.com/Nihronick/blackrose-bot/main/assets/guides/soul_sword2.png"],  # 🔽 Добавьте URL документов
+        "document": [],  # 🔽 Добавьте URL документов
     },
     "info_farm": {
         "title": "Фарм этапов",
