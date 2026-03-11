@@ -37,6 +37,7 @@
             font-size: 16px; line-height: 1.5;
             padding-bottom: 80px;
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
         .app { max-width: 640px; margin: 0 auto; padding: 0 16px; }
 
@@ -77,14 +78,13 @@
         .card-subtitle { font-size: 13px; color: var(--hint); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .card-arrow { color: var(--hint); font-size: 20px; flex-shrink: 0; opacity: 0.4; }
 
-        /* ═══ FLOATING BACK BUTTON ═══ */
+        /* ═══ DRAGGABLE FAB ═══ */
         .fab-container {
             position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%);
             z-index: 300;
             display: none;
+            touch-action: none;
+            /* Позиция по умолчанию — сохраняется в localStorage */
         }
         .fab-container.visible { display: block; }
 
@@ -99,21 +99,24 @@
             background: var(--btn);
             border: none;
             border-radius: 50px;
-            cursor: pointer;
+            cursor: grab;
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
             user-select: none;
             -webkit-user-select: none;
             touch-action: none;
             position: relative;
+            transition: box-shadow 0.2s, transform 0.1s;
+        }
+        .fab-back.dragging {
+            cursor: grabbing;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            transform: scale(1.05);
         }
         .fab-back svg {
             width: 20px; height: 20px; fill: currentColor;
-            transition: transform 0.2s ease;
         }
-        .fab-back:active { transform: scale(0.93); }
 
-        /* Индикатор удержания — кольцо вокруг кнопки */
+        /* Кольцо удержания */
         .fab-hold-ring {
             position: absolute;
             inset: -4px;
@@ -121,7 +124,6 @@
             border: 3px solid transparent;
             border-top-color: var(--btn-text);
             opacity: 0;
-            transition: opacity 0.15s;
             pointer-events: none;
         }
         .fab-back.holding .fab-hold-ring {
@@ -133,10 +135,10 @@
             100% { transform: rotate(1080deg); border-color: var(--btn-text); }
         }
 
-        /* Подсказка удержания */
+        /* Подсказка */
         .fab-hold-hint {
             position: absolute;
-            bottom: calc(100% + 8px);
+            bottom: calc(100% + 10px);
             left: 50%;
             transform: translateX(-50%);
             background: var(--card-bg);
@@ -151,16 +153,30 @@
             transition: opacity 0.2s;
             pointer-events: none;
         }
-        .fab-back.holding .fab-hold-hint {
-            opacity: 1;
-        }
+        .fab-back.holding .fab-hold-hint { opacity: 1; }
 
-        /* ═══ QUICK NAV POPUP ═══ */
+        /* Drag hint — появляется при первом показе */
+        .fab-drag-hint {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--card-bg);
+            color: var(--hint);
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            white-space: nowrap;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        .fab-drag-hint.show { opacity: 1; }
+
+        /* ═══ QUICK NAV ═══ */
         .quick-nav {
             position: fixed;
-            bottom: 90px;
-            left: 50%;
-            transform: translateX(-50%) translateY(20px);
             z-index: 310;
             background: var(--card-bg);
             border-radius: 16px;
@@ -173,53 +189,28 @@
             min-width: 220px;
             max-width: 300px;
         }
-        .quick-nav.active {
-            opacity: 1;
-            pointer-events: auto;
-            transform: translateX(-50%) translateY(0);
-        }
+        .quick-nav.active { opacity: 1; pointer-events: auto; }
         .quick-nav-title {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--hint);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            padding: 4px 12px 8px;
+            font-size: 12px; font-weight: 600; color: var(--hint);
+            text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 12px 8px;
         }
         .quick-nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 12px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background 0.12s;
-            user-select: none;
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 12px; border-radius: 10px; cursor: pointer;
+            transition: background 0.12s; user-select: none;
         }
-        .quick-nav-item:active {
-            background: var(--secondary);
-        }
+        .quick-nav-item:active { background: var(--secondary); }
         .quick-nav-item-icon {
-            width: 36px; height: 36px;
-            display: flex; align-items: center; justify-content: center;
-            background: var(--secondary); border-radius: 10px; overflow: hidden;
-            flex-shrink: 0;
+            width: 36px; height: 36px; display: flex; align-items: center;
+            justify-content: center; background: var(--secondary);
+            border-radius: 10px; overflow: hidden; flex-shrink: 0;
         }
         .quick-nav-item-icon img { width: 28px; height: 28px; object-fit: contain; }
-        .quick-nav-item-title {
-            font-size: 15px; font-weight: 500;
-        }
+        .quick-nav-item-title { font-size: 15px; font-weight: 500; }
         .quick-nav-item-home {
-            border-top: 1px solid var(--separator);
-            margin-top: 4px;
-            padding-top: 12px;
+            border-top: 1px solid var(--separator); margin-top: 4px; padding-top: 12px;
         }
-
-        /* Overlay для закрытия попапа */
-        .quick-nav-overlay {
-            position: fixed; inset: 0; z-index: 305;
-            display: none;
-        }
+        .quick-nav-overlay { position: fixed; inset: 0; z-index: 305; display: none; }
         .quick-nav-overlay.active { display: block; }
 
         /* ═══ GUIDE ═══ */
@@ -319,20 +310,14 @@
         <p>Справочник гильдии</p>
     </header>
 
-    <!-- ACCESS DENIED -->
     <div id="access-denied-view" class="hidden">
         <div class="access-denied">
             <div class="access-denied-icon">🔒</div>
             <h2>Требуется авторизация</h2>
-            <p id="access-denied-msg">
-                Откройте бота <b>@blackrosesl1_bot</b>,
-                нажмите /start и используйте кнопку
-                <b>«📖 Открыть гайды»</b> внизу экрана.
-            </p>
+            <p id="access-denied-msg">Откройте бота @blackrosesl1_bot, нажмите /start и используйте кнопку «📖 Открыть гайды».</p>
         </div>
     </div>
 
-    <!-- CATEGORIES -->
     <div id="categories-view" class="hidden">
         <div class="search">
             <input type="search" placeholder="Поиск гайда..." id="search-input" autocomplete="off">
@@ -340,13 +325,11 @@
         <div class="list" id="categories-list"></div>
     </div>
 
-    <!-- GUIDES LIST -->
     <div id="guides-view" class="hidden">
         <h2 id="category-title" style="margin:0 0 16px;font-size:22px;font-weight:700;"></h2>
         <div class="list" id="guides-list"></div>
     </div>
 
-    <!-- SINGLE GUIDE -->
     <div id="guide-view" class="hidden">
         <div class="guide">
             <div class="guide-header">
@@ -358,17 +341,18 @@
     </div>
 </div>
 
-<!-- FLOATING BACK BUTTON -->
+<!-- DRAGGABLE FAB -->
 <div class="fab-container" id="fab-container">
     <button class="fab-back" id="fab-back">
         <div class="fab-hold-ring"></div>
         <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
         <span id="fab-label">Назад</span>
-        <span class="fab-hold-hint">Удерживайте для быстрого перехода</span>
+        <span class="fab-hold-hint">Удерживайте для меню</span>
+        <span class="fab-drag-hint" id="fab-drag-hint">Перетащите кнопку</span>
     </button>
 </div>
 
-<!-- QUICK NAV POPUP -->
+<!-- QUICK NAV -->
 <div class="quick-nav-overlay" id="quick-nav-overlay"></div>
 <div class="quick-nav" id="quick-nav">
     <div class="quick-nav-title">Перейти в раздел</div>
@@ -396,8 +380,7 @@ function initTheme() {
     try {
         tg.ready(); tg.expand();
         document.documentElement.setAttribute('data-theme', tg.colorScheme || 'light');
-        const r = document.documentElement.style;
-        const p = tg.themeParams || {};
+        const r = document.documentElement.style, p = tg.themeParams || {};
         if (p.bg_color) r.setProperty('--bg', p.bg_color);
         if (p.text_color) r.setProperty('--text', p.text_color);
         if (p.hint_color) r.setProperty('--hint', p.hint_color);
@@ -416,142 +399,286 @@ function openLightbox(src) {
     document.getElementById('lightbox-img').src = src;
     document.getElementById('lightbox').classList.add('active');
 }
-function closeLightbox() {
-    document.getElementById('lightbox').classList.remove('active');
-}
+function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); }
 document.getElementById('lightbox').addEventListener('click', e => {
     if (e.target === e.currentTarget) closeLightbox();
 });
 
-// ═══ RENDER HELPERS ═══
+// ═══ RENDER ═══
 function renderCardIcon(url) {
     return url ? `<img src="${url}" onerror="this.style.display='none'" alt="">` : '';
 }
 
 function renderVideo(url) {
     if (!url) return '';
-    const yt = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-    if (yt) return `<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${yt[1]}" allowfullscreen></iframe></div>`;
-    if (url.match(/\.(mp4|webm|ogg)(\?|$)/i))
-        return `<div class="video-wrapper"><video controls preload="metadata" playsinline><source src="${url}"></video></div>`;
-    return `<a href="${url}" target="_blank" class="guide-document"><span class="guide-document-icon">🎬</span><div class="guide-document-info"><div class="guide-document-name">Видео</div><div class="guide-document-hint">Открыть</div></div></a>`;
+    // YouTube
+    const yt = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    if (yt) return `<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${yt[1]}?playsinline=1" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe></div>`;
+    // Direct video
+    if (url.match(/\.(mp4|webm|ogg)(\?|$)/i)) {
+        const ext = url.match(/\.(mp4|webm|ogg)/i)[1];
+        return `<div class="video-wrapper"><video controls preload="metadata" playsinline controlslist="nodownload"><source src="${url}" type="video/${ext}">Ваш браузер не поддерживает видео</video></div>`;
+    }
+    // Google Drive
+    const gd = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+    if (gd) return `<div class="video-wrapper"><iframe src="https://drive.google.com/file/d/${gd[1]}/preview" allowfullscreen></iframe></div>`;
+    // Fallback link
+    return `<a href="${url}" target="_blank" class="guide-document"><span class="guide-document-icon">🎬</span><div class="guide-document-info"><div class="guide-document-name">Видео</div><div class="guide-document-hint">Открыть в браузере</div></div></a>`;
 }
 
 function renderDocument(url) {
     if (!url) return '';
     const name = decodeURIComponent(url.split('/').pop().split('?')[0]) || 'Документ';
     const ext = name.split('.').pop().toLowerCase();
-    const icons = { pdf:'📕', doc:'📘', docx:'📘', xls:'📊', xlsx:'📊', png:'🖼', jpg:'🖼', jpeg:'🖼' };
+    const icons = { pdf:'📕', doc:'📘', docx:'📘', xls:'📊', xlsx:'📊', png:'🖼', jpg:'🖼', jpeg:'🖼', gif:'🖼', webp:'🖼' };
     return `<a href="${url}" target="_blank" class="guide-document"><span class="guide-document-icon">${icons[ext]||'📄'}</span><div class="guide-document-info"><div class="guide-document-name">${name}</div><div class="guide-document-hint">Скачать · ${ext.toUpperCase()}</div></div></a>`;
 }
 
-// ═══ FAB BACK BUTTON WITH HOLD ═══
+// ═══ DRAGGABLE FAB ═══
 const fab = {
-    el: document.getElementById('fab-back'),
-    container: document.getElementById('fab-container'),
-    label: document.getElementById('fab-label'),
+    el: null,
+    container: null,
+    label: null,
+    dragHint: null,
+
+    // State
     holdTimer: null,
     holdTriggered: false,
+    isDragging: false,
+    dragStarted: false,
+    startX: 0, startY: 0,
+    startLeft: 0, startTop: 0,
     HOLD_DURATION: 3000,
+    DRAG_THRESHOLD: 10,
 
     init() {
-        // Pointer events — работают на touch и mouse
-        this.el.addEventListener('pointerdown', (e) => this.onDown(e));
-        this.el.addEventListener('pointerup', (e) => this.onUp(e));
-        this.el.addEventListener('pointerleave', () => this.cancelHold());
-        this.el.addEventListener('pointercancel', () => this.cancelHold());
+        this.container = document.getElementById('fab-container');
+        this.el = document.getElementById('fab-back');
+        this.label = document.getElementById('fab-label');
+        this.dragHint = document.getElementById('fab-drag-hint');
 
-        // Предотвращаем контекстное меню на long press
-        this.el.addEventListener('contextmenu', (e) => e.preventDefault());
+        // Восстанавливаем позицию
+        this.restorePosition();
+
+        // Events
+        this.el.addEventListener('pointerdown', e => this.onPointerDown(e));
+        document.addEventListener('pointermove', e => this.onPointerMove(e));
+        document.addEventListener('pointerup', e => this.onPointerUp(e));
+        document.addEventListener('pointercancel', () => this.cancelAll());
+        this.el.addEventListener('contextmenu', e => e.preventDefault());
+
+        // Показать подсказку перетаскивания при первом показе
+        if (!localStorage.getItem('fab_dragged')) {
+            this._showDragHint = true;
+        }
     },
 
-    onDown(e) {
-        e.preventDefault();
-        this.holdTriggered = false;
-        this.el.classList.add('holding');
+    restorePosition() {
+        const saved = localStorage.getItem('fab_position');
+        if (saved) {
+            try {
+                const { right, bottom } = JSON.parse(saved);
+                this.container.style.right = right + 'px';
+                this.container.style.bottom = bottom + 'px';
+                this.container.style.left = 'auto';
+                this.container.style.top = 'auto';
+                return;
+            } catch (e) {}
+        }
+        // Позиция по умолчанию
+        this.container.style.bottom = '24px';
+        this.container.style.left = '50%';
+        this.container.style.transform = 'translateX(-50%)';
+    },
 
+    savePosition() {
+        const rect = this.container.getBoundingClientRect();
+        const right = window.innerWidth - rect.right;
+        const bottom = window.innerHeight - rect.bottom;
+        localStorage.setItem('fab_position', JSON.stringify({ right, bottom }));
+        localStorage.setItem('fab_dragged', '1');
+    },
+
+    onPointerDown(e) {
+        e.preventDefault();
+        this.el.setPointerCapture(e.pointerId);
+
+        this.holdTriggered = false;
+        this.isDragging = false;
+        this.dragStarted = false;
+        this.startX = e.clientX;
+        this.startY = e.clientY;
+
+        const rect = this.container.getBoundingClientRect();
+        this.startLeft = rect.left;
+        this.startTop = rect.top;
+
+        // Таймер удержания
+        this.el.classList.add('holding');
         this.holdTimer = setTimeout(() => {
-            this.holdTriggered = true;
-            this.el.classList.remove('holding');
-            // Вибрация (если поддерживается)
-            if (navigator.vibrate) navigator.vibrate(50);
-            if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-            quickNav.show();
+            if (!this.dragStarted) {
+                this.holdTriggered = true;
+                this.el.classList.remove('holding');
+                if (navigator.vibrate) navigator.vibrate(50);
+                if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+                quickNav.show(this.container);
+            }
         }, this.HOLD_DURATION);
     },
 
-    onUp(e) {
-        e.preventDefault();
-        this.cancelHold();
-        if (!this.holdTriggered) {
-            // Обычное нажатие — назад
-            app.goBack();
+    onPointerMove(e) {
+        if (!this.el.hasPointerCapture?.(e.pointerId)) return;
+
+        const dx = e.clientX - this.startX;
+        const dy = e.clientY - this.startY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        // Если двигаем больше порога — начинаем drag
+        if (dist > this.DRAG_THRESHOLD && !this.holdTriggered) {
+            if (!this.dragStarted) {
+                this.dragStarted = true;
+                this.isDragging = true;
+                this.cancelHold();
+                this.el.classList.add('dragging');
+
+                // Убираем transform: translateX(-50%)
+                this.container.style.transform = 'none';
+                this.container.style.left = this.startLeft + 'px';
+                this.container.style.top = this.startTop + 'px';
+                this.container.style.right = 'auto';
+                this.container.style.bottom = 'auto';
+
+                // Скрываем drag hint навсегда
+                if (this.dragHint) this.dragHint.classList.remove('show');
+            }
+
+            // Двигаем кнопку
+            let newLeft = this.startLeft + dx;
+            let newTop = this.startTop + dy;
+
+            // Ограничиваем экраном
+            const w = this.container.offsetWidth;
+            const h = this.container.offsetHeight;
+            newLeft = Math.max(4, Math.min(window.innerWidth - w - 4, newLeft));
+            newTop = Math.max(4, Math.min(window.innerHeight - h - 4, newTop));
+
+            this.container.style.left = newLeft + 'px';
+            this.container.style.top = newTop + 'px';
         }
     },
 
-    cancelHold() {
-        if (this.holdTimer) {
-            clearTimeout(this.holdTimer);
-            this.holdTimer = null;
+    onPointerUp(e) {
+        this.el.classList.remove('dragging');
+        this.cancelHold();
+
+        if (this.dragStarted) {
+            // Закончили drag — сохраняем позицию
+            this.savePosition();
+            // Конвертируем в right/bottom
+            const rect = this.container.getBoundingClientRect();
+            const right = window.innerWidth - rect.right;
+            const bottom = window.innerHeight - rect.bottom;
+            this.container.style.left = 'auto';
+            this.container.style.top = 'auto';
+            this.container.style.right = right + 'px';
+            this.container.style.bottom = bottom + 'px';
+            this.container.style.transform = 'none';
+        } else if (!this.holdTriggered) {
+            // Обычный тап — назад
+            app.goBack();
         }
+
+        this.isDragging = false;
+        this.dragStarted = false;
+    },
+
+    cancelHold() {
+        if (this.holdTimer) { clearTimeout(this.holdTimer); this.holdTimer = null; }
         this.el.classList.remove('holding');
+    },
+
+    cancelAll() {
+        this.cancelHold();
+        this.el.classList.remove('dragging');
+        this.isDragging = false;
+        this.dragStarted = false;
     },
 
     show(labelText) {
         this.container.classList.add('visible');
         if (labelText) this.label.textContent = labelText;
+
+        // Показать drag hint один раз
+        if (this._showDragHint && this.dragHint) {
+            this._showDragHint = false;
+            setTimeout(() => this.dragHint.classList.add('show'), 500);
+            setTimeout(() => this.dragHint.classList.remove('show'), 4000);
+        }
     },
 
     hide() {
         this.container.classList.remove('visible');
-        this.cancelHold();
+        this.cancelAll();
     }
 };
 
-// ═══ QUICK NAV POPUP ═══
+// ═══ QUICK NAV ═══
 const quickNav = {
     el: document.getElementById('quick-nav'),
     overlay: document.getElementById('quick-nav-overlay'),
     itemsEl: document.getElementById('quick-nav-items'),
-    categories: [], // заполняется при загрузке
+    categories: [],
 
     init() {
         this.overlay.addEventListener('click', () => this.hide());
     },
 
-    show() {
+    show(anchorEl) {
         if (!this.categories.length) return;
+
+        // Позиция попапа рядом с кнопкой
+        if (anchorEl) {
+            const rect = anchorEl.getBoundingClientRect();
+            const popupH = 300;
+
+            // Показываем над кнопкой если есть место, иначе под
+            if (rect.top > popupH + 20) {
+                this.el.style.bottom = (window.innerHeight - rect.top + 8) + 'px';
+                this.el.style.top = 'auto';
+            } else {
+                this.el.style.top = (rect.bottom + 8) + 'px';
+                this.el.style.bottom = 'auto';
+            }
+
+            // Горизонтально — по центру кнопки
+            const centerX = rect.left + rect.width / 2;
+            const popupW = 260;
+            let left = centerX - popupW / 2;
+            left = Math.max(12, Math.min(window.innerWidth - popupW - 12, left));
+            this.el.style.left = left + 'px';
+            this.el.style.transform = 'none';
+        }
 
         this.itemsEl.innerHTML = '';
 
-        // Категории
         this.categories.forEach(cat => {
             const item = document.createElement('div');
             item.className = 'quick-nav-item';
             item.innerHTML = `
                 <div class="quick-nav-item-icon">${renderCardIcon(cat.icon)}</div>
-                <div class="quick-nav-item-title">${cat.title}</div>
-            `;
-            item.onclick = () => {
-                this.hide();
-                app.showGuides(cat.key, cat.title);
-            };
+                <div class="quick-nav-item-title">${cat.title}</div>`;
+            item.onclick = () => { this.hide(); app.showGuides(cat.key, cat.title); };
             this.itemsEl.appendChild(item);
         });
 
-        // Домой
         const home = document.createElement('div');
         home.className = 'quick-nav-item quick-nav-item-home';
         home.innerHTML = `
-            <div class="quick-nav-item-icon" style="background:var(--btn);">
+            <div class="quick-nav-item-icon" style="background:var(--btn)">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--btn-text)"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
             </div>
-            <div class="quick-nav-item-title">🏠 Главное меню</div>
-        `;
-        home.onclick = () => {
-            this.hide();
-            app.showCategories();
-        };
+            <div class="quick-nav-item-title">🏠 Главное меню</div>`;
+        home.onclick = () => { this.hide(); app.showCategories(); };
         this.itemsEl.appendChild(home);
 
         this.el.classList.add('active');
@@ -587,8 +714,6 @@ const app = {
         document.querySelectorAll('[id$="-view"]').forEach(el => el.classList.add('hidden'));
         document.getElementById(viewId).classList.remove('hidden');
         window.scrollTo({ top: 0 });
-
-        // FAB
         if (viewId === 'categories-view' || viewId === 'access-denied-view') {
             fab.hide();
         } else if (viewId === 'guides-view') {
@@ -596,26 +721,17 @@ const app = {
         } else if (viewId === 'guide-view') {
             fab.show('Назад');
         }
-
-        // Telegram native back
         if (tg?.BackButton) {
             (viewId === 'categories-view' || viewId === 'access-denied-view')
                 ? tg.BackButton.hide() : tg.BackButton.show();
         }
-
-        // History для Android back
-        if (viewId !== 'categories-view') {
-            history.pushState({ view: viewId }, '');
-        }
+        if (viewId !== 'categories-view') history.pushState({ view: viewId }, '');
     },
 
     goBack() {
-        const guideView = document.getElementById('guide-view');
-        if (!guideView.classList.contains('hidden')) {
-            this.showGuides();
-        } else {
-            this.showCategories();
-        }
+        const gv = document.getElementById('guide-view');
+        if (!gv.classList.contains('hidden')) this.showGuides();
+        else this.showCategories();
     },
 
     showAccessDenied(msg) {
@@ -628,7 +744,6 @@ const app = {
         catch { return false; }
     },
 
-    // ═══ CATEGORIES ═══
     async showCategories() {
         this.show('categories-view');
         const list = document.getElementById('categories-list');
@@ -636,10 +751,7 @@ const app = {
         try {
             const { categories } = await this.apiFetch('/api/categories');
             if (!categories.length) { list.innerHTML = '<div class="empty">Нет категорий</div>'; return; }
-
-            // Сохраняем для Quick Nav
             quickNav.categories = categories;
-
             list.innerHTML = '';
             categories.forEach(cat => {
                 const card = document.createElement('div');
@@ -660,16 +772,13 @@ const app = {
         }
     },
 
-    // ═══ GUIDES LIST ═══
     async showGuides(key, title) {
         if (key) { this.currentCategory = key; this.currentCategoryTitle = title; }
         if (!this.currentCategory) { this.showCategories(); return; }
-
         this.show('guides-view');
         document.getElementById('category-title').textContent = this.currentCategoryTitle || '';
         const list = document.getElementById('guides-list');
         list.innerHTML = '<div class="loading">Загрузка...</div>';
-
         try {
             const { items } = await this.apiFetch(`/api/category/${this.currentCategory}`);
             if (!items.length) { list.innerHTML = '<div class="empty">Нет гайдов</div>'; return; }
@@ -696,7 +805,6 @@ const app = {
         }
     },
 
-    // ═══ SINGLE GUIDE ═══
     async showGuide(key) {
         this.show('guide-view');
         const content = document.getElementById('guide-content');
@@ -704,14 +812,12 @@ const app = {
         const iconEl = document.getElementById('guide-icon');
         titleEl.textContent = ''; iconEl.innerHTML = '';
         content.innerHTML = '<div class="loading">Загрузка...</div>';
-
         try {
             const data = await this.apiFetch(`/api/guide/${key}`);
             titleEl.textContent = data.title;
             if (data.icon) iconEl.innerHTML = `<img src="${data.icon}" onerror="this.style.display='none'" alt="">`;
             content.innerHTML = data.text || '<p>Контент отсутствует</p>';
 
-            // Photos
             (data.photo || []).forEach(src => {
                 if (!src || src.startsWith('Ag')) return;
                 const img = document.createElement('img');
@@ -720,30 +826,24 @@ const app = {
                 img.onclick = function() { openLightbox(this.src); };
                 content.appendChild(img);
             });
-
-            // Videos
             (data.video || []).forEach(url => {
                 if (!url) return;
                 const div = document.createElement('div');
                 div.innerHTML = renderVideo(url);
                 content.appendChild(div);
             });
-
-            // Documents
             (data.document || []).forEach(url => {
                 if (!url) return;
                 const div = document.createElement('div');
                 div.innerHTML = renderDocument(url);
                 content.appendChild(div);
             });
-
         } catch (e) {
             if (e.message !== 'ACCESS_DENIED')
                 content.innerHTML = `<div class="error">${e.message}</div>`;
         }
     },
 
-    // ═══ SEARCH ═══
     initSearch() {
         const input = document.getElementById('search-input');
         let t;
@@ -794,17 +894,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     initTheme();
     fab.init();
     quickNav.init();
-
-    // Telegram native back
     if (tg?.BackButton) tg.BackButton.onClick(() => app.goBack());
-
-    // Android back
     window.addEventListener('popstate', e => { e.preventDefault(); app.goBack(); });
-
     const ok = await app.checkAuth();
     if (ok) { app.showCategories(); app.initSearch(); }
-
-    console.log('BlackRose Guides v2.1, API:', API);
 });
 </script>
 </body>
