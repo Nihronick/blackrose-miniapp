@@ -20,7 +20,6 @@
             --value-bg: rgba(51,144,236,0.1);
             --value-color: #3390ec;
         }
-
         [data-theme="dark"] {
             --bg: #1c1c1e;
             --text: #ffffff;
@@ -31,617 +30,534 @@
             --value-bg: rgba(10,132,255,0.15);
             --value-color: #0a84ff;
         }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            -webkit-tap-highlight-color: transparent;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Roboto', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            font-size: 16px;
-            line-height: 1.5;
+            background: var(--bg); color: var(--text);
+            font-size: 16px; line-height: 1.5;
             padding-bottom: env(safe-area-inset-bottom, 20px);
             -webkit-font-smoothing: antialiased;
         }
+        .app { max-width: 640px; margin: 0 auto; padding: 0 16px; }
 
-        .app {
-            max-width: 640px;
-            margin: 0 auto;
-            padding: 0 16px;
-        }
+        /* ═══ HEADER ═══ */
+        .header { position: sticky; top: 0; z-index: 100; background: var(--bg); padding: 16px 0 12px; }
+        .header h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
+        .header p { color: var(--hint); margin-top: 2px; font-size: 15px; }
 
-        /* ═══════════════════ HEADER ═══════════════════ */
-        .header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: var(--bg);
-            padding: 16px 0 12px;
-        }
-        .header h1 {
-            font-size: 28px;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
-        .header p {
-            color: var(--hint);
-            margin-top: 2px;
-            font-size: 15px;
-        }
-
-        /* ═══════════════════ SEARCH ═══════════════════ */
-        .search {
-            padding: 8px 0 16px;
-        }
+        /* ═══ SEARCH ═══ */
+        .search { padding: 8px 0 16px; }
         .search input {
-            width: 100%;
-            padding: 10px 16px 10px 40px;
-            font-size: 16px;
-            border: none;
-            border-radius: 12px;
-            background: var(--secondary);
-            color: var(--text);
+            width: 100%; padding: 10px 16px 10px 40px; font-size: 16px;
+            border: none; border-radius: 12px; background: var(--secondary); color: var(--text);
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: 12px center;
+            background-repeat: no-repeat; background-position: 12px center;
         }
-        .search input:focus {
-            outline: 2px solid var(--btn);
-            outline-offset: -2px;
-        }
+        .search input:focus { outline: 2px solid var(--btn); outline-offset: -2px; }
 
-        /* ═══════════════════ LIST ═══════════════════ */
-        .list {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            padding-bottom: 20px;
-        }
+        /* ═══ LIST ═══ */
+        .list { display: flex; flex-direction: column; gap: 6px; padding-bottom: 20px; }
 
-        /* ═══════════════════ CARD ═══════════════════ */
+        /* ═══ CARD ═══ */
         .card {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 12px 16px;
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            border: 1px solid var(--separator);
-            cursor: pointer;
-            transition: transform 0.12s ease;
-            -webkit-user-select: none;
+            display: flex; align-items: center; gap: 14px; padding: 12px 16px;
+            background: var(--card-bg); border-radius: var(--radius);
+            border: 1px solid var(--separator); cursor: pointer;
+            transition: transform 0.12s ease; user-select: none;
+        }
+        .card:active { transform: scale(0.97); }
+        .card-icon {
+            width: 44px; height: 44px; display: flex; align-items: center;
+            justify-content: center; flex-shrink: 0; background: var(--secondary);
+            border-radius: 12px; overflow: hidden;
+        }
+        .card-icon img { width: 32px; height: 32px; object-fit: contain; }
+        .card-content { flex: 1; min-width: 0; }
+        .card-title { font-size: 16px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-subtitle { font-size: 13px; color: var(--hint); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-arrow { color: var(--hint); font-size: 20px; flex-shrink: 0; opacity: 0.4; }
+
+        /* ═══ FLOATING BACK ═══ */
+        .fab-back {
+            position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+            z-index: 200; display: none; align-items: center; gap: 8px;
+            padding: 12px 24px; font-size: 16px; font-weight: 600;
+            color: var(--btn-text); background: var(--btn); border: none;
+            border-radius: 50px; cursor: pointer;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+            transition: transform 0.15s ease, opacity 0.15s ease;
             user-select: none;
         }
-        .card:active {
-            transform: scale(0.97);
-        }
+        .fab-back:active { transform: translateX(-50%) scale(0.93); }
+        .fab-back svg { width: 20px; height: 20px; fill: currentColor; }
+        .fab-back.visible { display: flex; }
 
-        .card-icon {
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            background: var(--secondary);
-            border-radius: 12px;
-            overflow: hidden;
-        }
-        .card-icon img {
-            width: 32px;
-            height: 32px;
-            object-fit: contain;
-        }
-
-        .card-content {
-            flex: 1;
-            min-width: 0;
-        }
-        .card-title {
-            font-size: 16px;
-            font-weight: 600;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .card-subtitle {
-            font-size: 13px;
-            color: var(--hint);
-            margin-top: 2px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .card-arrow {
-            color: var(--hint);
-            font-size: 20px;
-            flex-shrink: 0;
-            opacity: 0.4;
-        }
-
-        /* ═══════════════════ BACK BUTTON ═══════════════════ */
+        /* Верхняя кнопка «назад» */
         .btn-back {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 8px 12px;
-            margin: 4px 0 12px -12px;
-            font-size: 16px;
-            color: var(--link);
-            background: none;
-            border: none;
-            cursor: pointer;
-            border-radius: 8px;
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 10px 14px; margin: 4px 0 12px -12px; font-size: 22px;
+            color: var(--link); background: none; border: none; cursor: pointer; border-radius: 8px;
         }
-        .btn-back:active {
-            background: var(--secondary);
-        }
+        .btn-back:active { background: var(--secondary); }
 
-        /* ═══════════════════ GUIDE ═══════════════════ */
-        .guide {
-            padding: 8px 0;
-        }
+        /* ═══ GUIDE ═══ */
+        .guide { padding: 8px 0; }
         .guide-header {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 12px 0 16px;
-            border-bottom: 1px solid var(--separator);
-            margin-bottom: 16px;
+            display: flex; align-items: center; gap: 14px;
+            padding: 12px 0 16px; border-bottom: 1px solid var(--separator); margin-bottom: 16px;
         }
         .guide-icon {
-            width: 52px;
-            height: 52px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--secondary);
-            border-radius: 14px;
-            overflow: hidden;
-            flex-shrink: 0;
+            width: 52px; height: 52px; display: flex; align-items: center;
+            justify-content: center; background: var(--secondary);
+            border-radius: 14px; overflow: hidden; flex-shrink: 0;
         }
-        .guide-icon img {
-            width: 40px;
-            height: 40px;
-            object-fit: contain;
-        }
-        .guide-title {
-            font-size: 22px;
-            font-weight: 700;
-            line-height: 1.2;
-        }
+        .guide-icon img { width: 40px; height: 40px; object-fit: contain; }
+        .guide-title { font-size: 22px; font-weight: 700; line-height: 1.2; }
 
-        /* ═══════════════════ GUIDE CONTENT ═══════════════════ */
-        .guide-content {
-            font-size: 18px;
-            line-height: 1.6;
-            word-wrap: break-word;
+        /* ═══ GUIDE CONTENT ═══ */
+        .guide-content { font-size: 18px; line-height: 1.6; word-wrap: break-word; }
+        .guide-content strong { font-weight: 600; color: var(--link); }
+        .guide-content em { font-style: italic; }
+        .guide-content .inline-icon, .guide-content img.inline-icon {
+            display: inline !important; vertical-align: middle;
+            width: 30px; height: 30px; margin: 0 3px; border-radius: 4px;
         }
-
-        /*
-         * КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ:
-         * strong НЕ block, а inline — чтобы иконки и текст
-         * шли горизонтально в одну строку
-         */
-        .guide-content strong {
-            font-weight: 600;
-            color: var(--link);
-            /* НЕ display:block! Оставляем inline */
-        }
-
-        /*
-         * Секции-заголовки (когда strong на отдельной строке)
-         * Определяются по <br><strong> паттерну
-         */
-        .guide-content .section-title {
-            display: block;
-            margin: 20px 0 8px;
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--link);
-        }
-
-        /*
-         * INLINE ИКОНКИ — главное исправление!
-         * Иконки идут горизонтально вместе с текстом
-         */
-        .guide-content .inline-icon,
-        .guide-content img.inline-icon {
-            display: inline !important;
-            vertical-align: middle;
-            width: 30ppx;
-            height: 30px;
-            margin: 0 3px;
-            border-radius: 4px;
-        }
-
-        /* Большие картинки (фото гайда) — они блочные */
         .guide-content img.guide-photo {
-            display: block;
-            max-width: 100%;
-            height: auto;
-            border-radius: 12px;
-            margin: 16px 0;
+            display: block; max-width: 100%; height: auto;
+            border-radius: 12px; margin: 16px 0; cursor: pointer;
         }
 
-        .guide-content .value {
-            background: var(--value-bg);
-            padding: 1px 6px;
-            border-radius: 4px;
-            font-weight: 600;
-            color: var(--value-color);
-            font-size: 15px;
+        /* ═══ VIDEO ═══ */
+        .video-wrapper {
+            position: relative; padding-bottom: 56.25%; height: 0;
+            overflow: hidden; border-radius: 12px; margin: 16px 0; background: #000;
+        }
+        .video-wrapper iframe, .video-wrapper video {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;
         }
 
-        /* ═══════════════════ STATES ═══════════════════ */
+        /* ═══ DOCUMENT ═══ */
+        .guide-document {
+            display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+            margin: 12px 0; background: var(--secondary); border-radius: 12px;
+            text-decoration: none; color: var(--text); transition: transform 0.12s;
+        }
+        .guide-document:active { transform: scale(0.97); }
+        .guide-document-icon { font-size: 28px; flex-shrink: 0; }
+        .guide-document-info { flex: 1; min-width: 0; }
+        .guide-document-name { font-weight: 600; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .guide-document-hint { font-size: 13px; color: var(--hint); }
+
+        /* ═══ LIGHTBOX ═══ */
+        .lightbox {
+            display: none; position: fixed; inset: 0; z-index: 500;
+            background: rgba(0,0,0,0.92); align-items: center; justify-content: center; cursor: pointer;
+        }
+        .lightbox.active { display: flex; }
+        .lightbox img { max-width: 95%; max-height: 90vh; object-fit: contain; border-radius: 8px; }
+        .lightbox-close {
+            position: absolute; top: 16px; right: 16px; width: 40px; height: 40px;
+            background: rgba(255,255,255,0.15); border: none; border-radius: 50%;
+            color: #fff; font-size: 24px; cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+        }
+
+        /* ═══ ACCESS DENIED ═══ */
+        .access-denied { text-align: center; padding: 80px 20px; }
+        .access-denied-icon { font-size: 64px; margin-bottom: 16px; }
+        .access-denied h2 { font-size: 22px; margin-bottom: 8px; }
+        .access-denied p { color: var(--hint); font-size: 15px; line-height: 1.5; }
+
+        /* ═══ STATES ═══ */
         .hidden { display: none !important; }
-
-        .loading {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--hint);
-            font-size: 15px;
-        }
+        .loading { text-align: center; padding: 60px 20px; color: var(--hint); font-size: 15px; }
         .loading::before {
-            content: "";
-            display: block;
-            width: 28px;
-            height: 28px;
-            margin: 0 auto 12px;
-            border: 3px solid var(--separator);
-            border-top-color: var(--link);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
+            content: ""; display: block; width: 28px; height: 28px; margin: 0 auto 12px;
+            border: 3px solid var(--separator); border-top-color: var(--link);
+            border-radius: 50%; animation: spin 0.8s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
+        .error { color: #ff3b30; padding: 24px; text-align: center; background: rgba(255,59,48,0.08); border-radius: 12px; font-size: 15px; }
+        .empty { text-align: center; padding: 60px 20px; color: var(--hint); font-size: 15px; }
 
-        .error {
-            color: #ff3b30;
-            padding: 24px;
-            text-align: center;
-            background: rgba(255,59,48,0.08);
-            border-radius: 12px;
-            font-size: 15px;
-        }
-
-        .empty {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--hint);
-            font-size: 15px;
-        }
-
-        /* ═══════════════════ RESPONSIVE ═══════════════════ */
         @media (max-width: 480px) {
             .header h1 { font-size: 24px; }
             .card { padding: 10px 14px; gap: 12px; }
             .card-icon { width: 50px; height: 50px; border-radius: 10px; }
             .card-icon img { width: 45px; height: 45px; }
             .guide-title { font-size: 20px; }
+            .fab-back { bottom: 20px; padding: 10px 20px; font-size: 15px; }
         }
     </style>
 </head>
 <body>
-    <div class="app">
-        <header class="header">
-            <h2>BlackRose Guides</h2>
-            <p>Справочник гильдии</p>
-        </header>
+<div class="app">
+    <header class="header">
+        <h1>BlackRose Guides</h1>
+        <p>Справочник гильдии</p>
+    </header>
 
-        <!-- CATEGORIES -->
-        <div id="categories-view">
-            <div class="search">
-                <input type="search" placeholder="Поиск гайда..." id="search-input" autocomplete="off">
-            </div>
-            <div class="list" id="categories-list"></div>
-        </div>
-
-        <!-- GUIDES LIST -->
-        <div id="guides-view" class="hidden">
-            <button class="btn-back" id="btn-back-categories">← Назад</button>
-            <h2 id="category-title" style="margin: 0 0 16px; font-size: 22px; font-weight: 700;"></h2>
-            <div class="list" id="guides-list"></div>
-        </div>
-
-        <!-- SINGLE GUIDE -->
-        <div id="guide-view" class="hidden">
-            <button class="btn-back" id="btn-back-guides">← Назад</button>
-            <div class="guide">
-                <div class="guide-header">
-                    <div class="guide-icon" id="guide-icon"></div>
-                    <h2 class="guide-title" id="guide-title"></h2>
-                </div>
-                <div class="guide-content" id="guide-content"></div>
-            </div>
+    <!-- ACCESS DENIED -->
+    <div id="access-denied-view" class="hidden">
+        <div class="access-denied">
+            <div class="access-denied-icon">🔒</div>
+            <h2>Доступ ограничен</h2>
+            <p id="access-denied-msg">Откройте приложение через Telegram бота BlackRose.</p>
         </div>
     </div>
 
-    <script>
-    // ═══════════════════════════════════
-    // API URL — auto-detect
-    // ═══════════════════════════════════
-    const API = (() => {
-        const h = window.location.hostname;
-        if (h === 'localhost' || h === '127.0.0.1') {
-            return 'http://127.0.0.1:8000';
+    <!-- CATEGORIES -->
+    <div id="categories-view" class="hidden">
+        <div class="search">
+            <input type="search" placeholder="Поиск гайда..." id="search-input" autocomplete="off">
+        </div>
+        <div class="list" id="categories-list"></div>
+    </div>
+
+    <!-- GUIDES LIST -->
+    <div id="guides-view" class="hidden">
+        <button class="btn-back" id="btn-back-categories">← Назад</button>
+        <h2 id="category-title" style="margin:0 0 16px;font-size:22px;font-weight:700;"></h2>
+        <div class="list" id="guides-list"></div>
+    </div>
+
+    <!-- SINGLE GUIDE -->
+    <div id="guide-view" class="hidden">
+        <button class="btn-back" id="btn-back-guides">← Назад</button>
+        <div class="guide">
+            <div class="guide-header">
+                <div class="guide-icon" id="guide-icon"></div>
+                <h2 class="guide-title" id="guide-title"></h2>
+            </div>
+            <div class="guide-content" id="guide-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- FLOATING BACK -->
+<button class="fab-back" id="fab-back">
+    <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+    Назад
+</button>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+    <img id="lightbox-img" src="" alt="">
+</div>
+
+<script>
+const API = (() => {
+    const h = window.location.hostname;
+    return (h === 'localhost' || h === '127.0.0.1')
+        ? 'http://127.0.0.1:8000'
+        : window.location.origin;
+})();
+
+const tg = window.Telegram?.WebApp;
+const getInitData = () => tg?.initData || '';
+
+function initTheme() {
+    if (!tg) return;
+    try {
+        tg.ready();
+        tg.expand();
+        document.documentElement.setAttribute('data-theme', tg.colorScheme || 'light');
+        const r = document.documentElement.style;
+        const p = tg.themeParams || {};
+        if (p.bg_color) r.setProperty('--bg', p.bg_color);
+        if (p.text_color) r.setProperty('--text', p.text_color);
+        if (p.hint_color) r.setProperty('--hint', p.hint_color);
+        if (p.link_color) r.setProperty('--link', p.link_color);
+        if (p.button_color) r.setProperty('--btn', p.button_color);
+        if (p.button_text_color) r.setProperty('--btn-text', p.button_text_color);
+        if (p.secondary_bg_color) {
+            r.setProperty('--secondary', p.secondary_bg_color);
+            r.setProperty('--card-bg', p.secondary_bg_color);
         }
-        return window.location.origin;
-    })();
+    } catch (e) { console.warn('Theme:', e); }
+}
 
-    const tg = window.Telegram?.WebApp;
+// ═══ LIGHTBOX ═══
+function openLightbox(src) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox').classList.add('active');
+}
+function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+}
+document.getElementById('lightbox').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeLightbox();
+});
 
-    function initTheme() {
-        if (!tg) return;
+// ═══ RENDER ═══
+function renderCardIcon(url) {
+    return url ? `<img src="${url}" onerror="this.style.display='none'" alt="">` : '';
+}
+
+function renderVideo(url) {
+    if (!url) return '';
+    const yt = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    if (yt) return `<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${yt[1]}" allowfullscreen></iframe></div>`;
+    if (url.match(/\.(mp4|webm|ogg)(\?|$)/i)) {
+        return `<div class="video-wrapper"><video controls preload="metadata" playsinline><source src="${url}"></video></div>`;
+    }
+    return `<a href="${url}" target="_blank" class="guide-document"><span class="guide-document-icon">🎬</span><div class="guide-document-info"><div class="guide-document-name">Видео</div><div class="guide-document-hint">Открыть</div></div></a>`;
+}
+
+function renderDocument(url) {
+    if (!url) return '';
+    const name = decodeURIComponent(url.split('/').pop().split('?')[0]) || 'Документ';
+    const ext = name.split('.').pop().toLowerCase();
+    const icons = { pdf: '📕', doc: '📘', docx: '📘', xls: '📊', xlsx: '📊', png: '🖼', jpg: '🖼', jpeg: '🖼' };
+    return `<a href="${url}" target="_blank" class="guide-document"><span class="guide-document-icon">${icons[ext] || '📄'}</span><div class="guide-document-info"><div class="guide-document-name">${name}</div><div class="guide-document-hint">Скачать · ${ext.toUpperCase()}</div></div></a>`;
+}
+
+// ═══ APP ═══
+const app = {
+    currentCategory: null,
+    currentCategoryTitle: null,
+
+    async apiFetch(endpoint) {
+        const headers = {};
+        const initData = getInitData();
+        if (initData) headers['X-Telegram-Init-Data'] = initData;
+
+        const res = await fetch(`${API}${endpoint}`, { headers });
+
+        if (res.status === 403) {
+            const data = await res.json().catch(() => ({}));
+            this.showAccessDenied(data.detail);
+            throw new Error('ACCESS_DENIED');
+        }
+        if (!res.ok) throw new Error(`Ошибка ${res.status}`);
+        return res.json();
+    },
+
+    show(viewId) {
+        document.querySelectorAll('[id$="-view"]').forEach(el => el.classList.add('hidden'));
+        document.getElementById(viewId).classList.remove('hidden');
+        window.scrollTo({ top: 0 });
+
+        // FAB
+        const fab = document.getElementById('fab-back');
+        fab.classList.toggle('visible', viewId !== 'categories-view' && viewId !== 'access-denied-view');
+
+        // Telegram native back button
+        if (tg?.BackButton) {
+            (viewId === 'categories-view' || viewId === 'access-denied-view')
+                ? tg.BackButton.hide()
+                : tg.BackButton.show();
+        }
+
+        // Push history state для Android back
+        if (viewId !== 'categories-view') {
+            history.pushState({ view: viewId }, '');
+        }
+    },
+
+    goBack() {
+        const guideView = document.getElementById('guide-view');
+        if (!guideView.classList.contains('hidden')) {
+            this.showGuides();
+        } else {
+            this.showCategories();
+        }
+    },
+
+    showAccessDenied(msg) {
+        if (msg) document.getElementById('access-denied-msg').textContent = msg;
+        this.show('access-denied-view');
+    },
+
+    async checkAuth() {
+        try { await this.apiFetch('/api/auth'); return true; }
+        catch { return false; }
+    },
+
+    // ═══ CATEGORIES ═══
+    async showCategories() {
+        this.show('categories-view');
+        const list = document.getElementById('categories-list');
+        list.innerHTML = '<div class="loading">Загрузка...</div>';
         try {
-            tg.ready();
-            tg.expand();
-            const scheme = tg.colorScheme || 'light';
-            document.documentElement.setAttribute('data-theme', scheme);
-            const r = document.documentElement.style;
-            const p = tg.themeParams || {};
-            if (p.bg_color) r.setProperty('--bg', p.bg_color);
-            if (p.text_color) r.setProperty('--text', p.text_color);
-            if (p.hint_color) r.setProperty('--hint', p.hint_color);
-            if (p.link_color) r.setProperty('--link', p.link_color);
-            if (p.button_color) r.setProperty('--btn', p.button_color);
-            if (p.button_text_color) r.setProperty('--btn-text', p.button_text_color);
-            if (p.secondary_bg_color) {
-                r.setProperty('--secondary', p.secondary_bg_color);
-                r.setProperty('--card-bg', p.secondary_bg_color);
-            }
-        } catch (e) {
-            console.warn('Theme init error:', e);
-        }
-    }
-
-    // ═══════════════════════════════════
-    // RENDER ICON (for cards)
-    // ═══════════════════════════════════
-    function renderCardIcon(iconUrl) {
-        if (iconUrl) {
-            return `<img src="${iconUrl}" onerror="this.style.display='none'" alt="">`;
-        }
-        return '';
-    }
-
-    // ═══════════════════════════════════
-    // APP
-    // ═══════════════════════════════════
-    const app = {
-        currentCategory: null,
-        currentCategoryTitle: null,
-
-        async apiFetch(endpoint) {
-            const res = await fetch(`${API}${endpoint}`);
-            if (!res.ok) {
-                throw new Error(`Ошибка ${res.status}`);
-            }
-            return res.json();
-        },
-
-        show(viewId) {
-            document.querySelectorAll('[id$="-view"]').forEach(el => el.classList.add('hidden'));
-            document.getElementById(viewId).classList.remove('hidden');
-            window.scrollTo({ top: 0 });
-        },
-
-        // ═══ CATEGORIES ═══
-        async showCategories() {
-            this.show('categories-view');
-            const list = document.getElementById('categories-list');
-            list.innerHTML = '<div class="loading">Загрузка...</div>';
-
-            try {
-                const { categories } = await this.apiFetch('/api/categories');
-
-                if (!categories.length) {
-                    list.innerHTML = '<div class="empty">Категории не найдены</div>';
-                    return;
-                }
-
-                list.innerHTML = '';
-                categories.forEach(cat => {
-                    const card = document.createElement('div');
-                    card.className = 'card';
-
-                    const cnt = cat.count;
-                    const word = this.pluralize(cnt, 'гайд', 'гайда', 'гайдов');
-
-                    card.innerHTML = `
-                        <div class="card-icon">${renderCardIcon(cat.icon)}</div>
-                        <div class="card-content">
-                            <div class="card-title">${this.esc(cat.title)}</div>
-                            <div class="card-subtitle">${cnt} ${word}</div>
-                        </div>
-                        <span class="card-arrow">›</span>
-                    `;
-                    card.onclick = () => this.showGuides(cat.key, cat.title);
-                    list.appendChild(card);
-                });
-            } catch (e) {
-                list.innerHTML = `<div class="error">${e.message}</div>`;
-            }
-        },
-
-        // ═══ GUIDES LIST ═══
-        async showGuides(key, title) {
-            if (key) {
-                this.currentCategory = key;
-                this.currentCategoryTitle = title;
-            }
-            if (!this.currentCategory) {
-                this.showCategories();
-                return;
-            }
-
-            this.show('guides-view');
-            document.getElementById('category-title').textContent = this.currentCategoryTitle || '';
-
-            const list = document.getElementById('guides-list');
-            list.innerHTML = '<div class="loading">Загрузка...</div>';
-
-            try {
-                const { items } = await this.apiFetch(`/api/category/${this.currentCategory}`);
-
-                if (!items.length) {
-                    list.innerHTML = '<div class="empty">Гайды не найдены</div>';
-                    return;
-                }
-
-                list.innerHTML = '';
-                items.forEach(item => {
-                    const card = document.createElement('div');
-                    card.className = 'card';
-                    card.innerHTML = `
-                        <div class="card-icon">${renderCardIcon(item.icon)}</div>
-                        <div class="card-content">
-                            <div class="card-title">${this.esc(item.title)}</div>
-                            ${item.preview ? `<div class="card-subtitle">${this.esc(item.preview)}</div>` : ''}
-                        </div>
-                        <span class="card-arrow">›</span>
-                    `;
-                    card.onclick = () => this.showGuide(item.key);
-                    list.appendChild(card);
-                });
-            } catch (e) {
-                list.innerHTML = `<div class="error">${e.message}</div>`;
-            }
-        },
-
-        // ═══ SINGLE GUIDE ═══
-        async showGuide(key) {
-            this.show('guide-view');
-
-            const content = document.getElementById('guide-content');
-            const titleEl = document.getElementById('guide-title');
-            const iconEl = document.getElementById('guide-icon');
-
-            titleEl.textContent = '';
-            iconEl.innerHTML = '';
-            content.innerHTML = '<div class="loading">Загрузка...</div>';
-
-            try {
-                const data = await this.apiFetch(`/api/guide/${key}`);
-
-                titleEl.textContent = data.title;
-
-                if (data.icon) {
-                    iconEl.innerHTML = `<img src="${data.icon}" onerror="this.style.display='none'" alt="">`;
-                }
-
-                // Бэкенд уже отформатировал HTML с inline иконками
-                content.innerHTML = data.text || '<p>Контент отсутствует</p>';
-
-                // Фото
-                if (data.photo && data.photo.length) {
-                    data.photo.forEach(src => {
-                        if (src && !src.startsWith('Ag')) {
-                            const img = document.createElement('img');
-                            img.src = src;
-                            img.className = 'guide-photo';
-                            img.loading = 'lazy';
-                            img.onerror = function() { this.remove(); };
-                            content.appendChild(img);
-                        }
-                    });
-                }
-            } catch (e) {
-                content.innerHTML = `
-                    <div class="error">
-                        ${e.message}<br>
-                        <button class="btn-back" onclick="app.showGuides()" style="margin-top:12px">← Назад</button>
+            const { categories } = await this.apiFetch('/api/categories');
+            if (!categories.length) { list.innerHTML = '<div class="empty">Нет категорий</div>'; return; }
+            list.innerHTML = '';
+            categories.forEach(cat => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                const w = this.pluralize(cat.count, 'гайд', 'гайда', 'гайдов');
+                card.innerHTML = `
+                    <div class="card-icon">${renderCardIcon(cat.icon)}</div>
+                    <div class="card-content">
+                        <div class="card-title">${this.esc(cat.title)}</div>
+                        <div class="card-subtitle">${cat.count} ${w}</div>
                     </div>
-                `;
-            }
-        },
-
-        // ═══ SEARCH ═══
-        initSearch() {
-            const input = document.getElementById('search-input');
-            let timeout;
-
-            input.addEventListener('input', (e) => {
-                clearTimeout(timeout);
-                const q = e.target.value.trim();
-
-                if (q.length < 2) {
-                    this.showCategories();
-                    return;
-                }
-
-                timeout = setTimeout(async () => {
-                    try {
-                        const { results } = await this.apiFetch(`/api/search?q=${encodeURIComponent(q)}`);
-                        const list = document.getElementById('categories-list');
-
-                        if (!results.length) {
-                            list.innerHTML = '<div class="empty">Ничего не найдено</div>';
-                            return;
-                        }
-
-                        list.innerHTML = '';
-                        results.forEach(item => {
-                            const card = document.createElement('div');
-                            card.className = 'card';
-                            card.innerHTML = `
-                                <div class="card-icon">${renderCardIcon(item.icon)}</div>
-                                <div class="card-content">
-                                    <div class="card-title">${this.esc(item.title)}</div>
-                                    <div class="card-subtitle">${this.esc(item.preview || '')}</div>
-                                </div>
-                                <span class="card-arrow">›</span>
-                            `;
-                            card.onclick = () => {
-                                input.value = '';
-                                this.showGuide(item.key);
-                            };
-                            list.appendChild(card);
-                        });
-                    } catch (e) {
-                        console.error('Search error:', e);
-                    }
-                }, 300);
+                    <span class="card-arrow">›</span>`;
+                card.onclick = () => this.showGuides(cat.key, cat.title);
+                list.appendChild(card);
             });
-        },
-
-        // ═══ HELPERS ═══
-        esc(text) {
-            if (!text) return '';
-            const d = document.createElement('div');
-            d.textContent = text;
-            return d.innerHTML;
-        },
-
-        pluralize(n, one, few, many) {
-            const m10 = n % 10;
-            const m100 = n % 100;
-            if (m100 >= 11 && m100 <= 19) return many;
-            if (m10 === 1) return one;
-            if (m10 >= 2 && m10 <= 4) return few;
-            return many;
+        } catch (e) {
+            if (e.message !== 'ACCESS_DENIED') list.innerHTML = `<div class="error">${e.message}</div>`;
         }
-    };
+    },
 
-    // ═══════════════════════════════════
-    // INIT
-    // ═══════════════════════════════════
-    document.addEventListener('DOMContentLoaded', () => {
-        initTheme();
+    // ═══ GUIDES LIST ═══
+    async showGuides(key, title) {
+        if (key) { this.currentCategory = key; this.currentCategoryTitle = title; }
+        if (!this.currentCategory) { this.showCategories(); return; }
 
-        document.getElementById('btn-back-categories').onclick = () => app.showCategories();
-        document.getElementById('btn-back-guides').onclick = () => app.showGuides();
+        this.show('guides-view');
+        document.getElementById('category-title').textContent = this.currentCategoryTitle || '';
+        const list = document.getElementById('guides-list');
+        list.innerHTML = '<div class="loading">Загрузка...</div>';
 
-        app.showCategories();
-        app.initSearch();
+        try {
+            const { items } = await this.apiFetch(`/api/category/${this.currentCategory}`);
+            if (!items.length) { list.innerHTML = '<div class="empty">Нет гайдов</div>'; return; }
+            list.innerHTML = '';
+            items.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                let badges = '';
+                if (item.has_photo) badges += '📷 ';
+                if (item.has_video) badges += '🎬 ';
+                if (item.has_document) badges += '📄 ';
+                card.innerHTML = `
+                    <div class="card-icon">${renderCardIcon(item.icon)}</div>
+                    <div class="card-content">
+                        <div class="card-title">${this.esc(item.title)}</div>
+                        ${item.preview ? `<div class="card-subtitle">${badges}${this.esc(item.preview)}</div>` : ''}
+                    </div>
+                    <span class="card-arrow">›</span>`;
+                card.onclick = () => this.showGuide(item.key);
+                list.appendChild(card);
+            });
+        } catch (e) {
+            if (e.message !== 'ACCESS_DENIED') list.innerHTML = `<div class="error">${e.message}</div>`;
+        }
+    },
 
-        console.log('BlackRose Guides loaded, API:', API);
-    });
-    </script>
+    // ═══ SINGLE GUIDE ═══
+    async showGuide(key) {
+        this.show('guide-view');
+        const content = document.getElementById('guide-content');
+        const titleEl = document.getElementById('guide-title');
+        const iconEl = document.getElementById('guide-icon');
+        titleEl.textContent = ''; iconEl.innerHTML = '';
+        content.innerHTML = '<div class="loading">Загрузка...</div>';
+
+        try {
+            const data = await this.apiFetch(`/api/guide/${key}`);
+            titleEl.textContent = data.title;
+            if (data.icon) iconEl.innerHTML = `<img src="${data.icon}" onerror="this.style.display='none'" alt="">`;
+
+            content.innerHTML = data.text || '<p>Контент отсутствует</p>';
+
+            // Photos
+            (data.photo || []).forEach(src => {
+                if (!src || src.startsWith('Ag')) return;
+                const img = document.createElement('img');
+                img.src = src; img.className = 'guide-photo'; img.loading = 'lazy';
+                img.onerror = function() { this.remove(); };
+                img.onclick = function() { openLightbox(this.src); };
+                content.appendChild(img);
+            });
+
+            // Videos
+            (data.video || []).forEach(url => {
+                if (!url) return;
+                const div = document.createElement('div');
+                div.innerHTML = renderVideo(url);
+                content.appendChild(div);
+            });
+
+            // Documents
+            (data.document || []).forEach(url => {
+                if (!url) return;
+                const div = document.createElement('div');
+                div.innerHTML = renderDocument(url);
+                content.appendChild(div);
+            });
+
+        } catch (e) {
+            if (e.message !== 'ACCESS_DENIED') {
+                content.innerHTML = `<div class="error">${e.message}<br><button class="btn-back" onclick="app.showGuides()" style="margin-top:12px">← Назад</button></div>`;
+            }
+        }
+    },
+
+    // ═══ SEARCH ═══
+    initSearch() {
+        const input = document.getElementById('search-input');
+        let t;
+        input.addEventListener('input', e => {
+            clearTimeout(t);
+            const q = e.target.value.trim();
+            if (q.length < 2) { this.showCategories(); return; }
+            t = setTimeout(async () => {
+                try {
+                    const { results } = await this.apiFetch(`/api/search?q=${encodeURIComponent(q)}`);
+                    const list = document.getElementById('categories-list');
+                    if (!results.length) { list.innerHTML = '<div class="empty">Ничего не найдено</div>'; return; }
+                    list.innerHTML = '';
+                    results.forEach(item => {
+                        const card = document.createElement('div');
+                        card.className = 'card';
+                        card.innerHTML = `
+                            <div class="card-icon">${renderCardIcon(item.icon)}</div>
+                            <div class="card-content">
+                                <div class="card-title">${this.esc(item.title)}</div>
+                                <div class="card-subtitle">${this.esc(item.preview || '')}</div>
+                            </div>
+                            <span class="card-arrow">›</span>`;
+                        card.onclick = () => { input.value = ''; this.showGuide(item.key); };
+                        list.appendChild(card);
+                    });
+                } catch (e) { console.error('Search:', e); }
+            }, 300);
+        });
+    },
+
+    esc(text) {
+        if (!text) return '';
+        const d = document.createElement('div');
+        d.textContent = text;
+        return d.innerHTML;
+    },
+    pluralize(n, one, few, many) {
+        const m10 = n % 10, m100 = n % 100;
+        if (m100 >= 11 && m100 <= 19) return many;
+        if (m10 === 1) return one;
+        if (m10 >= 2 && m10 <= 4) return few;
+        return many;
+    }
+};
+
+// ═══ INIT ═══
+document.addEventListener('DOMContentLoaded', async () => {
+    initTheme();
+
+    // Telegram native back
+    if (tg?.BackButton) tg.BackButton.onClick(() => app.goBack());
+
+    // FAB back
+    document.getElementById('fab-back').onclick = () => app.goBack();
+
+    // Inline backs
+    document.getElementById('btn-back-categories').onclick = () => app.showCategories();
+    document.getElementById('btn-back-guides').onclick = () => app.showGuides();
+
+    // Android back
+    window.addEventListener('popstate', e => { e.preventDefault(); app.goBack(); });
+
+    // Auth → load
+    const ok = await app.checkAuth();
+    if (ok) { app.showCategories(); app.initSearch(); }
+
+    console.log('BlackRose Guides v2, API:', API);
+});
+</script>
 </body>
 </html>
