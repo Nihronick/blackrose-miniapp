@@ -566,7 +566,7 @@ CONTENT = {
 📌 Приоритет 4: Бери навыки РЕДКИЕ приоритет будет на картинке
 📌 Приоритет 5: Зеленые перья{{pero_berez}} и фиолетовые{{pero_viol}} - это только в том случае, когда редкие навыки уже заполнены.
 ❗️❗️❗️Не стоит менять на АЛМАЗЫ, только покупка по приоритету""",
-        "photo": [],
+        "photo": ["https://raw.githubusercontent.com/Nihronick/blackrose-bot/main/assets/guides/event.jpg"],
         "video": None,
         "document": None,
     },
@@ -575,7 +575,7 @@ CONTENT = {
         "icon": get_icon("Rage"),
         "text": """Обучающее видео, смотрите на тайминги нажатия кнопок""",
         "photo": [],
-        "video": [],  # 🔽 Добавьте URL видео
+        "video": ["https://clck.ru/3SUhac","https://clck.ru/3SUhdw"],  # 🔽 Добавьте URL видео
         "document": None,
     },
     "info_ads": {
@@ -593,7 +593,7 @@ CONTENT = {
         "text": """ **Прокачка спутников**
 Просто, качай по приоритету указаному тут, с звездой прям нужно качать. Души на твое усмотрение, какой меч хочешь получать.
 Инфо о спутниках...""",
-        "photo": [],
+        "photo": ["https://raw.githubusercontent.com/Nihronick/blackrose-bot/main/assets/guides/companion.jpg"],
         "video": None,
         "document": [],  # 🔽 Добавьте URL документов
     },
@@ -609,7 +609,7 @@ CONTENT = {
 как в начале игры: Если у вас уровень ниже Dragonos, крит может временно превышать ATK из-за вычисления.""",
         "photo": [],
         "video": None,
-        "document": [],  # 🔽 Добавьте URL документов
+        "document": ["https://raw.githubusercontent.com/Nihronick/blackrose-bot/main/assets/guides/soul_sword1.png","https://raw.githubusercontent.com/Nihronick/blackrose-bot/main/assets/guides/soul_sword2.png"],  # 🔽 Добавьте URL документов
     },
     "info_farm": {
         "title": "Фарм этапов",
