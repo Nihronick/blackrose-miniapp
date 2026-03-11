@@ -566,7 +566,7 @@ CONTENT = {
 📌 Приоритет 4: Бери навыки РЕДКИЕ приоритет будет на картинке
 📌 Приоритет 5: Зеленые перья{{pero_berez}} и фиолетовые{{pero_viol}} - это только в том случае, когда редкие навыки уже заполнены.
 ❗️❗️❗️Не стоит менять на АЛМАЗЫ, только покупка по приоритету""",
-        "photo": ["AgACAgIAAxkBAAOmaaMtk1J--RRDyeSEAAHZy_nOCajaAAL5F2sbWG8YScOkJLMjq6Z9AQADAgADeAADOgQ"],
+        "photo": ["https://raw.githubusercontent.com/Nihronick/blackrose-bot/main/assets/guides/event.jpg"],
         "video": None,
         "document": None,
     },
@@ -593,7 +593,7 @@ CONTENT = {
         "text": """**Прокачка спутников**
 Просто, качай по приоритету указаному тут, с звездой прям нужно качать. Души на твое усмотрение, какой меч хочешь получать.
 Инфо о спутниках...""",
-        "photo": ["AgACAgIAAxkBAANQaaMCcihI204_aWGRViJcgAQziUMAApUTaxvV2fBIghGp6sbr3-ABAAMCAAN5AAM6BA"],
+        "photo": ["https://raw.githubusercontent.com/Nihronick/blackrose-bot/main/assets/guides/companion.jpg"],
         "video": None,
         "document": [],  # 🔽 Добавьте URL документов
     },
@@ -607,8 +607,8 @@ CONTENT = {
 Золотые блоки в начале и середине игры (I-образной формы) могут значительно увеличить ваш процент золота. Из-за этого может оказаться полезным сохранить 2 набора гравюр в начале игры: 1 для увеличения количества золотых монет (используется во время фермерства) и 1 для увеличения урона (используется во время толкания(стадии) или ежедневной работы по мере необходимости).,
 Поздняя игра: Оружие Дущи уровня 1500+ может отдавать предпочтение критическим блокам из-за худшего вычисления блоков Atk,
 как в начале игры: Если у вас уровень ниже Dragonos, крит может временно превышать ATK из-за вычисления.""",
-        "photo": ["BQACAgIAAxkBAAOOaaMLHUwJIntgk6Kn9oK421gY5TYAArGXAAJYbxhJjmT0cedYTKE6BA",
-            "BQACAgIAAxkBAAONaaMLG7mLl5-o3VZuJXOZ5OoxgnIAArCXAAJYbxhJeBddek6gPck6BA"],
+        "photo": ["https://raw.githubusercontent.com/Nihronick/blackrose-bot/main/assets/guides/soul_sword1.png",
+            "https://raw.githubusercontent.com/Nihronick/blackrose-bot/main/assets/guides/soul_sword2.png"],
         "video": None,
         "document": [],  # 🔽 Добавьте URL документов
     },
@@ -627,8 +627,7 @@ CONTENT = {
 4 - Стоимость кубов и душ на оффлайн-ферме намного ниже, чем на онлайн-ферме.
 Но у оффлайн-фермы все же есть некоторые преимущества (особенно если вы только начали игру).:
 После 160-го этапа вы получаете только 4 и 18 mpw соответственно, так что вы не можете выбирать, где фармить""",
-        "photo": ["AgACAgIAAxkBAAOoaaMupovsv_wyoo_RuwpCbiisu_IAAgcYaxtYbxhJeHEV0ClADykBAAMCAAN5AAM6BA",
-            "AgACAgIAAxkBAAOqaaMvSwjuyfY91suOzBdU16XC1A0AAggYaxtYbxhJRwUFzRxxr7oBAAMCAAN5AAM6BA"],
+        "photo": [],
         "video": None,
         "document": None,
     },
