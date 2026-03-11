@@ -534,7 +534,23 @@ const app = {
         return many;
     }
 };
+document.addEventListener('DOMContentLoaded', async () => {
+    initTheme();
 
+    // ═══ ВРЕМЕННАЯ ОТЛАДКА — УДАЛИТЬ ПОСЛЕ ═══
+    try {
+        const headers = {};
+        const initData = getInitData();
+        console.log('initData length:', initData?.length || 0);
+        console.log('initData:', initData?.substring(0, 100));
+        if (initData) headers['X-Telegram-Init-Data'] = initData;
+        const debugRes = await fetch(`${API}/api/debug`, { headers });
+        const debugData = await debugRes.json();
+        console.log('DEBUG AUTH:', JSON.stringify(debugData));
+    } catch (e) {
+        console.error('DEBUG ERROR:', e);
+    }
+});
 // ═══ INIT ═══
 document.addEventListener('DOMContentLoaded', async () => {
     initTheme();

@@ -366,6 +366,30 @@ async def get_category(
         "items": items,
     }
 
+@app.get("/api/debug")
+async def debug_auth(request: Request):
+    """Временный — для отладки. УДАЛИТЬ после проверки!"""
+    init_data = (
+        request.headers.get("X-Telegram-Init-Data", "")
+        or request.query_params.get("initData", "")
+    )
+    
+    has_bot_token = bool(BOT_TOKEN)
+    has_init_data = bool(init_data)
+    
+    user = None
+    if init_data and BOT_TOKEN:
+        user = verify_telegram_init_data(init_data)
+    
+    return {
+        "has_bot_token": has_bot_token,
+        "has_init_data": has_init_data,
+        "init_data_length": len(init_data) if init_data else 0,
+        "init_data_preview": init_data[:50] + "..." if len(init_data) > 50 else init_data,
+        "user": user,
+        "verified": user is not None,
+    }
+
 
 @app.get("/api/guide/{guide_key}")
 async def get_guide(
