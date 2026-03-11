@@ -406,6 +406,7 @@ async def debug_auth(request: Request):
                 
         except Exception as e:
             result["error"] = str(e)
+        logger.info(f"DEBUG: {result}")
     
     return result
 
