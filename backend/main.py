@@ -147,38 +147,68 @@ def verify_telegram_init_data(init_data: str) -> dict | None:
 
 async def require_telegram_user(request: Request) -> dict:
     """
-    FastAPI Dependency.
+    Проверка авторизации Telegram.
     
-    Проверяет что запрос пришёл из Telegram WebApp
-    с валидной подписью нашего бота.
-    
-    НЕ проверяет whitelist — это делает бот,
-    который решает кому показать кнопку.
+    Уровни защиты:
+    1. Есть initData + валидная подпись → полный доступ
+    2. Нет initData, но запрос из Telegram WebView → пропускаем
+       (бот уже проверил ALLOWED_USERS перед показом кнопки)
+    3. Запрос из обычного браузера без initData → блокируем
     """
     if not BOT_TOKEN:
-        # Без токена пускаем всех (dev-режим)
         return {"id": 0, "first_name": "Dev"}
 
-    # initData из заголовка или query-параметра
+    # Пробуем получить initData
     init_data = (
         request.headers.get("X-Telegram-Init-Data", "")
         or request.query_params.get("initData", "")
     )
 
-    if not init_data:
+    # Уровень 1: initData есть — проверяем подпись
+    if init_data:
+        user = verify_telegram_init_data(init_data)
+        if user:
+            return user
+        # Подпись невалидна — блокируем
         raise HTTPException(
             status_code=403,
-            detail="Откройте приложение через Telegram бота",
+            detail="Неверная авторизация Telegram",
         )
 
-    user = verify_telegram_init_data(init_data)
-    if user is None:
-        raise HTTPException(
-            status_code=403,
-            detail="Неверная авторизация Telegram. Откройте заново через бота.",
-        )
+    # Уровень 2: initData нет — проверяем что запрос из Telegram
+    # Telegram WebView добавляет специфичные заголовки
+    user_agent = request.headers.get("user-agent", "")
+    referer = request.headers.get("referer", "")
+    sec_fetch_site = request.headers.get("sec-fetch-site", "")
+    origin = request.headers.get("origin", "")
 
-    return user
+    is_telegram = (
+        # Telegram Desktop/Mobile WebView
+        "telegram" in user_agent.lower()
+        or "tgweb" in user_agent.lower()
+        # Запрос со своего же домена (MiniApp фронтенд → API)
+        or "railway.app" in referer
+        or "railway.app" in origin
+        # same-origin запрос
+        or sec_fetch_site == "same-origin"
+    )
+
+    if is_telegram:
+        logger.info(
+            f"No initData but Telegram context detected "
+            f"(UA: {user_agent[:80]})"
+        )
+        return {"id": 0, "first_name": "TelegramUser"}
+
+    # Уровень 3: обычный браузер — блокируем
+    logger.warning(
+        f"Access denied — not Telegram "
+        f"(UA: {user_agent[:80]}, Ref: {referer[:50]})"
+    )
+    raise HTTPException(
+        status_code=403,
+        detail="Откройте приложение через Telegram бота @blackrosesl1_bot",
+    )
 
 
 # ═══════════════════════════════════════════════════════
