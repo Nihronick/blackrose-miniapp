@@ -1,1039 +1,922 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BlackRose Guides</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        :root {
-            --bg: #ffffff;
-            --text: #000000;
-            --hint: #8e8e93;
-            --link: #3390ec;
-            --btn: #3390ec;
-            --btn-text: #ffffff;
-            --secondary: #f2f2f7;
-            --separator: rgba(0,0,0,0.08);
-            --radius: 14px;
-            --card-bg: #ffffff;
-            --shimmer: rgba(0,0,0,0.04);
-        }
-        [data-theme="dark"] {
-            --bg: #1c1c1e;
-            --text: #ffffff;
-            --hint: #8e8e93;
-            --secondary: #2c2c2e;
-            --separator: rgba(255,255,255,0.08);
-            --card-bg: #2c2c2e;
-            --shimmer: rgba(255,255,255,0.06);
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Roboto', sans-serif;
-            background: var(--bg); color: var(--text);
-            font-size: 16px; line-height: 1.5;
-            padding-bottom: 80px;
-            -webkit-font-smoothing: antialiased;
-            overflow-x: hidden;
-        }
-        .app { max-width: 640px; margin: 0 auto; padding: 0 16px; }
-
-        .header { position: sticky; top: 0; z-index: 100; background: var(--bg); padding: 16px 0 12px; }
-        .header h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
-        .header p { color: var(--hint); margin-top: 2px; font-size: 15px; }
-
-        .search { padding: 8px 0 16px; }
-        .search input {
-            width: 100%; padding: 10px 16px 10px 40px; font-size: 16px;
-            border: none; border-radius: 12px; background: var(--secondary); color: var(--text);
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
-            background-repeat: no-repeat; background-position: 12px center;
-        }
-        .search input:focus { outline: 2px solid var(--btn); outline-offset: -2px; }
-
-        .list { display: flex; flex-direction: column; gap: 6px; padding-bottom: 20px; }
-
-        .card {
-            display: flex; align-items: center; gap: 14px; padding: 12px 16px;
-            background: var(--card-bg); border-radius: var(--radius);
-            border: 1px solid var(--separator); cursor: pointer;
-            transition: transform 0.12s ease; user-select: none;
-        }
-        .card:active { transform: scale(0.97); }
-        .card-icon {
-            width: 44px; height: 44px; display: flex; align-items: center;
-            justify-content: center; flex-shrink: 0; background: var(--secondary);
-            border-radius: 12px; overflow: hidden;
-        }
-        .card-icon img { width: 32px; height: 32px; object-fit: contain; }
-        .card-content { flex: 1; min-width: 0; }
-        .card-title { font-size: 16px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .card-subtitle { font-size: 13px; color: var(--hint); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .card-arrow { color: var(--hint); font-size: 20px; flex-shrink: 0; opacity: 0.4; }
-
-        /* Badges */
-        .card-badges { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
-        .badge {
-            display: inline-flex; align-items: center; gap: 3px;
-            padding: 2px 7px; border-radius: 6px;
-            font-size: 10px; font-weight: 600; line-height: 1.4;
-        }
-        .badge-photo { background: rgba(52,199,89,0.12); color: #34c759; }
-        .badge-video { background: rgba(255,149,0,0.12); color: #ff9500; }
-        .badge-doc { background: rgba(90,200,250,0.12); color: #32ade6; }
-        [data-theme="dark"] .badge-photo { background: rgba(48,209,88,0.18); color: #30d158; }
-        [data-theme="dark"] .badge-video { background: rgba(255,159,10,0.18); color: #ff9f0a; }
-        [data-theme="dark"] .badge-doc { background: rgba(100,210,255,0.18); color: #64d2ff; }
-
-        /* Skeleton */
-        .skeleton { background: var(--secondary); border-radius: 6px; position: relative; overflow: hidden; }
-        .skeleton::after {
-            content: ''; position: absolute; inset: 0;
-            background: linear-gradient(90deg, transparent 0%, var(--shimmer) 50%, transparent 100%);
-            animation: shimmer 1.5s ease-in-out infinite;
-        }
-        @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-        .skeleton-card {
-            display: flex; align-items: center; gap: 14px; padding: 12px 16px;
-            background: var(--card-bg); border-radius: var(--radius); border: 1px solid var(--separator);
-        }
-        .skeleton-icon { width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0; }
-        .skeleton-text-group { flex: 1; display: flex; flex-direction: column; gap: 8px; }
-        .skeleton-line { height: 14px; border-radius: 4px; }
-
-        /* Pull to refresh */
-        .pull-indicator {
-            position: fixed; top: 0; left: 0; right: 0; height: 0; overflow: hidden;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            background: var(--secondary); z-index: 90; transition: height 0.25s ease;
-        }
-        .pull-indicator.active { transition: none; }
-        .pull-indicator.refreshing { height: 50px; }
-        .pull-spinner {
-            width: 20px; height: 20px;
-            border: 2.5px solid var(--separator); border-top-color: var(--link);
-            border-radius: 50%;
-        }
-        .pull-indicator.refreshing .pull-spinner { animation: spin 0.8s linear infinite; }
-        .pull-text { font-size: 13px; color: var(--hint); font-weight: 500; }
-        .pull-arrow { width: 20px; height: 20px; fill: var(--hint); transition: transform 0.2s; }
-        .pull-indicator.ready .pull-arrow { transform: rotate(180deg); }
-
-        /* FAB */
-        .fab-container { position: fixed; z-index: 300; display: none; touch-action: none; }
-        .fab-container.visible { display: block; }
-        .fab-back {
-            display: flex; align-items: center; gap: 8px;
-            padding: 14px 28px; font-size: 16px; font-weight: 600;
-            color: var(--btn-text); background: var(--btn);
-            border: none; border-radius: 50px; cursor: grab;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            user-select: none; touch-action: none; position: relative;
-            transition: box-shadow 0.2s, transform 0.1s;
-        }
-        .fab-back.dragging { cursor: grabbing; box-shadow: 0 8px 32px rgba(0,0,0,0.4); transform: scale(1.05); }
-        .fab-back svg { width: 20px; height: 20px; fill: currentColor; }
-        .fab-hold-ring {
-            position: absolute; inset: -4px; border-radius: 54px;
-            border: 3px solid transparent; border-top-color: var(--btn-text);
-            opacity: 0; pointer-events: none;
-        }
-        .fab-back.holding .fab-hold-ring { opacity: 1; animation: holdSpin 3s linear forwards; }
-        @keyframes holdSpin {
-            0% { transform: rotate(0deg); border-color: rgba(255,255,255,0.3); border-top-color: var(--btn-text); }
-            100% { transform: rotate(1080deg); border-color: var(--btn-text); }
-        }
-        .fab-hold-hint {
-            position: absolute; bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%);
-            background: var(--card-bg); color: var(--hint); font-size: 12px; font-weight: 500;
-            padding: 4px 10px; border-radius: 8px; white-space: nowrap;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15); opacity: 0; transition: opacity 0.2s; pointer-events: none;
-        }
-        .fab-back.holding .fab-hold-hint { opacity: 1; }
-        .fab-drag-hint {
-            position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%);
-            background: var(--card-bg); color: var(--hint); font-size: 11px;
-            padding: 3px 8px; border-radius: 6px; white-space: nowrap;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1); opacity: 0; transition: opacity 0.3s; pointer-events: none;
-        }
-        .fab-drag-hint.show { opacity: 1; }
-
-        /* Quick Nav */
-        .quick-nav {
-            position: fixed; z-index: 310; background: var(--card-bg);
-            border-radius: 16px; padding: 8px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.25); border: 1px solid var(--separator);
-            opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
-            min-width: 220px; max-width: 300px;
-        }
-        .quick-nav.active { opacity: 1; pointer-events: auto; }
-        .quick-nav-title { font-size: 12px; font-weight: 600; color: var(--hint); text-transform: uppercase; padding: 4px 12px 8px; }
-        .quick-nav-item {
-            display: flex; align-items: center; gap: 12px;
-            padding: 10px 12px; border-radius: 10px; cursor: pointer;
-            transition: background 0.12s; user-select: none;
-        }
-        .quick-nav-item:active { background: var(--secondary); }
-        .quick-nav-item-icon {
-            width: 36px; height: 36px; display: flex; align-items: center;
-            justify-content: center; background: var(--secondary);
-            border-radius: 10px; overflow: hidden; flex-shrink: 0;
-        }
-        .quick-nav-item-icon img { width: 28px; height: 28px; object-fit: contain; }
-        .quick-nav-item-title { font-size: 15px; font-weight: 500; }
-        .quick-nav-item-home { border-top: 1px solid var(--separator); margin-top: 4px; padding-top: 12px; }
-        .quick-nav-overlay { position: fixed; inset: 0; z-index: 305; display: none; }
-        .quick-nav-overlay.active { display: block; }
-
-        /* Guide */
-        .guide { padding: 8px 0; }
-        .guide-header {
-            display: flex; align-items: center; gap: 14px;
-            padding: 12px 0 16px; border-bottom: 1px solid var(--separator); margin-bottom: 16px;
-        }
-        .guide-icon {
-            width: 52px; height: 52px; display: flex; align-items: center;
-            justify-content: center; background: var(--secondary);
-            border-radius: 14px; overflow: hidden; flex-shrink: 0;
-        }
-        .guide-icon img { width: 40px; height: 40px; object-fit: contain; }
-        .guide-title { font-size: 22px; font-weight: 700; line-height: 1.2; }
-        .guide-content { font-size: 18px; line-height: 1.6; word-wrap: break-word; }
-        .guide-content strong { font-weight: 600; color: var(--link); }
-        .guide-content em { font-style: italic; }
-        .guide-content .inline-icon, .guide-content img.inline-icon {
-            display: inline !important; vertical-align: middle;
-            width: 30px; height: 30px; margin: 0 3px; border-radius: 4px;
-        }
-        .guide-content img.guide-photo {
-            display: block; max-width: 100%; height: auto;
-            border-radius: 12px; margin: 16px 0; cursor: pointer;
-        }
-
-        .video-wrapper {
-            position: relative; padding-bottom: 56.25%; height: 0;
-            overflow: hidden; border-radius: 12px; margin: 16px 0; background: #000;
-        }
-        .video-wrapper iframe, .video-wrapper video {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;
-        }
-
-        .guide-document {
-            display: flex; align-items: center; gap: 12px; padding: 12px 16px;
-            margin: 12px 0; background: var(--secondary); border-radius: 12px;
-            text-decoration: none; color: var(--text); transition: transform 0.12s;
-        }
-        .guide-document:active { transform: scale(0.97); }
-        .guide-document-icon { font-size: 28px; flex-shrink: 0; }
-        .guide-document-info { flex: 1; min-width: 0; }
-        .guide-document-name { font-weight: 600; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .guide-document-hint { font-size: 13px; color: var(--hint); }
-
-        .lightbox {
-            display: none; position: fixed; inset: 0; z-index: 500;
-            background: rgba(0,0,0,0.92); align-items: center; justify-content: center; cursor: pointer;
-        }
-        .lightbox.active { display: flex; }
-        .lightbox img { max-width: 95%; max-height: 90vh; object-fit: contain; border-radius: 8px; }
-        .lightbox-close {
-            position: absolute; top: 16px; right: 16px; width: 40px; height: 40px;
-            background: rgba(255,255,255,0.15); border: none; border-radius: 50%;
-            color: #fff; font-size: 24px; cursor: pointer; display: flex;
-            align-items: center; justify-content: center;
-        }
-
-        .access-denied { text-align: center; padding: 80px 20px; }
-        .access-denied-icon { font-size: 64px; margin-bottom: 16px; }
-        .access-denied h2 { font-size: 22px; margin-bottom: 8px; }
-        .access-denied p { color: var(--hint); font-size: 15px; line-height: 1.5; }
-
-        .hidden { display: none !important; }
-        .error { color: #ff3b30; padding: 24px; text-align: center; background: rgba(255,59,48,0.08); border-radius: 12px; font-size: 15px; }
-        .empty { text-align: center; padding: 60px 20px; color: var(--hint); font-size: 15px; }
-
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        @media (max-width: 480px) {
-            .header h1 { font-size: 24px; }
-            .card { padding: 10px 14px; gap: 12px; }
-            .card-icon { width: 50px; height: 50px; border-radius: 10px; }
-            .card-icon img { width: 45px; height: 45px; }
-            .guide-title { font-size: 20px; }
-            .fab-back { padding: 12px 22px; font-size: 15px; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>BlackRose Guides</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root {
+  --bg: #ffffff; --text: #000000; --hint: #8e8e93;
+  --link: #3390ec; --btn: #3390ec; --btn-text: #ffffff;
+  --secondary: #f2f2f7; --separator: rgba(0,0,0,0.08);
+  --radius: 14px; --card-bg: #ffffff; --shimmer: rgba(0,0,0,0.04);
+}
+[data-theme="dark"] {
+  --bg: #1c1c1e; --text: #ffffff; --hint: #8e8e93;
+  --secondary: #2c2c2e; --separator: rgba(255,255,255,0.08);
+  --card-bg: #2c2c2e; --shimmer: rgba(255,255,255,0.06);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Roboto', sans-serif;
+  background: var(--bg); color: var(--text);
+  font-size: 16px; line-height: 1.5;
+  padding-bottom: 80px;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+.app { max-width: 640px; margin: 0 auto; padding: 0 16px; }
+.header { position: sticky; top: 0; z-index: 100; background: var(--bg); padding: 16px 0 12px; }
+.header h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
+.header p { color: var(--hint); margin-top: 2px; font-size: 15px; }
+.search { padding: 8px 0 16px; }
+.search input {
+  width: 100%; padding: 10px 16px 10px 40px; font-size: 16px;
+  border: none; border-radius: 12px; background: var(--secondary); color: var(--text);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: 12px center;
+}
+.search input:focus { outline: 2px solid var(--btn); outline-offset: -2px; }
+.list { display: flex; flex-direction: column; gap: 6px; padding-bottom: 20px; }
+.card {
+  display: flex; align-items: center; gap: 14px; padding: 12px 16px;
+  background: var(--card-bg); border-radius: var(--radius);
+  border: 1px solid var(--separator); cursor: pointer;
+  transition: transform 0.12s ease; user-select: none;
+}
+.card:active { transform: scale(0.97); }
+.card-icon {
+  width: 44px; height: 44px; display: flex; align-items: center;
+  justify-content: center; flex-shrink: 0; background: var(--secondary);
+  border-radius: 12px; overflow: hidden;
+}
+.card-icon img { width: 32px; height: 32px; object-fit: contain; }
+.card-content { flex: 1; min-width: 0; }
+.card-title { font-size: 16px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-subtitle { font-size: 13px; color: var(--hint); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-arrow { color: var(--hint); font-size: 20px; flex-shrink: 0; opacity: 0.4; }
+.card-badges { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
+.badge { display: inline-flex; align-items: center; gap: 3px; padding: 2px 7px; border-radius: 6px; font-size: 10px; font-weight: 600; line-height: 1.4; }
+.badge-photo { background: rgba(52,199,89,0.12); color: #34c759; }
+.badge-video { background: rgba(255,149,0,0.12); color: #ff9500; }
+.badge-doc { background: rgba(90,200,250,0.12); color: #32ade6; }
+[data-theme="dark"] .badge-photo { background: rgba(48,209,88,0.18); color: #30d158; }
+[data-theme="dark"] .badge-video { background: rgba(255,159,10,0.18); color: #ff9f0a; }
+[data-theme="dark"] .badge-doc { background: rgba(100,210,255,0.18); color: #64d2ff; }
+.skeleton { background: var(--secondary); border-radius: 6px; position: relative; overflow: hidden; }
+.skeleton::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent 0%, var(--shimmer) 50%, transparent 100%);
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+@keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+.skeleton-card { display: flex; align-items: center; gap: 14px; padding: 12px 16px; background: var(--card-bg); border-radius: var(--radius); border: 1px solid var(--separator); }
+.skeleton-icon { width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0; }
+.skeleton-text-group { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.skeleton-line { height: 14px; border-radius: 4px; }
+.pull-indicator {
+  position: fixed; top: 0; left: 0; right: 0; height: 0; overflow: hidden;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  background: var(--secondary); z-index: 90; transition: height 0.25s ease;
+}
+.pull-indicator.active { transition: none; }
+.pull-indicator.refreshing { height: 50px; }
+.pull-spinner { width: 20px; height: 20px; border: 2.5px solid var(--separator); border-top-color: var(--link); border-radius: 50%; }
+.pull-indicator.refreshing .pull-spinner { animation: spin 0.8s linear infinite; }
+.pull-text { font-size: 13px; color: var(--hint); font-weight: 500; }
+.pull-arrow { width: 20px; height: 20px; fill: var(--hint); transition: transform 0.2s; }
+.pull-indicator.ready .pull-arrow { transform: rotate(180deg); }
+.fab-container { position: fixed; z-index: 300; display: none; touch-action: none; }
+.fab-container.visible { display: block; }
+.fab-back {
+  display: flex; align-items: center; gap: 8px;
+  padding: 14px 28px; font-size: 16px; font-weight: 600;
+  color: var(--btn-text); background: var(--btn);
+  border: none; border-radius: 50px; cursor: grab;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  user-select: none; touch-action: none; position: relative;
+  transition: box-shadow 0.2s, transform 0.1s;
+}
+.fab-back.dragging { cursor: grabbing; box-shadow: 0 8px 32px rgba(0,0,0,0.4); transform: scale(1.05); }
+.fab-back svg { width: 20px; height: 20px; fill: currentColor; }
+.fab-hold-ring { position: absolute; inset: -4px; border-radius: 54px; border: 3px solid transparent; border-top-color: var(--btn-text); opacity: 0; pointer-events: none; }
+.fab-back.holding .fab-hold-ring { opacity: 1; animation: holdSpin 3s linear forwards; }
+@keyframes holdSpin {
+  0% { transform: rotate(0deg); border-color: rgba(255,255,255,0.3); border-top-color: var(--btn-text); }
+  100% { transform: rotate(1080deg); border-color: var(--btn-text); }
+}
+.fab-hold-hint {
+  position: absolute; bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%);
+  background: var(--card-bg); color: var(--hint); font-size: 12px; font-weight: 500;
+  padding: 4px 10px; border-radius: 8px; white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15); opacity: 0; transition: opacity 0.2s; pointer-events: none;
+}
+.fab-back.holding .fab-hold-hint { opacity: 1; }
+.fab-drag-hint {
+  position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+  background: var(--card-bg); color: var(--hint); font-size: 11px;
+  padding: 3px 8px; border-radius: 6px; white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1); opacity: 0; transition: opacity 0.3s; pointer-events: none;
+}
+.fab-drag-hint.show { opacity: 1; }
+.quick-nav {
+  position: fixed; z-index: 310; background: var(--card-bg);
+  border-radius: 16px; padding: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25); border: 1px solid var(--separator);
+  opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
+  min-width: 220px; max-width: 300px;
+}
+.quick-nav.active { opacity: 1; pointer-events: auto; }
+.quick-nav-title { font-size: 12px; font-weight: 600; color: var(--hint); text-transform: uppercase; padding: 4px 12px 8px; }
+.quick-nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 10px; cursor: pointer; transition: background 0.12s; user-select: none; }
+.quick-nav-item:active { background: var(--secondary); }
+.quick-nav-item-icon { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: var(--secondary); border-radius: 10px; overflow: hidden; flex-shrink: 0; }
+.quick-nav-item-icon img { width: 28px; height: 28px; object-fit: contain; }
+.quick-nav-item-title { font-size: 15px; font-weight: 500; }
+.quick-nav-item-home { border-top: 1px solid var(--separator); margin-top: 4px; padding-top: 12px; }
+.quick-nav-overlay { position: fixed; inset: 0; z-index: 305; display: none; }
+.quick-nav-overlay.active { display: block; }
+.guide { padding: 8px 0; }
+.guide-header { display: flex; align-items: center; gap: 14px; padding: 12px 0 16px; border-bottom: 1px solid var(--separator); margin-bottom: 16px; }
+.guide-icon { width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; background: var(--secondary); border-radius: 14px; overflow: hidden; flex-shrink: 0; }
+.guide-icon img { width: 40px; height: 40px; object-fit: contain; }
+.guide-title { font-size: 22px; font-weight: 700; line-height: 1.2; }
+.guide-content { font-size: 18px; line-height: 1.6; word-wrap: break-word; }
+.guide-content strong { font-weight: 600; color: var(--link); }
+.guide-content em { font-style: italic; }
+.guide-content .inline-icon, .guide-content img.inline-icon { display: inline !important; vertical-align: middle; width: 30px; height: 30px; margin: 0 3px; border-radius: 4px; }
+.guide-content img.guide-photo { display: block; max-width: 100%; height: auto; border-radius: 12px; margin: 16px 0; cursor: pointer; }
+.video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; margin: 16px 0; background: #000; }
+.video-wrapper iframe, .video-wrapper video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+.guide-document { display: flex; align-items: center; gap: 12px; padding: 12px 16px; margin: 12px 0; background: var(--secondary); border-radius: 12px; text-decoration: none; color: var(--text); transition: transform 0.12s; }
+.guide-document:active { transform: scale(0.97); }
+.guide-document-icon { font-size: 28px; flex-shrink: 0; }
+.guide-document-info { flex: 1; min-width: 0; }
+.guide-document-name { font-weight: 600; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.guide-document-hint { font-size: 13px; color: var(--hint); }
+.lightbox { display: none; position: fixed; inset: 0; z-index: 500; background: rgba(0,0,0,0.92); align-items: center; justify-content: center; cursor: pointer; }
+.lightbox.active { display: flex; }
+.lightbox img { max-width: 95%; max-height: 90vh; object-fit: contain; border-radius: 8px; }
+.lightbox-close { position: absolute; top: 16px; right: 16px; width: 40px; height: 40px; background: rgba(255,255,255,0.15); border: none; border-radius: 50%; color: #fff; font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.access-denied { text-align: center; padding: 80px 20px; }
+.access-denied-icon { font-size: 64px; margin-bottom: 16px; }
+.access-denied h2 { font-size: 22px; margin-bottom: 8px; }
+.access-denied p { color: var(--hint); font-size: 15px; line-height: 1.5; }
+.hidden { display: none !important; }
+.error { color: #ff3b30; padding: 24px; text-align: center; background: rgba(255,59,48,0.08); border-radius: 12px; font-size: 15px; }
+.empty { text-align: center; padding: 60px 20px; color: var(--hint); font-size: 15px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (max-width: 480px) {
+  .header h1 { font-size: 24px; }
+  .card { padding: 10px 14px; gap: 12px; }
+  .card-icon { width: 50px; height: 50px; border-radius: 10px; }
+  .card-icon img { width: 45px; height: 45px; }
+  .guide-title { font-size: 20px; }
+  .fab-back { padding: 12px 22px; font-size: 15px; }
+}
+</style>
 </head>
 <body>
-
 <div class="pull-indicator" id="pull-indicator">
-    <svg class="pull-arrow" viewBox="0 0 24 24"><path d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"/></svg>
-    <span class="pull-text">Потяните для обновления</span>
+  <svg class="pull-arrow" viewBox="0 0 24 24"><path d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"/></svg>
+  <span class="pull-spinner" style="display:none"></span>
+  <span class="pull-text">Потяните для обновления</span>
 </div>
-
 <div class="app">
-    <header class="header">
-        <h1>BlackRose Guides</h1>
-        <p>Справочник гильдии</p>
-    </header>
-
-    <div id="access-denied-view" class="hidden">
-        <div class="access-denied">
-            <div class="access-denied-icon">🔒</div>
-            <h2>Требуется авторизация</h2>
-            <p id="access-denied-msg">Откройте бота @blackrosesl1_bot и используйте кнопку «📖 Открыть гайды».</p>
-        </div>
+  <header class="header">
+    <h1>BlackRose Guides</h1>
+    <p>Справочник гильдии</p>
+  </header>
+  <div id="access-denied-view" class="hidden">
+    <div class="access-denied">
+      <div class="access-denied-icon">🔒</div>
+      <h2>Требуется авторизация</h2>
+      <p id="access-denied-msg">Откройте бота @blackrosesl1_bot и используйте кнопку «📖 Открыть гайды».</p>
     </div>
-
-    <div id="categories-view" class="hidden">
-        <div class="search">
-            <input type="search" placeholder="Поиск гайда..." id="search-input" autocomplete="off">
-        </div>
-        <div class="list" id="categories-list"></div>
+  </div>
+  <div id="categories-view" class="hidden">
+    <div class="search">
+      <input type="search" placeholder="Поиск гайда..." id="search-input" autocomplete="off">
     </div>
-
-    <div id="guides-view" class="hidden">
-        <h2 id="category-title" style="margin:0 0 16px;font-size:22px;font-weight:700;"></h2>
-        <div class="list" id="guides-list"></div>
+    <div class="list" id="categories-list"></div>
+  </div>
+  <div id="guides-view" class="hidden">
+    <h2 id="category-title" style="margin:0 0 16px;font-size:22px;font-weight:700;"></h2>
+    <div class="list" id="guides-list"></div>
+  </div>
+  <div id="guide-view" class="hidden">
+    <div class="guide">
+      <div class="guide-header">
+        <div class="guide-icon" id="guide-icon"></div>
+        <h2 class="guide-title" id="guide-title"></h2>
+      </div>
+      <div class="guide-content" id="guide-content"></div>
     </div>
-
-    <div id="guide-view" class="hidden">
-        <div class="guide">
-            <div class="guide-header">
-                <div class="guide-icon" id="guide-icon"></div>
-                <h2 class="guide-title" id="guide-title"></h2>
-            </div>
-            <div class="guide-content" id="guide-content"></div>
-        </div>
-    </div>
+  </div>
 </div>
-
 <div class="fab-container" id="fab-container">
-    <button class="fab-back" id="fab-back">
-        <div class="fab-hold-ring"></div>
-        <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-        <span id="fab-label">Назад</span>
-        <span class="fab-hold-hint">Удерживайте для меню</span>
-        <span class="fab-drag-hint" id="fab-drag-hint">Перетащите кнопку</span>
-    </button>
+  <button class="fab-back" id="fab-back">
+    <div class="fab-hold-ring"></div>
+    <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+    <span id="fab-label">Назад</span>
+    <span class="fab-hold-hint">Удерживайте для меню</span>
+    <span class="fab-drag-hint" id="fab-drag-hint">Перетащите кнопку</span>
+  </button>
 </div>
-
 <div class="quick-nav-overlay" id="quick-nav-overlay"></div>
 <div class="quick-nav" id="quick-nav">
-    <div class="quick-nav-title">Перейти в раздел</div>
-    <div id="quick-nav-items"></div>
+  <div class="quick-nav-title">Перейти в раздел</div>
+  <div id="quick-nav-items"></div>
 </div>
-
 <div class="lightbox" id="lightbox">
-    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
-    <img id="lightbox-img" src="" alt="">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="">
 </div>
-
 <script>
 (function() {
-    'use strict';
+'use strict';
 
-    const API = (() => {
-        const h = window.location.hostname;
-        return (h === 'localhost' || h === '127.0.0.1') ? 'http://127.0.0.1:8000' : window.location.origin;
-    })();
+const API = (() => {
+  const h = window.location.hostname;
+  return (h === 'localhost' || h === '127.0.0.1') ? 'http://127.0.0.1:8000' : window.location.origin;
+})();
 
-    const tg = window.Telegram?.WebApp;
-    const getInitData = () => tg?.initData || '';
+const tg = window.Telegram?.WebApp;
+const getInitData = () => tg?.initData || '';
 
-    // Haptic
-    function haptic(type) {
-        try {
-            if (tg?.HapticFeedback) {
-                if (['light','medium','heavy','rigid','soft'].includes(type)) {
-                    tg.HapticFeedback.impactOccurred(type);
-                } else if (['success','warning','error'].includes(type)) {
-                    tg.HapticFeedback.notificationOccurred(type);
-                } else if (type === 'selection') {
-                    tg.HapticFeedback.selectionChanged();
-                }
-            }
-        } catch(e) {}
+// ═══ КЭШ КАТЕГОРИЙ (исправление зацикливания) ═══
+let _categoriesCache = null;
+
+function haptic(type) {
+  try {
+    if (tg?.HapticFeedback) {
+      if (['light','medium','heavy','rigid','soft'].includes(type)) {
+        tg.HapticFeedback.impactOccurred(type);
+      } else if (['success','warning','error'].includes(type)) {
+        tg.HapticFeedback.notificationOccurred(type);
+      } else if (type === 'selection') {
+        tg.HapticFeedback.selectionChanged();
+      }
     }
+  } catch(e) {}
+}
 
-    function initTheme() {
-        if (!tg) return;
-        try {
-            tg.ready();
-            tg.expand();
-            document.documentElement.setAttribute('data-theme', tg.colorScheme || 'light');
-            const r = document.documentElement.style;
-            const p = tg.themeParams || {};
-            if (p.bg_color) r.setProperty('--bg', p.bg_color);
-            if (p.text_color) r.setProperty('--text', p.text_color);
-            if (p.hint_color) r.setProperty('--hint', p.hint_color);
-            if (p.link_color) r.setProperty('--link', p.link_color);
-            if (p.button_color) r.setProperty('--btn', p.button_color);
-            if (p.button_text_color) r.setProperty('--btn-text', p.button_text_color);
-            if (p.secondary_bg_color) {
-                r.setProperty('--secondary', p.secondary_bg_color);
-                r.setProperty('--card-bg', p.secondary_bg_color);
-            }
-        } catch (e) { console.warn('Theme error:', e); }
+function initTheme() {
+  if (!tg) return;
+  try {
+    tg.ready();
+    tg.expand();
+    document.documentElement.setAttribute('data-theme', tg.colorScheme || 'light');
+    const r = document.documentElement.style;
+    const p = tg.themeParams || {};
+    if (p.bg_color) r.setProperty('--bg', p.bg_color);
+    if (p.text_color) r.setProperty('--text', p.text_color);
+    if (p.hint_color) r.setProperty('--hint', p.hint_color);
+    if (p.link_color) r.setProperty('--link', p.link_color);
+    if (p.button_color) r.setProperty('--btn', p.button_color);
+    if (p.button_text_color) r.setProperty('--btn-text', p.button_text_color);
+    if (p.secondary_bg_color) {
+      r.setProperty('--secondary', p.secondary_bg_color);
+      r.setProperty('--card-bg', p.secondary_bg_color);
     }
+  } catch(e) { console.warn('Theme error:', e); }
+}
 
-    // Skeleton
-    function renderSkeletonCards(count) {
-        let html = '';
-        for (let i = 0; i < count; i++) {
-            const w1 = 60 + Math.random() * 30 + '%';
-            const w2 = 40 + Math.random() * 20 + '%';
-            html += '<div class="skeleton-card">' +
-                '<div class="skeleton skeleton-icon"></div>' +
-                '<div class="skeleton-text-group">' +
-                '<div class="skeleton skeleton-line" style="width:' + w1 + '"></div>' +
-                '<div class="skeleton skeleton-line" style="width:' + w2 + ';height:12px"></div>' +
-                '</div></div>';
-        }
-        return html;
+function renderSkeletonCards(count) {
+  let html = '';
+  for (let i = 0; i < count; i++) {
+    const w1 = (60 + Math.random() * 30) + '%';
+    const w2 = (40 + Math.random() * 20) + '%';
+    html += '<div class="skeleton-card">' +
+      '<div class="skeleton skeleton-icon"></div>' +
+      '<div class="skeleton-text-group">' +
+      '<div class="skeleton skeleton-line" style="width:' + w1 + '"></div>' +
+      '<div class="skeleton skeleton-line" style="width:' + w2 + ';height:12px"></div>' +
+      '</div></div>';
+  }
+  return html;
+}
+
+function renderSkeletonGuide() {
+  return '<div style="display:flex;align-items:center;gap:14px;padding:12px 0 16px;border-bottom:1px solid var(--separator);margin-bottom:16px">' +
+    '<div class="skeleton" style="width:52px;height:52px;border-radius:14px;flex-shrink:0"></div>' +
+    '<div class="skeleton" style="height:22px;width:65%;border-radius:6px"></div>' +
+    '</div>' +
+    '<div style="display:flex;flex-direction:column;gap:10px">' +
+    '<div class="skeleton" style="height:16px;width:100%;border-radius:4px"></div>' +
+    '<div class="skeleton" style="height:16px;width:92%;border-radius:4px"></div>' +
+    '<div class="skeleton" style="height:16px;width:85%;border-radius:4px"></div>' +
+    '<div class="skeleton" style="height:16px;width:78%;border-radius:4px"></div>' +
+    '</div>';
+}
+
+window.openLightbox = function(src) {
+  haptic('light');
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox').classList.add('active');
+};
+window.closeLightbox = function() {
+  document.getElementById('lightbox').classList.remove('active');
+};
+document.getElementById('lightbox').addEventListener('click', function(e) {
+  if (e.target === e.currentTarget) closeLightbox();
+});
+
+function renderCardIcon(url) {
+  if (!url) return '';
+  return '<img src="' + url + '" onerror="this.style.display=\'none\'" alt="">';
+}
+
+function renderBadges(item) {
+  if (!item.has_photo && !item.has_video && !item.has_document) return '';
+  let html = '<div class="card-badges">';
+  if (item.has_photo) html += '<span class="badge badge-photo">📷 Фото</span>';
+  if (item.has_video) html += '<span class="badge badge-video">🎬 Видео</span>';
+  if (item.has_document) html += '<span class="badge badge-doc">📄 Файл</span>';
+  return html + '</div>';
+}
+
+function renderVideo(url) {
+  if (!url) return '';
+  const yt = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  if (yt) return '<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/' + yt[1] + '?playsinline=1" allowfullscreen></iframe></div>';
+  if (/\.(mp4|webm|ogg)(\?|$)/i.test(url)) {
+    const ext = url.match(/\.(mp4|webm|ogg)/i)[1];
+    return '<div class="video-wrapper"><video controls preload="metadata" playsinline><source src="' + url + '" type="video/' + ext + '"></video></div>';
+  }
+  return '<a href="' + url + '" target="_blank" class="guide-document"><span class="guide-document-icon">🎬</span><div class="guide-document-info"><div class="guide-document-name">Видео</div><div class="guide-document-hint">Открыть</div></div></a>';
+}
+
+function renderDocument(url) {
+  if (!url) return '';
+  const name = decodeURIComponent(url.split('/').pop().split('?')[0]) || 'Документ';
+  const ext = name.split('.').pop().toLowerCase();
+  const icons = { pdf:'📕', doc:'📘', docx:'📘', xls:'📊', xlsx:'📊', png:'🖼', jpg:'🖼', jpeg:'🖼' };
+  return '<a href="' + url + '" target="_blank" class="guide-document"><span class="guide-document-icon">' + (icons[ext]||'📄') + '</span><div class="guide-document-info"><div class="guide-document-name">' + name + '</div><div class="guide-document-hint">Скачать · ' + ext.toUpperCase() + '</div></div></a>';
+}
+
+function esc(text) {
+  if (!text) return '';
+  const d = document.createElement('div');
+  d.textContent = text;
+  return d.innerHTML;
+}
+
+function pluralize(n, one, few, many) {
+  const m10 = n % 10, m100 = n % 100;
+  if (m100 >= 11 && m100 <= 19) return many;
+  if (m10 === 1) return one;
+  if (m10 >= 2 && m10 <= 4) return few;
+  return many;
+}
+
+// ═══ PULL TO REFRESH ═══
+var pullRefresh = {
+  indicator: null, textEl: null, arrowEl: null, spinnerEl: null,
+  startY: 0, dist: 0, pulling: false, refreshing: false, threshold: 70,
+  init: function() {
+    this.indicator = document.getElementById('pull-indicator');
+    this.textEl = this.indicator.querySelector('.pull-text');
+    this.arrowEl = this.indicator.querySelector('.pull-arrow');
+    this.spinnerEl = this.indicator.querySelector('.pull-spinner');
+    var self = this;
+    document.addEventListener('touchstart', function(e) { self.onStart(e); }, { passive: true });
+    document.addEventListener('touchmove', function(e) { self.onMove(e); }, { passive: false });
+    document.addEventListener('touchend', function() { self.onEnd(); });
+  },
+  onStart: function(e) {
+    if (window.scrollY > 2 || this.refreshing) return;
+    this.startY = e.touches[0].clientY;
+    this.pulling = true;
+    this.dist = 0;
+  },
+  onMove: function(e) {
+    if (!this.pulling || this.refreshing) return;
+    this.dist = e.touches[0].clientY - this.startY;
+    if (this.dist < 0) { this.dist = 0; return; }
+    if (window.scrollY > 2) { this.pulling = false; return; }
+    if (this.dist > 10) {
+      e.preventDefault();
+      var d = Math.min(this.dist, 110);
+      this.indicator.classList.add('active');
+      this.indicator.style.height = (d * 0.6) + 'px';
+      if (this.dist >= this.threshold) {
+        this.textEl.textContent = 'Отпустите для обновления';
+        this.indicator.classList.add('ready');
+      } else {
+        this.textEl.textContent = 'Потяните для обновления';
+        this.indicator.classList.remove('ready');
+      }
     }
-
-    function renderSkeletonGuide() {
-        return '<div style="display:flex;align-items:center;gap:14px;padding:12px 0 16px;border-bottom:1px solid var(--separator);margin-bottom:16px">' +
-            '<div class="skeleton" style="width:52px;height:52px;border-radius:14px;flex-shrink:0"></div>' +
-            '<div class="skeleton" style="height:22px;width:65%;border-radius:6px"></div>' +
-            '</div>' +
-            '<div style="display:flex;flex-direction:column;gap:10px">' +
-            '<div class="skeleton" style="height:16px;width:100%;border-radius:4px"></div>' +
-            '<div class="skeleton" style="height:16px;width:92%;border-radius:4px"></div>' +
-            '<div class="skeleton" style="height:16px;width:85%;border-radius:4px"></div>' +
-            '<div class="skeleton" style="height:16px;width:60%;border-radius:4px"></div>' +
-            '<div class="skeleton" style="height:16px;width:95%;border-radius:4px"></div>' +
-            '<div class="skeleton" style="height:16px;width:78%;border-radius:4px"></div>' +
-            '</div>';
+  },
+  onEnd: function() {
+    if (!this.pulling) return;
+    this.pulling = false;
+    this.indicator.classList.remove('active', 'ready');
+    var self = this;
+    if (this.dist >= this.threshold && !this.refreshing) {
+      this.refreshing = true;
+      this.indicator.classList.add('refreshing');
+      if (this.arrowEl) this.arrowEl.style.display = 'none';
+      if (this.spinnerEl) this.spinnerEl.style.display = 'block';
+      this.textEl.textContent = 'Обновление...';
+      haptic('medium');
+      // Сбрасываем кэш при pull-to-refresh
+      _categoriesCache = null;
+      app.refreshCurrentView().then(function() {
+        haptic('success');
+        self.indicator.classList.remove('refreshing');
+        self.refreshing = false;
+        self.indicator.style.height = '0';
+        if (self.arrowEl) self.arrowEl.style.display = '';
+        if (self.spinnerEl) self.spinnerEl.style.display = 'none';
+        self.textEl.textContent = 'Потяните для обновления';
+      }).catch(function() {
+        self.indicator.classList.remove('refreshing');
+        self.refreshing = false;
+        self.indicator.style.height = '0';
+        if (self.arrowEl) self.arrowEl.style.display = '';
+        if (self.spinnerEl) self.spinnerEl.style.display = 'none';
+        self.textEl.textContent = 'Потяните для обновления';
+      });
+    } else {
+      this.indicator.style.height = '0';
     }
+    this.dist = 0;
+  }
+};
 
-    // Lightbox
-    window.openLightbox = function(src) {
-        haptic('light');
-        document.getElementById('lightbox-img').src = src;
-        document.getElementById('lightbox').classList.add('active');
-    };
-    window.closeLightbox = function() {
-        document.getElementById('lightbox').classList.remove('active');
-    };
-    document.getElementById('lightbox').addEventListener('click', function(e) {
-        if (e.target === e.currentTarget) closeLightbox();
+// ═══ FAB ═══
+var fab = {
+  el: null, container: null, label: null, dragHint: null,
+  holdTimer: null, holdTriggered: false,
+  isDragging: false, dragStarted: false,
+  startX: 0, startY: 0, startLeft: 0, startTop: 0,
+  HOLD_DURATION: 3000, DRAG_THRESHOLD: 10,
+  init: function() {
+    this.container = document.getElementById('fab-container');
+    this.el = document.getElementById('fab-back');
+    this.label = document.getElementById('fab-label');
+    this.dragHint = document.getElementById('fab-drag-hint');
+    this.restorePosition();
+    var self = this;
+    this.el.addEventListener('pointerdown', function(e) { self.onPointerDown(e); });
+    document.addEventListener('pointermove', function(e) { self.onPointerMove(e); });
+    document.addEventListener('pointerup', function(e) { self.onPointerUp(e); });
+    document.addEventListener('pointercancel', function() { self.cancelAll(); });
+    this.el.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+    if (!localStorage.getItem('fab_dragged')) this._showDragHint = true;
+  },
+  restorePosition: function() {
+    var saved = localStorage.getItem('fab_position');
+    if (saved) {
+      try {
+        var pos = JSON.parse(saved);
+        this.container.style.right = pos.right + 'px';
+        this.container.style.bottom = pos.bottom + 'px';
+        this.container.style.left = 'auto';
+        this.container.style.top = 'auto';
+        return;
+      } catch(e) {}
+    }
+    this.container.style.bottom = '24px';
+    this.container.style.left = '50%';
+    this.container.style.transform = 'translateX(-50%)';
+  },
+  savePosition: function() {
+    var rect = this.container.getBoundingClientRect();
+    var right = window.innerWidth - rect.right;
+    var bottom = window.innerHeight - rect.bottom;
+    localStorage.setItem('fab_position', JSON.stringify({ right: right, bottom: bottom }));
+    localStorage.setItem('fab_dragged', '1');
+  },
+  onPointerDown: function(e) {
+    e.preventDefault();
+    this.el.setPointerCapture(e.pointerId);
+    this.holdTriggered = false;
+    this.isDragging = false;
+    this.dragStarted = false;
+    this.startX = e.clientX;
+    this.startY = e.clientY;
+    var rect = this.container.getBoundingClientRect();
+    this.startLeft = rect.left;
+    this.startTop = rect.top;
+    this.el.classList.add('holding');
+    var self = this;
+    this.holdTimer = setTimeout(function() {
+      if (!self.dragStarted) {
+        self.holdTriggered = true;
+        self.el.classList.remove('holding');
+        haptic('medium');
+        quickNav.show(self.container);
+      }
+    }, this.HOLD_DURATION);
+  },
+  onPointerMove: function(e) {
+    if (!this.el.hasPointerCapture || !this.el.hasPointerCapture(e.pointerId)) return;
+    var dx = e.clientX - this.startX;
+    var dy = e.clientY - this.startY;
+    var dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist > this.DRAG_THRESHOLD && !this.holdTriggered) {
+      if (!this.dragStarted) {
+        this.dragStarted = true;
+        this.isDragging = true;
+        this.cancelHold();
+        this.el.classList.add('dragging');
+        this.container.style.transform = 'none';
+        this.container.style.left = this.startLeft + 'px';
+        this.container.style.top = this.startTop + 'px';
+        this.container.style.right = 'auto';
+        this.container.style.bottom = 'auto';
+        if (this.dragHint) this.dragHint.classList.remove('show');
+      }
+      var newLeft = Math.max(4, Math.min(window.innerWidth - this.container.offsetWidth - 4, this.startLeft + dx));
+      var newTop = Math.max(4, Math.min(window.innerHeight - this.container.offsetHeight - 4, this.startTop + dy));
+      this.container.style.left = newLeft + 'px';
+      this.container.style.top = newTop + 'px';
+    }
+  },
+  onPointerUp: function() {
+    this.el.classList.remove('dragging');
+    this.cancelHold();
+    if (this.dragStarted) {
+      this.savePosition();
+      var rect = this.container.getBoundingClientRect();
+      this.container.style.left = 'auto';
+      this.container.style.top = 'auto';
+      this.container.style.right = (window.innerWidth - rect.right) + 'px';
+      this.container.style.bottom = (window.innerHeight - rect.bottom) + 'px';
+      this.container.style.transform = 'none';
+    } else if (!this.holdTriggered) {
+      haptic('light');
+      app.goBack();
+    }
+    this.isDragging = false;
+    this.dragStarted = false;
+  },
+  cancelHold: function() {
+    if (this.holdTimer) { clearTimeout(this.holdTimer); this.holdTimer = null; }
+    this.el.classList.remove('holding');
+  },
+  cancelAll: function() {
+    this.cancelHold();
+    this.el.classList.remove('dragging');
+    this.isDragging = false;
+    this.dragStarted = false;
+  },
+  show: function(labelText) {
+    this.container.classList.add('visible');
+    if (labelText) this.label.textContent = labelText;
+    if (this._showDragHint && this.dragHint) {
+      this._showDragHint = false;
+      var hint = this.dragHint;
+      setTimeout(function() { hint.classList.add('show'); }, 500);
+      setTimeout(function() { hint.classList.remove('show'); }, 4000);
+    }
+  },
+  hide: function() {
+    this.container.classList.remove('visible');
+    this.cancelAll();
+  }
+};
+
+// ═══ QUICK NAV ═══
+var quickNav = {
+  el: document.getElementById('quick-nav'),
+  overlay: document.getElementById('quick-nav-overlay'),
+  itemsEl: document.getElementById('quick-nav-items'),
+  categories: [],
+  init: function() {
+    var self = this;
+    this.overlay.addEventListener('click', function() { self.hide(); });
+  },
+  show: function(anchorEl) {
+    if (!this.categories.length) return;
+    if (anchorEl) {
+      var rect = anchorEl.getBoundingClientRect();
+      if (rect.top > 320) {
+        this.el.style.bottom = (window.innerHeight - rect.top + 8) + 'px';
+        this.el.style.top = 'auto';
+      } else {
+        this.el.style.top = (rect.bottom + 8) + 'px';
+        this.el.style.bottom = 'auto';
+      }
+      var left = Math.max(12, Math.min(window.innerWidth - 272, rect.left + rect.width / 2 - 130));
+      this.el.style.left = left + 'px';
+    }
+    this.itemsEl.innerHTML = '';
+    var self = this;
+    this.categories.forEach(function(cat) {
+      var item = document.createElement('div');
+      item.className = 'quick-nav-item';
+      item.innerHTML = '<div class="quick-nav-item-icon">' + renderCardIcon(cat.icon) + '</div>' +
+        '<div class="quick-nav-item-title">' + esc(cat.title) + '</div>';
+      item.onclick = function() { haptic('light'); self.hide(); app.showGuides(cat.key, cat.title); };
+      self.itemsEl.appendChild(item);
     });
+    var home = document.createElement('div');
+    home.className = 'quick-nav-item quick-nav-item-home';
+    home.innerHTML = '<div class="quick-nav-item-icon" style="background:var(--btn)">' +
+      '<svg width="20" height="20" viewBox="0 0 24 24" fill="var(--btn-text)"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>' +
+      '</div><div class="quick-nav-item-title">🏠 Главное меню</div>';
+    home.onclick = function() { haptic('light'); self.hide(); app.showCategories(); };
+    this.itemsEl.appendChild(home);
+    this.el.classList.add('active');
+    this.overlay.classList.add('active');
+  },
+  hide: function() {
+    this.el.classList.remove('active');
+    this.overlay.classList.remove('active');
+  }
+};
 
-    // Render helpers
-    function renderCardIcon(url) {
-        if (!url) return '';
-        return '<img src="' + url + '" onerror="this.style.display=\'none\'" alt="">';
-    }
+// ═══ APP ═══
+var app = {
+  currentCategory: null,
+  currentCategoryTitle: null,
 
-    function renderBadges(item) {
-        if (!item.has_photo && !item.has_video && !item.has_document) return '';
-        let html = '<div class="card-badges">';
-        if (item.has_photo) html += '<span class="badge badge-photo">📷 Фото</span>';
-        if (item.has_video) html += '<span class="badge badge-video">🎬 Видео</span>';
-        if (item.has_document) html += '<span class="badge badge-doc">📄 Файл</span>';
-        html += '</div>';
-        return html;
-    }
-
-    function renderVideo(url) {
-        if (!url) return '';
-        var yt = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-        if (yt) return '<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/' + yt[1] + '?playsinline=1" allowfullscreen></iframe></div>';
-        if (/\.(mp4|webm|ogg)(\?|$)/i.test(url)) {
-            var ext = url.match(/\.(mp4|webm|ogg)/i)[1];
-            return '<div class="video-wrapper"><video controls preload="metadata" playsinline><source src="' + url + '" type="video/' + ext + '"></video></div>';
-        }
-        return '<a href="' + url + '" target="_blank" class="guide-document"><span class="guide-document-icon">🎬</span><div class="guide-document-info"><div class="guide-document-name">Видео</div><div class="guide-document-hint">Открыть</div></div></a>';
-    }
-
-    function renderDocument(url) {
-        if (!url) return '';
-        var name = decodeURIComponent(url.split('/').pop().split('?')[0]) || 'Документ';
-        var ext = name.split('.').pop().toLowerCase();
-        var icons = { pdf:'📕', doc:'📘', docx:'📘', xls:'📊', xlsx:'📊', png:'🖼', jpg:'🖼', jpeg:'🖼' };
-        return '<a href="' + url + '" target="_blank" class="guide-document"><span class="guide-document-icon">' + (icons[ext]||'📄') + '</span><div class="guide-document-info"><div class="guide-document-name">' + name + '</div><div class="guide-document-hint">Скачать · ' + ext.toUpperCase() + '</div></div></a>';
-    }
-
-    function esc(text) {
-        if (!text) return '';
-        var d = document.createElement('div');
-        d.textContent = text;
-        return d.innerHTML;
-    }
-
-    function pluralize(n, one, few, many) {
-        var m10 = n % 10, m100 = n % 100;
-        if (m100 >= 11 && m100 <= 19) return many;
-        if (m10 === 1) return one;
-        if (m10 >= 2 && m10 <= 4) return few;
-        return many;
-    }
-
-    // Pull to refresh
-    var pullRefresh = {
-        indicator: null,
-        textEl: null,
-        startY: 0,
-        dist: 0,
-        pulling: false,
-        refreshing: false,
-        threshold: 70,
-
-        init: function() {
-            this.indicator = document.getElementById('pull-indicator');
-            this.textEl = this.indicator.querySelector('.pull-text');
-            var self = this;
-            document.addEventListener('touchstart', function(e) { self.onStart(e); }, { passive: true });
-            document.addEventListener('touchmove', function(e) { self.onMove(e); }, { passive: false });
-            document.addEventListener('touchend', function(e) { self.onEnd(e); });
-        },
-
-        onStart: function(e) {
-            if (window.scrollY > 2 || this.refreshing) return;
-            this.startY = e.touches[0].clientY;
-            this.pulling = true;
-            this.dist = 0;
-        },
-
-        onMove: function(e) {
-            if (!this.pulling || this.refreshing) return;
-            this.dist = e.touches[0].clientY - this.startY;
-            if (this.dist < 0) { this.dist = 0; return; }
-            if (window.scrollY > 2) { this.pulling = false; return; }
-            if (this.dist > 10) {
-                e.preventDefault();
-                var d = Math.min(this.dist, 110);
-                this.indicator.classList.add('active');
-                this.indicator.style.height = (d * 0.6) + 'px';
-                if (this.dist >= this.threshold) {
-                    this.textEl.textContent = 'Отпустите для обновления';
-                    this.indicator.classList.add('ready');
-                } else {
-                    this.textEl.textContent = 'Потяните для обновления';
-                    this.indicator.classList.remove('ready');
-                }
-            }
-        },
-
-        onEnd: function() {
-            if (!this.pulling) return;
-            this.pulling = false;
-            this.indicator.classList.remove('active', 'ready');
-            var self = this;
-            if (this.dist >= this.threshold && !this.refreshing) {
-                this.refreshing = true;
-                this.indicator.classList.add('refreshing');
-                this.textEl.textContent = 'Обновление...';
-                haptic('medium');
-                app.refreshCurrentView().then(function() {
-                    haptic('success');
-                    self.indicator.classList.remove('refreshing');
-                    self.refreshing = false;
-                    self.indicator.style.height = '0';
-                }).catch(function() {
-                    self.indicator.classList.remove('refreshing');
-                    self.refreshing = false;
-                    self.indicator.style.height = '0';
-                });
-            } else {
-                this.indicator.style.height = '0';
-            }
-            this.dist = 0;
-        }
-    };
-
-    // FAB
-    var fab = {
-        el: null,
-        container: null,
-        label: null,
-        dragHint: null,
-        holdTimer: null,
-        holdTriggered: false,
-        isDragging: false,
-        dragStarted: false,
-        startX: 0, startY: 0, startLeft: 0, startTop: 0,
-        HOLD_DURATION: 3000,
-        DRAG_THRESHOLD: 10,
-
-        init: function() {
-            this.container = document.getElementById('fab-container');
-            this.el = document.getElementById('fab-back');
-            this.label = document.getElementById('fab-label');
-            this.dragHint = document.getElementById('fab-drag-hint');
-            this.restorePosition();
-            var self = this;
-            this.el.addEventListener('pointerdown', function(e) { self.onPointerDown(e); });
-            document.addEventListener('pointermove', function(e) { self.onPointerMove(e); });
-            document.addEventListener('pointerup', function(e) { self.onPointerUp(e); });
-            document.addEventListener('pointercancel', function() { self.cancelAll(); });
-            this.el.addEventListener('contextmenu', function(e) { e.preventDefault(); });
-            if (!localStorage.getItem('fab_dragged')) this._showDragHint = true;
-        },
-
-        restorePosition: function() {
-            var saved = localStorage.getItem('fab_position');
-            if (saved) {
-                try {
-                    var pos = JSON.parse(saved);
-                    this.container.style.right = pos.right + 'px';
-                    this.container.style.bottom = pos.bottom + 'px';
-                    this.container.style.left = 'auto';
-                    this.container.style.top = 'auto';
-                    return;
-                } catch (e) {}
-            }
-            this.container.style.bottom = '24px';
-            this.container.style.left = '50%';
-            this.container.style.transform = 'translateX(-50%)';
-        },
-
-        savePosition: function() {
-            var rect = this.container.getBoundingClientRect();
-            var right = window.innerWidth - rect.right;
-            var bottom = window.innerHeight - rect.bottom;
-            localStorage.setItem('fab_position', JSON.stringify({ right: right, bottom: bottom }));
-            localStorage.setItem('fab_dragged', '1');
-        },
-
-        onPointerDown: function(e) {
-            e.preventDefault();
-            this.el.setPointerCapture(e.pointerId);
-            this.holdTriggered = false;
-            this.isDragging = false;
-            this.dragStarted = false;
-            this.startX = e.clientX;
-            this.startY = e.clientY;
-            var rect = this.container.getBoundingClientRect();
-            this.startLeft = rect.left;
-            this.startTop = rect.top;
-            this.el.classList.add('holding');
-            var self = this;
-            this.holdTimer = setTimeout(function() {
-                if (!self.dragStarted) {
-                    self.holdTriggered = true;
-                    self.el.classList.remove('holding');
-                    haptic('medium');
-                    quickNav.show(self.container);
-                }
-            }, this.HOLD_DURATION);
-        },
-
-        onPointerMove: function(e) {
-            if (!this.el.hasPointerCapture || !this.el.hasPointerCapture(e.pointerId)) return;
-            var dx = e.clientX - this.startX;
-            var dy = e.clientY - this.startY;
-            var dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist > this.DRAG_THRESHOLD && !this.holdTriggered) {
-                if (!this.dragStarted) {
-                    this.dragStarted = true;
-                    this.isDragging = true;
-                    this.cancelHold();
-                    this.el.classList.add('dragging');
-                    this.container.style.transform = 'none';
-                    this.container.style.left = this.startLeft + 'px';
-                    this.container.style.top = this.startTop + 'px';
-                    this.container.style.right = 'auto';
-                    this.container.style.bottom = 'auto';
-                    if (this.dragHint) this.dragHint.classList.remove('show');
-                }
-                var newLeft = this.startLeft + dx;
-                var newTop = this.startTop + dy;
-                var w = this.container.offsetWidth;
-                var h = this.container.offsetHeight;
-                newLeft = Math.max(4, Math.min(window.innerWidth - w - 4, newLeft));
-                newTop = Math.max(4, Math.min(window.innerHeight - h - 4, newTop));
-                this.container.style.left = newLeft + 'px';
-                this.container.style.top = newTop + 'px';
-            }
-        },
-
-        onPointerUp: function(e) {
-            this.el.classList.remove('dragging');
-            this.cancelHold();
-            if (this.dragStarted) {
-                this.savePosition();
-                var rect = this.container.getBoundingClientRect();
-                var right = window.innerWidth - rect.right;
-                var bottom = window.innerHeight - rect.bottom;
-                this.container.style.left = 'auto';
-                this.container.style.top = 'auto';
-                this.container.style.right = right + 'px';
-                this.container.style.bottom = bottom + 'px';
-                this.container.style.transform = 'none';
-            } else if (!this.holdTriggered) {
-                haptic('light');
-                app.goBack();
-            }
-            this.isDragging = false;
-            this.dragStarted = false;
-        },
-
-        cancelHold: function() {
-            if (this.holdTimer) { clearTimeout(this.holdTimer); this.holdTimer = null; }
-            this.el.classList.remove('holding');
-        },
-
-        cancelAll: function() {
-            this.cancelHold();
-            this.el.classList.remove('dragging');
-            this.isDragging = false;
-            this.dragStarted = false;
-        },
-
-        show: function(labelText) {
-            this.container.classList.add('visible');
-            if (labelText) this.label.textContent = labelText;
-            if (this._showDragHint && this.dragHint) {
-                this._showDragHint = false;
-                var hint = this.dragHint;
-                setTimeout(function() { hint.classList.add('show'); }, 500);
-                setTimeout(function() { hint.classList.remove('show'); }, 4000);
-            }
-        },
-
-        hide: function() {
-            this.container.classList.remove('visible');
-            this.cancelAll();
-        }
-    };
-
-    // Quick Nav
-    var quickNav = {
-        el: document.getElementById('quick-nav'),
-        overlay: document.getElementById('quick-nav-overlay'),
-        itemsEl: document.getElementById('quick-nav-items'),
-        categories: [],
-
-        init: function() {
-            var self = this;
-            this.overlay.addEventListener('click', function() { self.hide(); });
-        },
-
-        show: function(anchorEl) {
-            if (!this.categories.length) return;
-            if (anchorEl) {
-                var rect = anchorEl.getBoundingClientRect();
-                if (rect.top > 320) {
-                    this.el.style.bottom = (window.innerHeight - rect.top + 8) + 'px';
-                    this.el.style.top = 'auto';
-                } else {
-                    this.el.style.top = (rect.bottom + 8) + 'px';
-                    this.el.style.bottom = 'auto';
-                }
-                var centerX = rect.left + rect.width / 2;
-                var left = centerX - 130;
-                left = Math.max(12, Math.min(window.innerWidth - 272, left));
-                this.el.style.left = left + 'px';
-            }
-            this.itemsEl.innerHTML = '';
-            var self = this;
-            this.categories.forEach(function(cat) {
-                var item = document.createElement('div');
-                item.className = 'quick-nav-item';
-                item.innerHTML = '<div class="quick-nav-item-icon">' + renderCardIcon(cat.icon) + '</div>' +
-                    '<div class="quick-nav-item-title">' + cat.title + '</div>';
-                item.onclick = function() { haptic('light'); self.hide(); app.showGuides(cat.key, cat.title); };
-                self.itemsEl.appendChild(item);
-            });
-            var home = document.createElement('div');
-            home.className = 'quick-nav-item quick-nav-item-home';
-            home.innerHTML = '<div class="quick-nav-item-icon" style="background:var(--btn)">' +
-                '<svg width="20" height="20" viewBox="0 0 24 24" fill="var(--btn-text)"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>' +
-                '</div><div class="quick-nav-item-title">🏠 Главное меню</div>';
-            home.onclick = function() { haptic('light'); self.hide(); app.showCategories(); };
-            this.itemsEl.appendChild(home);
-            this.el.classList.add('active');
-            this.overlay.classList.add('active');
-        },
-
-        hide: function() {
-            this.el.classList.remove('active');
-            this.overlay.classList.remove('active');
-        }
-    };
-
-    // App
-    var app = {
-        currentCategory: null,
-        currentCategoryTitle: null,
-
-        apiFetch: function(endpoint) {
-            var headers = {};
-            var initData = getInitData();
-            if (initData) headers['X-Telegram-Init-Data'] = initData;
-            return fetch(API + endpoint, { headers: headers })
-                .then(function(res) {
-                    if (res.status === 403) {
-                        return res.json().catch(function() { return {}; }).then(function(data) {
-                            app.showAccessDenied(data.detail);
-                            throw new Error('ACCESS_DENIED');
-                        });
-                    }
-                    if (!res.ok) throw new Error('Ошибка ' + res.status);
-                    return res.json();
-                });
-        },
-
-        show: function(viewId) {
-            document.querySelectorAll('[id$="-view"]').forEach(function(el) {
-                el.classList.add('hidden');
-            });
-            document.getElementById(viewId).classList.remove('hidden');
-            window.scrollTo({ top: 0 });
-            if (viewId === 'categories-view' || viewId === 'access-denied-view') {
-                fab.hide();
-            } else if (viewId === 'guides-view') {
-                fab.show('Категории');
-            } else if (viewId === 'guide-view') {
-                fab.show('Назад');
-            }
-            if (tg && tg.BackButton) {
-                if (viewId === 'categories-view' || viewId === 'access-denied-view') {
-                    tg.BackButton.hide();
-                } else {
-                    tg.BackButton.show();
-                }
-            }
-            if (viewId !== 'categories-view') {
-                history.pushState({ view: viewId }, '');
-            }
-        },
-
-        goBack: function() {
-            haptic('light');
-            var gv = document.getElementById('guide-view');
-            if (!gv.classList.contains('hidden')) {
-                this.showGuides();
-            } else {
-                this.showCategories();
-            }
-        },
-
-        showAccessDenied: function(msg) {
-            if (msg) document.getElementById('access-denied-msg').textContent = msg;
-            this.show('access-denied-view');
-        },
-
-        checkAuth: function() {
-            return this.apiFetch('/api/auth').then(function() { return true; }).catch(function() { return false; });
-        },
-
-        refreshCurrentView: function() {
-            var catView = document.getElementById('categories-view');
-            var guidesView = document.getElementById('guides-view');
-            if (!catView.classList.contains('hidden')) {
-                return this.showCategories();
-            } else if (!guidesView.classList.contains('hidden')) {
-                return this.showGuides();
-            }
-            return Promise.resolve();
-        },
-
-        showCategories: function() {
-            var self = this;
-            this.show('categories-view');
-            var list = document.getElementById('categories-list');
-            list.innerHTML = renderSkeletonCards(4);
-            return this.apiFetch('/api/categories').then(function(data) {
-                var categories = data.categories;
-                if (!categories || !categories.length) {
-                    list.innerHTML = '<div class="empty">Нет категорий</div>';
-                    return;
-                }
-                quickNav.categories = categories;
-                list.innerHTML = '';
-                categories.forEach(function(cat) {
-                    var card = document.createElement('div');
-                    card.className = 'card';
-                    var w = pluralize(cat.count, 'гайд', 'гайда', 'гайдов');
-                    card.innerHTML = '<div class="card-icon">' + renderCardIcon(cat.icon) + '</div>' +
-                        '<div class="card-content">' +
-                        '<div class="card-title">' + esc(cat.title) + '</div>' +
-                        '<div class="card-subtitle">' + cat.count + ' ' + w + '</div>' +
-                        '</div>' +
-                        '<span class="card-arrow">›</span>';
-                    card.onclick = function() {
-                        haptic('light');
-                        self.showGuides(cat.key, cat.title);
-                    };
-                    list.appendChild(card);
-                });
-                haptic('success');
-            }).catch(function(e) {
-                if (e.message !== 'ACCESS_DENIED') {
-                    list.innerHTML = '<div class="error">' + e.message + '</div>';
-                }
-            });
-        },
-
-        showGuides: function(key, title) {
-            var self = this;
-            if (key) {
-                this.currentCategory = key;
-                this.currentCategoryTitle = title;
-            }
-            if (!this.currentCategory) {
-                return this.showCategories();
-            }
-            this.show('guides-view');
-            document.getElementById('category-title').textContent = this.currentCategoryTitle || '';
-            var list = document.getElementById('guides-list');
-            list.innerHTML = renderSkeletonCards(6);
-            return this.apiFetch('/api/category/' + this.currentCategory).then(function(data) {
-                var items = data.items;
-                if (!items || !items.length) {
-                    list.innerHTML = '<div class="empty">Нет гайдов</div>';
-                    return;
-                }
-                list.innerHTML = '';
-                items.forEach(function(item) {
-                    var card = document.createElement('div');
-                    card.className = 'card';
-                    card.innerHTML = '<div class="card-icon">' + renderCardIcon(item.icon) + '</div>' +
-                        '<div class="card-content">' +
-                        '<div class="card-title">' + esc(item.title) + '</div>' +
-                        (item.preview ? '<div class="card-subtitle">' + esc(item.preview) + '</div>' : '') +
-                        renderBadges(item) +
-                        '</div>' +
-                        '<span class="card-arrow">›</span>';
-                    card.onclick = function() {
-                        haptic('light');
-                        self.showGuide(item.key);
-                    };
-                    list.appendChild(card);
-                });
-                haptic('success');
-            }).catch(function(e) {
-                if (e.message !== 'ACCESS_DENIED') {
-                    list.innerHTML = '<div class="error">' + e.message + '</div>';
-                }
-            });
-        },
-
-        showGuide: function(key) {
-            var self = this;
-            this.show('guide-view');
-            var content = document.getElementById('guide-content');
-            var titleEl = document.getElementById('guide-title');
-            var iconEl = document.getElementById('guide-icon');
-            titleEl.textContent = '';
-            iconEl.innerHTML = '';
-            content.innerHTML = renderSkeletonGuide();
-            return this.apiFetch('/api/guide/' + key).then(function(data) {
-                titleEl.textContent = data.title;
-                if (data.icon) {
-                    iconEl.innerHTML = '<img src="' + data.icon + '" onerror="this.style.display=\'none\'" alt="">';
-                }
-                content.innerHTML = data.text || '<p>Контент отсутствует</p>';
-
-                (data.photo || []).forEach(function(src) {
-                    if (!src || src.startsWith('Ag')) return;
-                    var img = document.createElement('img');
-                    img.src = src;
-                    img.className = 'guide-photo';
-                    img.loading = 'lazy';
-                    img.onerror = function() { this.remove(); };
-                    img.onclick = function() { openLightbox(this.src); };
-                    content.appendChild(img);
-                });
-
-                (data.video || []).forEach(function(url) {
-                    if (!url) return;
-                    var div = document.createElement('div');
-                    div.innerHTML = renderVideo(url);
-                    content.appendChild(div);
-                });
-
-                (data.document || []).forEach(function(url) {
-                    if (!url) return;
-                    var div = document.createElement('div');
-                    div.innerHTML = renderDocument(url);
-                    content.appendChild(div);
-                });
-
-                haptic('success');
-            }).catch(function(e) {
-                if (e.message !== 'ACCESS_DENIED') {
-                    content.innerHTML = '<div class="error">' + e.message + '</div>';
-                }
-            });
-        },
-
-        initSearch: function() {
-            var self = this;
-            var input = document.getElementById('search-input');
-            var t;
-            input.addEventListener('input', function(e) {
-                clearTimeout(t);
-                var q = e.target.value.trim();
-                if (q.length < 2) {
-                    self.showCategories();
-                    return;
-                }
-                t = setTimeout(function() {
-                    haptic('selection');
-                    self.apiFetch('/api/search?q=' + encodeURIComponent(q)).then(function(data) {
-                        var results = data.results;
-                        var list = document.getElementById('categories-list');
-                        if (!results || !results.length) {
-                            list.innerHTML = '<div class="empty">Ничего не найдено</div>';
-                            return;
-                        }
-                        list.innerHTML = '';
-                        results.forEach(function(item) {
-                            var card = document.createElement('div');
-                            card.className = 'card';
-                            card.innerHTML = '<div class="card-icon">' + renderCardIcon(item.icon) + '</div>' +
-                                '<div class="card-content">' +
-                                '<div class="card-title">' + esc(item.title) + '</div>' +
-                                '<div class="card-subtitle">' + esc(item.preview || '') + '</div>' +
-                                '</div>' +
-                                '<span class="card-arrow">›</span>';
-                            card.onclick = function() {
-                                haptic('light');
-                                input.value = '';
-                                self.showGuide(item.key);
-                            };
-                            list.appendChild(card);
-                        });
-                    }).catch(function(e) {
-                        console.error('Search error:', e);
-                    });
-                }, 300);
-            });
-        }
-    };
-
-    // Make app global for back button
-    window.app = app;
-
-    // Init
-    document.addEventListener('DOMContentLoaded', function() {
-        initTheme();
-        fab.init();
-        quickNav.init();
-        pullRefresh.init();
-
-        if (tg && tg.BackButton) {
-            tg.BackButton.onClick(function() { app.goBack(); });
-        }
-
-        window.addEventListener('popstate', function(e) {
-            e.preventDefault();
-            app.goBack();
+  apiFetch: function(endpoint) {
+    var headers = {};
+    var initData = getInitData();
+    if (initData) headers['X-Telegram-Init-Data'] = initData;
+    return fetch(API + endpoint, { headers: headers }).then(function(res) {
+      if (res.status === 403) {
+        return res.json().catch(function() { return {}; }).then(function(data) {
+          app.showAccessDenied(data.detail);
+          throw new Error('ACCESS_DENIED');
         });
-
-        app.checkAuth().then(function(ok) {
-            if (ok) {
-                app.showCategories();
-                app.initSearch();
-            }
-        });
+      }
+      if (!res.ok) throw new Error('Ошибка ' + res.status);
+      return res.json();
     });
+  },
+
+  show: function(viewId) {
+    document.querySelectorAll('[id$="-view"]').forEach(function(el) {
+      el.classList.add('hidden');
+    });
+    document.getElementById(viewId).classList.remove('hidden');
+    window.scrollTo({ top: 0 });
+    if (viewId === 'categories-view' || viewId === 'access-denied-view') {
+      fab.hide();
+    } else if (viewId === 'guides-view') {
+      fab.show('Категории');
+    } else if (viewId === 'guide-view') {
+      fab.show('Назад');
+    }
+    if (tg && tg.BackButton) {
+      if (viewId === 'categories-view' || viewId === 'access-denied-view') {
+        tg.BackButton.hide();
+      } else {
+        tg.BackButton.show();
+      }
+    }
+    if (viewId !== 'categories-view') {
+      history.pushState({ view: viewId }, '');
+    }
+  },
+
+  goBack: function() {
+    haptic('light');
+    var gv = document.getElementById('guide-view');
+    if (!gv.classList.contains('hidden')) {
+      this.showGuides();
+    } else {
+      this.showCategories();
+    }
+  },
+
+  showAccessDenied: function(msg) {
+    if (msg) document.getElementById('access-denied-msg').textContent = msg;
+    this.show('access-denied-view');
+  },
+
+  checkAuth: function() {
+    return this.apiFetch('/api/auth').then(function() { return true; }).catch(function() { return false; });
+  },
+
+  refreshCurrentView: function() {
+    var catView = document.getElementById('categories-view');
+    var guidesView = document.getElementById('guides-view');
+    // Сбрасываем кэш при обновлении
+    _categoriesCache = null;
+    if (!catView.classList.contains('hidden')) {
+      return this.showCategories();
+    } else if (!guidesView.classList.contains('hidden')) {
+      return this.showGuides();
+    }
+    return Promise.resolve();
+  },
+
+  // ═══ КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: кэширование категорий ═══
+  showCategories: function() {
+    var self = this;
+    this.show('categories-view');
+    var list = document.getElementById('categories-list');
+
+    // Если кэш есть — рендерим из кэша без запроса к API
+    if (_categoriesCache) {
+      this._renderCategories(list, _categoriesCache);
+      return Promise.resolve();
+    }
+
+    list.innerHTML = renderSkeletonCards(4);
+    return this.apiFetch('/api/categories').then(function(data) {
+      var categories = data.categories;
+      if (!categories || !categories.length) {
+        list.innerHTML = '<div class="empty">Нет категорий</div>';
+        return;
+      }
+      // Сохраняем в кэш
+      _categoriesCache = categories;
+      quickNav.categories = categories;
+      self._renderCategories(list, categories);
+      haptic('success');
+    }).catch(function(e) {
+      if (e.message !== 'ACCESS_DENIED') {
+        list.innerHTML = '<div class="error">' + esc(e.message) + '</div>';
+      }
+    });
+  },
+
+  _renderCategories: function(list, categories) {
+    var self = this;
+    quickNav.categories = categories;
+    list.innerHTML = '';
+    categories.forEach(function(cat) {
+      var card = document.createElement('div');
+      card.className = 'card';
+      var w = pluralize(cat.count, 'гайд', 'гайда', 'гайдов');
+      card.innerHTML = '<div class="card-icon">' + renderCardIcon(cat.icon) + '</div>' +
+        '<div class="card-content">' +
+        '<div class="card-title">' + esc(cat.title) + '</div>' +
+        '<div class="card-subtitle">' + cat.count + ' ' + w + '</div>' +
+        '</div><span class="card-arrow">›</span>';
+      card.onclick = function() { haptic('light'); self.showGuides(cat.key, cat.title); };
+      list.appendChild(card);
+    });
+  },
+
+  showGuides: function(key, title) {
+    var self = this;
+    if (key) { this.currentCategory = key; this.currentCategoryTitle = title; }
+    if (!this.currentCategory) { return this.showCategories(); }
+    this.show('guides-view');
+    document.getElementById('category-title').textContent = this.currentCategoryTitle || '';
+    var list = document.getElementById('guides-list');
+    list.innerHTML = renderSkeletonCards(6);
+    return this.apiFetch('/api/category/' + this.currentCategory).then(function(data) {
+      var items = data.items;
+      if (!items || !items.length) { list.innerHTML = '<div class="empty">Нет гайдов</div>'; return; }
+      list.innerHTML = '';
+      items.forEach(function(item) {
+        var card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = '<div class="card-icon">' + renderCardIcon(item.icon) + '</div>' +
+          '<div class="card-content">' +
+          '<div class="card-title">' + esc(item.title) + '</div>' +
+          (item.preview ? '<div class="card-subtitle">' + esc(item.preview) + '</div>' : '') +
+          renderBadges(item) +
+          '</div><span class="card-arrow">›</span>';
+        card.onclick = function() { haptic('light'); self.showGuide(item.key); };
+        list.appendChild(card);
+      });
+      haptic('success');
+    }).catch(function(e) {
+      if (e.message !== 'ACCESS_DENIED') {
+        list.innerHTML = '<div class="error">' + esc(e.message) + '</div>';
+      }
+    });
+  },
+
+  showGuide: function(key) {
+    var self = this;
+    this.show('guide-view');
+    var content = document.getElementById('guide-content');
+    var titleEl = document.getElementById('guide-title');
+    var iconEl = document.getElementById('guide-icon');
+    titleEl.textContent = '';
+    iconEl.innerHTML = '';
+    content.innerHTML = renderSkeletonGuide();
+    return this.apiFetch('/api/guide/' + key).then(function(data) {
+      titleEl.textContent = data.title;
+      if (data.icon) {
+        iconEl.innerHTML = '<img src="' + data.icon + '" onerror="this.style.display=\'none\'" alt="">';
+      }
+      content.innerHTML = data.text || '<p>Контент отсутствует</p>';
+      (data.photo || []).forEach(function(src) {
+        if (!src || src.startsWith('Ag')) return;
+        var img = document.createElement('img');
+        img.src = src;
+        img.className = 'guide-photo';
+        img.loading = 'lazy';
+        img.onerror = function() { this.remove(); };
+        img.onclick = function() { openLightbox(this.src); };
+        content.appendChild(img);
+      });
+      (data.video || []).forEach(function(url) {
+        if (!url) return;
+        var div = document.createElement('div');
+        div.innerHTML = renderVideo(url);
+        content.appendChild(div);
+      });
+      (data.document || []).forEach(function(url) {
+        if (!url) return;
+        var div = document.createElement('div');
+        div.innerHTML = renderDocument(url);
+        content.appendChild(div);
+      });
+      haptic('success');
+    }).catch(function(e) {
+      if (e.message !== 'ACCESS_DENIED') {
+        content.innerHTML = '<div class="error">' + esc(e.message) + '</div>';
+      }
+    });
+  },
+
+  initSearch: function() {
+    var self = this;
+    var input = document.getElementById('search-input');
+    var t;
+    var isSearching = false; // флаг активного поиска
+
+    input.addEventListener('input', function(e) {
+      clearTimeout(t);
+      var q = e.target.value.trim();
+
+      if (q.length < 2) {
+        if (isSearching) {
+          // Возвращаем кэшированные категории БЕЗ запроса к API
+          isSearching = false;
+          var list = document.getElementById('categories-list');
+          if (_categoriesCache) {
+            self._renderCategories(list, _categoriesCache);
+          } else {
+            self.showCategories();
+          }
+        }
+        return;
+      }
+
+      isSearching = true;
+      t = setTimeout(function() {
+        haptic('selection');
+        self.apiFetch('/api/search?q=' + encodeURIComponent(q)).then(function(data) {
+          var results = data.results;
+          var list = document.getElementById('categories-list');
+          if (!results || !results.length) {
+            list.innerHTML = '<div class="empty">Ничего не найдено</div>';
+            return;
+          }
+          list.innerHTML = '';
+          results.forEach(function(item) {
+            var card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = '<div class="card-icon">' + renderCardIcon(item.icon) + '</div>' +
+              '<div class="card-content">' +
+              '<div class="card-title">' + esc(item.title) + '</div>' +
+              '<div class="card-subtitle">' + esc(item.preview || '') + '</div>' +
+              '</div><span class="card-arrow">›</span>';
+            card.onclick = function() {
+              haptic('light');
+              input.value = '';
+              isSearching = false;
+              self.showGuide(item.key);
+            };
+            list.appendChild(card);
+          });
+        }).catch(function(e) {
+          console.error('Search error:', e);
+        });
+      }, 300);
+    });
+  }
+};
+
+window.app = app;
+
+document.addEventListener('DOMContentLoaded', function() {
+  initTheme();
+  fab.init();
+  quickNav.init();
+  pullRefresh.init();
+
+  if (tg && tg.BackButton) {
+    tg.BackButton.onClick(function() { app.goBack(); });
+  }
+  window.addEventListener('popstate', function(e) {
+    e.preventDefault();
+    app.goBack();
+  });
+
+  app.checkAuth().then(function(ok) {
+    if (ok) {
+      app.showCategories();
+      app.initSearch();
+    }
+  });
+});
 
 })();
 </script>
