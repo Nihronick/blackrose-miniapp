@@ -194,7 +194,7 @@ async def require_telegram_user(request: Request) -> dict:
     )
 
     if is_telegram:
-        logger.info(
+        logger.debug(
             f"No initData but Telegram context detected "
             f"(UA: {user_agent[:80]})"
         )

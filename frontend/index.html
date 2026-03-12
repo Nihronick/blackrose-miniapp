@@ -19,6 +19,7 @@
             --card-bg: #ffffff;
             --value-bg: rgba(51,144,236,0.1);
             --value-color: #3390ec;
+            --shimmer: rgba(0,0,0,0.04);
         }
         [data-theme="dark"] {
             --bg: #1c1c1e;
@@ -29,7 +30,9 @@
             --card-bg: #2c2c2e;
             --value-bg: rgba(10,132,255,0.15);
             --value-color: #0a84ff;
+            --shimmer: rgba(255,255,255,0.06);
         }
+
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Roboto', sans-serif;
@@ -78,116 +81,135 @@
         .card-subtitle { font-size: 13px; color: var(--hint); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .card-arrow { color: var(--hint); font-size: 20px; flex-shrink: 0; opacity: 0.4; }
 
+        /* ═══ CONTENT BADGES ═══ */
+        .card-badges { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
+        .badge {
+            display: inline-flex; align-items: center; gap: 3px;
+            padding: 2px 7px; border-radius: 6px;
+            font-size: 10px; font-weight: 600; letter-spacing: 0.3px;
+            line-height: 1.4;
+        }
+        .badge-photo { background: rgba(52,199,89,0.12); color: #34c759; }
+        .badge-video { background: rgba(255,149,0,0.12); color: #ff9500; }
+        .badge-doc   { background: rgba(90,200,250,0.12); color: #32ade6; }
+        [data-theme="dark"] .badge-photo { background: rgba(48,209,88,0.18); color: #30d158; }
+        [data-theme="dark"] .badge-video { background: rgba(255,159,10,0.18); color: #ff9f0a; }
+        [data-theme="dark"] .badge-doc   { background: rgba(100,210,255,0.18); color: #64d2ff; }
+
+        /* ═══ SKELETON LOADING ═══ */
+        .skeleton {
+            background: var(--secondary);
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+        .skeleton::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent 0%, var(--shimmer) 50%, transparent 100%);
+            animation: shimmer 1.5s ease-in-out infinite;
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        .skeleton-card {
+            display: flex; align-items: center; gap: 14px; padding: 12px 16px;
+            background: var(--card-bg); border-radius: var(--radius);
+            border: 1px solid var(--separator);
+        }
+        .skeleton-icon { width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0; }
+        .skeleton-text-group { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+        .skeleton-line { height: 14px; border-radius: 4px; }
+        .skeleton-line-short { width: 55%; }
+        .skeleton-line-medium { width: 75%; }
+        .skeleton-line-long { width: 90%; }
+        .skeleton-line-full { width: 100%; }
+
+        .skeleton-guide-header {
+            display: flex; align-items: center; gap: 14px;
+            padding: 12px 0 16px; border-bottom: 1px solid var(--separator); margin-bottom: 16px;
+        }
+        .skeleton-guide-icon { width: 52px; height: 52px; border-radius: 14px; flex-shrink: 0; }
+        .skeleton-guide-title { height: 22px; width: 65%; border-radius: 6px; }
+        .skeleton-guide-body { display: flex; flex-direction: column; gap: 10px; }
+        .skeleton-guide-line { height: 16px; border-radius: 4px; }
+
+        /* ═══ PULL TO REFRESH ═══ */
+        .pull-indicator {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: 0; overflow: hidden;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            background: var(--secondary);
+            z-index: 90;
+            transition: height 0.25s ease;
+        }
+        .pull-indicator.active { transition: none; }
+        .pull-indicator.refreshing { height: 50px; transition: height 0.25s ease; }
+        .pull-spinner {
+            width: 20px; height: 20px;
+            border: 2.5px solid var(--separator); border-top-color: var(--link);
+            border-radius: 50%; transition: transform 0.2s;
+        }
+        .pull-indicator.refreshing .pull-spinner { animation: spin 0.8s linear infinite; }
+        .pull-text { font-size: 13px; color: var(--hint); font-weight: 500; }
+        .pull-indicator .pull-arrow {
+            width: 20px; height: 20px; fill: var(--hint);
+            transition: transform 0.2s;
+        }
+        .pull-indicator.ready .pull-arrow { transform: rotate(180deg); }
+
         /* ═══ DRAGGABLE FAB ═══ */
         .fab-container {
-            position: fixed;
-            z-index: 300;
-            display: none;
-            touch-action: none;
-            /* Позиция по умолчанию — сохраняется в localStorage */
+            position: fixed; z-index: 300; display: none; touch-action: none;
         }
         .fab-container.visible { display: block; }
-
         .fab-back {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 14px 28px;
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--btn-text);
-            background: var(--btn);
-            border: none;
-            border-radius: 50px;
-            cursor: grab;
+            display: flex; align-items: center; gap: 8px;
+            padding: 14px 28px; font-size: 16px; font-weight: 600;
+            color: var(--btn-text); background: var(--btn);
+            border: none; border-radius: 50px; cursor: grab;
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: none;
-            position: relative;
+            user-select: none; -webkit-user-select: none;
+            touch-action: none; position: relative;
             transition: box-shadow 0.2s, transform 0.1s;
         }
-        .fab-back.dragging {
-            cursor: grabbing;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-            transform: scale(1.05);
-        }
-        .fab-back svg {
-            width: 20px; height: 20px; fill: currentColor;
-        }
-
-        /* Кольцо удержания */
+        .fab-back.dragging { cursor: grabbing; box-shadow: 0 8px 32px rgba(0,0,0,0.4); transform: scale(1.05); }
+        .fab-back svg { width: 20px; height: 20px; fill: currentColor; }
         .fab-hold-ring {
-            position: absolute;
-            inset: -4px;
-            border-radius: 54px;
-            border: 3px solid transparent;
-            border-top-color: var(--btn-text);
-            opacity: 0;
-            pointer-events: none;
+            position: absolute; inset: -4px; border-radius: 54px;
+            border: 3px solid transparent; border-top-color: var(--btn-text);
+            opacity: 0; pointer-events: none;
         }
-        .fab-back.holding .fab-hold-ring {
-            opacity: 1;
-            animation: holdSpin 3s linear forwards;
-        }
+        .fab-back.holding .fab-hold-ring { opacity: 1; animation: holdSpin 3s linear forwards; }
         @keyframes holdSpin {
             0% { transform: rotate(0deg); border-color: rgba(255,255,255,0.3); border-top-color: var(--btn-text); }
             100% { transform: rotate(1080deg); border-color: var(--btn-text); }
         }
-
-        /* Подсказка */
         .fab-hold-hint {
-            position: absolute;
-            bottom: calc(100% + 10px);
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--card-bg);
-            color: var(--hint);
-            font-size: 12px;
-            font-weight: 500;
-            padding: 4px 10px;
-            border-radius: 8px;
-            white-space: nowrap;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-            opacity: 0;
-            transition: opacity 0.2s;
-            pointer-events: none;
+            position: absolute; bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%);
+            background: var(--card-bg); color: var(--hint); font-size: 12px; font-weight: 500;
+            padding: 4px 10px; border-radius: 8px; white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15); opacity: 0; transition: opacity 0.2s; pointer-events: none;
         }
         .fab-back.holding .fab-hold-hint { opacity: 1; }
-
-        /* Drag hint — появляется при первом показе */
         .fab-drag-hint {
-            position: absolute;
-            top: calc(100% + 8px);
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--card-bg);
-            color: var(--hint);
-            font-size: 11px;
-            padding: 3px 8px;
-            border-radius: 6px;
-            white-space: nowrap;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
+            position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+            background: var(--card-bg); color: var(--hint); font-size: 11px;
+            padding: 3px 8px; border-radius: 6px; white-space: nowrap;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1); opacity: 0; transition: opacity 0.3s; pointer-events: none;
         }
         .fab-drag-hint.show { opacity: 1; }
 
         /* ═══ QUICK NAV ═══ */
         .quick-nav {
-            position: fixed;
-            z-index: 310;
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 8px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-            border: 1px solid var(--separator);
-            opacity: 0;
-            pointer-events: none;
+            position: fixed; z-index: 310; background: var(--card-bg);
+            border-radius: 16px; padding: 8px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25); border: 1px solid var(--separator);
+            opacity: 0; pointer-events: none;
             transition: opacity 0.2s ease, transform 0.2s ease;
-            min-width: 220px;
-            max-width: 300px;
+            min-width: 220px; max-width: 300px;
         }
         .quick-nav.active { opacity: 1; pointer-events: auto; }
         .quick-nav-title {
@@ -300,10 +322,18 @@
             .card-icon img { width: 45px; height: 45px; }
             .guide-title { font-size: 20px; }
             .fab-back { padding: 12px 22px; font-size: 15px; }
+            .skeleton-icon { width: 50px; height: 50px; border-radius: 10px; }
         }
     </style>
 </head>
 <body>
+
+<!-- PULL TO REFRESH -->
+<div class="pull-indicator" id="pull-indicator">
+    <svg class="pull-arrow" viewBox="0 0 24 24"><path d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"/></svg>
+    <span class="pull-text">Потяните для обновления</span>
+</div>
+
 <div class="app">
     <header class="header">
         <h1>BlackRose Guides</h1>
@@ -375,6 +405,21 @@ const API = (() => {
 const tg = window.Telegram?.WebApp;
 const getInitData = () => tg?.initData || '';
 
+// ═══ HAPTIC FEEDBACK ═══
+function haptic(type = 'light') {
+    try {
+        if (tg?.HapticFeedback) {
+            if (['light','medium','heavy','rigid','soft'].includes(type)) {
+                tg.HapticFeedback.impactOccurred(type);
+            } else if (['success','warning','error'].includes(type)) {
+                tg.HapticFeedback.notificationOccurred(type);
+            } else if (type === 'selection') {
+                tg.HapticFeedback.selectionChanged();
+            }
+        }
+    } catch(e) {}
+}
+
 function initTheme() {
     if (!tg) return;
     try {
@@ -394,12 +439,56 @@ function initTheme() {
     } catch (e) { console.warn('Theme:', e); }
 }
 
+// ═══ SKELETON RENDERERS ═══
+function renderSkeletonCards(count = 4) {
+    let html = '';
+    const widths = [
+        ['75%','50%'], ['85%','60%'], ['65%','45%'], ['90%','55%'],
+        ['70%','40%'], ['80%','65%']
+    ];
+    for (let i = 0; i < count; i++) {
+        const [w1, w2] = widths[i % widths.length];
+        html += `<div class="skeleton-card">
+            <div class="skeleton skeleton-icon"></div>
+            <div class="skeleton-text-group">
+                <div class="skeleton skeleton-line" style="width:${w1}"></div>
+                <div class="skeleton skeleton-line" style="width:${w2};height:12px"></div>
+            </div>
+        </div>`;
+    }
+    return html;
+}
+
+function renderSkeletonGuide() {
+    return `<div class="skeleton-guide-header">
+        <div class="skeleton skeleton-guide-icon"></div>
+        <div class="skeleton skeleton-guide-title"></div>
+    </div>
+    <div class="skeleton-guide-body">
+        <div class="skeleton skeleton-guide-line" style="width:100%"></div>
+        <div class="skeleton skeleton-guide-line" style="width:92%"></div>
+        <div class="skeleton skeleton-guide-line" style="width:85%"></div>
+        <div class="skeleton skeleton-guide-line" style="width:60%"></div>
+        <div class="skeleton skeleton-guide-line" style="width:0;height:12px"></div>
+        <div class="skeleton skeleton-guide-line" style="width:95%"></div>
+        <div class="skeleton skeleton-guide-line" style="width:88%"></div>
+        <div class="skeleton skeleton-guide-line" style="width:78%"></div>
+        <div class="skeleton skeleton-guide-line" style="width:55%"></div>
+        <div class="skeleton skeleton-guide-line" style="width:0;height:12px"></div>
+        <div class="skeleton skeleton-guide-line" style="width:100%"></div>
+        <div class="skeleton skeleton-guide-line" style="width:70%"></div>
+    </div>`;
+}
+
 // ═══ LIGHTBOX ═══
 function openLightbox(src) {
+    haptic('light');
     document.getElementById('lightbox-img').src = src;
     document.getElementById('lightbox').classList.add('active');
 }
-function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); }
+function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+}
 document.getElementById('lightbox').addEventListener('click', e => {
     if (e.target === e.currentTarget) closeLightbox();
 });
@@ -409,20 +498,28 @@ function renderCardIcon(url) {
     return url ? `<img src="${url}" onerror="this.style.display='none'" alt="">` : '';
 }
 
+function renderBadges(item) {
+    let html = '';
+    const has = item.has_photo || item.has_video || item.has_document;
+    if (!has) return '';
+    html = '<div class="card-badges">';
+    if (item.has_photo) html += '<span class="badge badge-photo">📷 Фото</span>';
+    if (item.has_video) html += '<span class="badge badge-video">🎬 Видео</span>';
+    if (item.has_document) html += '<span class="badge badge-doc">📄 Файл</span>';
+    html += '</div>';
+    return html;
+}
+
 function renderVideo(url) {
     if (!url) return '';
-    // YouTube
     const yt = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
     if (yt) return `<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${yt[1]}?playsinline=1" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe></div>`;
-    // Direct video
     if (url.match(/\.(mp4|webm|ogg)(\?|$)/i)) {
         const ext = url.match(/\.(mp4|webm|ogg)/i)[1];
         return `<div class="video-wrapper"><video controls preload="metadata" playsinline controlslist="nodownload"><source src="${url}" type="video/${ext}">Ваш браузер не поддерживает видео</video></div>`;
     }
-    // Google Drive
     const gd = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
     if (gd) return `<div class="video-wrapper"><iframe src="https://drive.google.com/file/d/${gd[1]}/preview" allowfullscreen></iframe></div>`;
-    // Fallback link
     return `<a href="${url}" target="_blank" class="guide-document"><span class="guide-document-icon">🎬</span><div class="guide-document-info"><div class="guide-document-name">Видео</div><div class="guide-document-hint">Открыть в браузере</div></div></a>`;
 }
 
@@ -434,43 +531,118 @@ function renderDocument(url) {
     return `<a href="${url}" target="_blank" class="guide-document"><span class="guide-document-icon">${icons[ext]||'📄'}</span><div class="guide-document-info"><div class="guide-document-name">${name}</div><div class="guide-document-hint">Скачать · ${ext.toUpperCase()}</div></div></a>`;
 }
 
+// ═══ PULL TO REFRESH ═══
+const pullRefresh = {
+    indicator: null,
+    textEl: null,
+    arrowEl: null,
+    startY: 0,
+    dist: 0,
+    pulling: false,
+    refreshing: false,
+    threshold: 70,
+    maxPull: 110,
+
+    init() {
+        this.indicator = document.getElementById('pull-indicator');
+        this.textEl = this.indicator.querySelector('.pull-text');
+        this.arrowEl = this.indicator.querySelector('.pull-arrow');
+
+        document.addEventListener('touchstart', e => this.onStart(e), { passive: true });
+        document.addEventListener('touchmove', e => this.onMove(e), { passive: false });
+        document.addEventListener('touchend', e => this.onEnd(e));
+    },
+
+    canPull() {
+        return window.scrollY <= 2 && !this.refreshing
+            && !document.getElementById('guide-view').classList.contains('hidden')
+            || !document.getElementById('categories-view').classList.contains('hidden')
+            || !document.getElementById('guides-view').classList.contains('hidden');
+    },
+
+    onStart(e) {
+        if (window.scrollY > 2 || this.refreshing) return;
+        this.startY = e.touches[0].clientY;
+        this.pulling = true;
+        this.dist = 0;
+    },
+
+    onMove(e) {
+        if (!this.pulling || this.refreshing) return;
+        const y = e.touches[0].clientY;
+        this.dist = y - this.startY;
+
+        if (this.dist < 0) { this.dist = 0; return; }
+        if (window.scrollY > 2) { this.pulling = false; return; }
+
+        if (this.dist > 10) {
+            e.preventDefault();
+            const d = Math.min(this.dist, this.maxPull);
+            const pct = d / this.maxPull;
+            this.indicator.classList.add('active');
+            this.indicator.style.height = (d * 0.6) + 'px';
+
+            if (this.arrowEl) {
+                this.arrowEl.style.transform = `rotate(${this.dist >= this.threshold ? 180 : 0}deg)`;
+            }
+
+            if (this.dist >= this.threshold) {
+                this.textEl.textContent = 'Отпустите для обновления';
+                this.indicator.classList.add('ready');
+            } else {
+                this.textEl.textContent = 'Потяните для обновления';
+                this.indicator.classList.remove('ready');
+            }
+        }
+    },
+
+    async onEnd() {
+        if (!this.pulling) return;
+        this.pulling = false;
+        this.indicator.classList.remove('active', 'ready');
+
+        if (this.dist >= this.threshold && !this.refreshing) {
+            this.refreshing = true;
+            this.indicator.classList.add('refreshing');
+            this.textEl.textContent = 'Обновление...';
+            haptic('medium');
+
+            try {
+                await app.refreshCurrentView();
+                haptic('success');
+            } catch(e) {
+                haptic('error');
+            }
+
+            this.indicator.classList.remove('refreshing');
+            this.refreshing = false;
+        }
+
+        this.indicator.style.height = '0';
+        this.dist = 0;
+    }
+};
+
 // ═══ DRAGGABLE FAB ═══
 const fab = {
-    el: null,
-    container: null,
-    label: null,
-    dragHint: null,
-
-    // State
-    holdTimer: null,
-    holdTriggered: false,
-    isDragging: false,
-    dragStarted: false,
-    startX: 0, startY: 0,
-    startLeft: 0, startTop: 0,
-    HOLD_DURATION: 3000,
-    DRAG_THRESHOLD: 10,
+    el: null, container: null, label: null, dragHint: null,
+    holdTimer: null, holdTriggered: false,
+    isDragging: false, dragStarted: false,
+    startX: 0, startY: 0, startLeft: 0, startTop: 0,
+    HOLD_DURATION: 3000, DRAG_THRESHOLD: 10,
 
     init() {
         this.container = document.getElementById('fab-container');
         this.el = document.getElementById('fab-back');
         this.label = document.getElementById('fab-label');
         this.dragHint = document.getElementById('fab-drag-hint');
-
-        // Восстанавливаем позицию
         this.restorePosition();
-
-        // Events
         this.el.addEventListener('pointerdown', e => this.onPointerDown(e));
         document.addEventListener('pointermove', e => this.onPointerMove(e));
         document.addEventListener('pointerup', e => this.onPointerUp(e));
         document.addEventListener('pointercancel', () => this.cancelAll());
         this.el.addEventListener('contextmenu', e => e.preventDefault());
-
-        // Показать подсказку перетаскивания при первом показе
-        if (!localStorage.getItem('fab_dragged')) {
-            this._showDragHint = true;
-        }
+        if (!localStorage.getItem('fab_dragged')) this._showDragHint = true;
     },
 
     restorePosition() {
@@ -485,7 +657,6 @@ const fab = {
                 return;
             } catch (e) {}
         }
-        // Позиция по умолчанию
         this.container.style.bottom = '24px';
         this.container.style.left = '50%';
         this.container.style.transform = 'translateX(-50%)';
@@ -502,25 +673,16 @@ const fab = {
     onPointerDown(e) {
         e.preventDefault();
         this.el.setPointerCapture(e.pointerId);
-
-        this.holdTriggered = false;
-        this.isDragging = false;
-        this.dragStarted = false;
-        this.startX = e.clientX;
-        this.startY = e.clientY;
-
+        this.holdTriggered = false; this.isDragging = false; this.dragStarted = false;
+        this.startX = e.clientX; this.startY = e.clientY;
         const rect = this.container.getBoundingClientRect();
-        this.startLeft = rect.left;
-        this.startTop = rect.top;
-
-        // Таймер удержания
+        this.startLeft = rect.left; this.startTop = rect.top;
         this.el.classList.add('holding');
         this.holdTimer = setTimeout(() => {
             if (!this.dragStarted) {
                 this.holdTriggered = true;
                 this.el.classList.remove('holding');
-                if (navigator.vibrate) navigator.vibrate(50);
-                if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+                haptic('medium');
                 quickNav.show(this.container);
             }
         }, this.HOLD_DURATION);
@@ -528,98 +690,63 @@ const fab = {
 
     onPointerMove(e) {
         if (!this.el.hasPointerCapture?.(e.pointerId)) return;
-
-        const dx = e.clientX - this.startX;
-        const dy = e.clientY - this.startY;
+        const dx = e.clientX - this.startX, dy = e.clientY - this.startY;
         const dist = Math.sqrt(dx * dx + dy * dy);
-
-        // Если двигаем больше порога — начинаем drag
         if (dist > this.DRAG_THRESHOLD && !this.holdTriggered) {
             if (!this.dragStarted) {
-                this.dragStarted = true;
-                this.isDragging = true;
-                this.cancelHold();
-                this.el.classList.add('dragging');
-
-                // Убираем transform: translateX(-50%)
+                this.dragStarted = true; this.isDragging = true;
+                this.cancelHold(); this.el.classList.add('dragging');
                 this.container.style.transform = 'none';
                 this.container.style.left = this.startLeft + 'px';
                 this.container.style.top = this.startTop + 'px';
-                this.container.style.right = 'auto';
-                this.container.style.bottom = 'auto';
-
-                // Скрываем drag hint навсегда
+                this.container.style.right = 'auto'; this.container.style.bottom = 'auto';
                 if (this.dragHint) this.dragHint.classList.remove('show');
             }
-
-            // Двигаем кнопку
-            let newLeft = this.startLeft + dx;
-            let newTop = this.startTop + dy;
-
-            // Ограничиваем экраном
-            const w = this.container.offsetWidth;
-            const h = this.container.offsetHeight;
+            let newLeft = this.startLeft + dx, newTop = this.startTop + dy;
+            const w = this.container.offsetWidth, h = this.container.offsetHeight;
             newLeft = Math.max(4, Math.min(window.innerWidth - w - 4, newLeft));
             newTop = Math.max(4, Math.min(window.innerHeight - h - 4, newTop));
-
             this.container.style.left = newLeft + 'px';
             this.container.style.top = newTop + 'px';
         }
     },
 
     onPointerUp(e) {
-        this.el.classList.remove('dragging');
-        this.cancelHold();
-
+        this.el.classList.remove('dragging'); this.cancelHold();
         if (this.dragStarted) {
-            // Закончили drag — сохраняем позицию
             this.savePosition();
-            // Конвертируем в right/bottom
             const rect = this.container.getBoundingClientRect();
             const right = window.innerWidth - rect.right;
             const bottom = window.innerHeight - rect.bottom;
-            this.container.style.left = 'auto';
-            this.container.style.top = 'auto';
+            this.container.style.left = 'auto'; this.container.style.top = 'auto';
             this.container.style.right = right + 'px';
             this.container.style.bottom = bottom + 'px';
             this.container.style.transform = 'none';
         } else if (!this.holdTriggered) {
-            // Обычный тап — назад
+            haptic('light');
             app.goBack();
         }
-
-        this.isDragging = false;
-        this.dragStarted = false;
+        this.isDragging = false; this.dragStarted = false;
     },
 
     cancelHold() {
         if (this.holdTimer) { clearTimeout(this.holdTimer); this.holdTimer = null; }
         this.el.classList.remove('holding');
     },
-
     cancelAll() {
-        this.cancelHold();
-        this.el.classList.remove('dragging');
-        this.isDragging = false;
-        this.dragStarted = false;
+        this.cancelHold(); this.el.classList.remove('dragging');
+        this.isDragging = false; this.dragStarted = false;
     },
-
     show(labelText) {
         this.container.classList.add('visible');
         if (labelText) this.label.textContent = labelText;
-
-        // Показать drag hint один раз
         if (this._showDragHint && this.dragHint) {
             this._showDragHint = false;
             setTimeout(() => this.dragHint.classList.add('show'), 500);
             setTimeout(() => this.dragHint.classList.remove('show'), 4000);
         }
     },
-
-    hide() {
-        this.container.classList.remove('visible');
-        this.cancelAll();
-    }
+    hide() { this.container.classList.remove('visible'); this.cancelAll(); }
 };
 
 // ═══ QUICK NAV ═══
@@ -629,19 +756,13 @@ const quickNav = {
     itemsEl: document.getElementById('quick-nav-items'),
     categories: [],
 
-    init() {
-        this.overlay.addEventListener('click', () => this.hide());
-    },
+    init() { this.overlay.addEventListener('click', () => this.hide()); },
 
     show(anchorEl) {
         if (!this.categories.length) return;
-
-        // Позиция попапа рядом с кнопкой
         if (anchorEl) {
             const rect = anchorEl.getBoundingClientRect();
             const popupH = 300;
-
-            // Показываем над кнопкой если есть место, иначе под
             if (rect.top > popupH + 20) {
                 this.el.style.bottom = (window.innerHeight - rect.top + 8) + 'px';
                 this.el.style.top = 'auto';
@@ -649,46 +770,32 @@ const quickNav = {
                 this.el.style.top = (rect.bottom + 8) + 'px';
                 this.el.style.bottom = 'auto';
             }
-
-            // Горизонтально — по центру кнопки
-            const centerX = rect.left + rect.width / 2;
-            const popupW = 260;
+            const centerX = rect.left + rect.width / 2, popupW = 260;
             let left = centerX - popupW / 2;
             left = Math.max(12, Math.min(window.innerWidth - popupW - 12, left));
-            this.el.style.left = left + 'px';
-            this.el.style.transform = 'none';
+            this.el.style.left = left + 'px'; this.el.style.transform = 'none';
         }
-
         this.itemsEl.innerHTML = '';
-
         this.categories.forEach(cat => {
             const item = document.createElement('div');
             item.className = 'quick-nav-item';
-            item.innerHTML = `
-                <div class="quick-nav-item-icon">${renderCardIcon(cat.icon)}</div>
+            item.innerHTML = `<div class="quick-nav-item-icon">${renderCardIcon(cat.icon)}</div>
                 <div class="quick-nav-item-title">${cat.title}</div>`;
-            item.onclick = () => { this.hide(); app.showGuides(cat.key, cat.title); };
+            item.onclick = () => { haptic('light'); this.hide(); app.showGuides(cat.key, cat.title); };
             this.itemsEl.appendChild(item);
         });
-
         const home = document.createElement('div');
         home.className = 'quick-nav-item quick-nav-item-home';
-        home.innerHTML = `
-            <div class="quick-nav-item-icon" style="background:var(--btn)">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--btn-text)"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-            </div>
-            <div class="quick-nav-item-title">🏠 Главное меню</div>`;
-        home.onclick = () => { this.hide(); app.showCategories(); };
+        home.innerHTML = `<div class="quick-nav-item-icon" style="background:var(--btn)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--btn-text)"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        </div><div class="quick-nav-item-title">🏠 Главное меню</div>`;
+        home.onclick = () => { haptic('light'); this.hide(); app.showCategories(); };
         this.itemsEl.appendChild(home);
-
         this.el.classList.add('active');
         this.overlay.classList.add('active');
     },
 
-    hide() {
-        this.el.classList.remove('active');
-        this.overlay.classList.remove('active');
-    }
+    hide() { this.el.classList.remove('active'); this.overlay.classList.remove('active'); }
 };
 
 // ═══ APP ═══
@@ -729,6 +836,7 @@ const app = {
     },
 
     goBack() {
+        haptic('light');
         const gv = document.getElementById('guide-view');
         if (!gv.classList.contains('hidden')) this.showGuides();
         else this.showCategories();
@@ -744,10 +852,24 @@ const app = {
         catch { return false; }
     },
 
+    async refreshCurrentView() {
+        const catView = document.getElementById('categories-view');
+        const guidesView = document.getElementById('guides-view');
+        const guideView = document.getElementById('guide-view');
+
+        if (!catView.classList.contains('hidden')) {
+            await this.showCategories();
+        } else if (!guidesView.classList.contains('hidden')) {
+            await this.showGuides();
+        } else if (!guideView.classList.contains('hidden')) {
+            // На странице гайда — не перезагружаем
+        }
+    },
+
     async showCategories() {
         this.show('categories-view');
         const list = document.getElementById('categories-list');
-        list.innerHTML = '<div class="loading">Загрузка...</div>';
+        list.innerHTML = renderSkeletonCards(4);
         try {
             const { categories } = await this.apiFetch('/api/categories');
             if (!categories.length) { list.innerHTML = '<div class="empty">Нет категорий</div>'; return; }
@@ -764,9 +886,10 @@ const app = {
                         <div class="card-subtitle">${cat.count} ${w}</div>
                     </div>
                     <span class="card-arrow">›</span>`;
-                card.onclick = () => this.showGuides(cat.key, cat.title);
+                card.onclick = () => { haptic('light'); this.showGuides(cat.key, cat.title); };
                 list.appendChild(card);
             });
+            haptic('success');
         } catch (e) {
             if (e.message !== 'ACCESS_DENIED') list.innerHTML = `<div class="error">${e.message}</div>`;
         }
@@ -778,7 +901,7 @@ const app = {
         this.show('guides-view');
         document.getElementById('category-title').textContent = this.currentCategoryTitle || '';
         const list = document.getElementById('guides-list');
-        list.innerHTML = '<div class="loading">Загрузка...</div>';
+        list.innerHTML = renderSkeletonCards(6);
         try {
             const { items } = await this.apiFetch(`/api/category/${this.currentCategory}`);
             if (!items.length) { list.innerHTML = '<div class="empty">Нет гайдов</div>'; return; }
@@ -786,20 +909,18 @@ const app = {
             items.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'card';
-                let badges = '';
-                if (item.has_photo) badges += '📷 ';
-                if (item.has_video) badges += '🎬 ';
-                if (item.has_document) badges += '📄 ';
                 card.innerHTML = `
                     <div class="card-icon">${renderCardIcon(item.icon)}</div>
                     <div class="card-content">
                         <div class="card-title">${this.esc(item.title)}</div>
-                        ${item.preview ? `<div class="card-subtitle">${badges}${this.esc(item.preview)}</div>` : ''}
+                        ${item.preview ? `<div class="card-subtitle">${this.esc(item.preview)}</div>` : ''}
+                        ${renderBadges(item)}
                     </div>
                     <span class="card-arrow">›</span>`;
-                card.onclick = () => this.showGuide(item.key);
+                card.onclick = () => { haptic('light'); this.showGuide(item.key); };
                 list.appendChild(card);
             });
+            haptic('success');
         } catch (e) {
             if (e.message !== 'ACCESS_DENIED') list.innerHTML = `<div class="error">${e.message}</div>`;
         }
@@ -811,7 +932,7 @@ const app = {
         const titleEl = document.getElementById('guide-title');
         const iconEl = document.getElementById('guide-icon');
         titleEl.textContent = ''; iconEl.innerHTML = '';
-        content.innerHTML = '<div class="loading">Загрузка...</div>';
+        content.innerHTML = renderSkeletonGuide();
         try {
             const data = await this.apiFetch(`/api/guide/${key}`);
             titleEl.textContent = data.title;
@@ -826,18 +947,22 @@ const app = {
                 img.onclick = function() { openLightbox(this.src); };
                 content.appendChild(img);
             });
+
             (data.video || []).forEach(url => {
                 if (!url) return;
                 const div = document.createElement('div');
                 div.innerHTML = renderVideo(url);
                 content.appendChild(div);
             });
+
             (data.document || []).forEach(url => {
                 if (!url) return;
                 const div = document.createElement('div');
                 div.innerHTML = renderDocument(url);
                 content.appendChild(div);
             });
+
+            haptic('success');
         } catch (e) {
             if (e.message !== 'ACCESS_DENIED')
                 content.innerHTML = `<div class="error">${e.message}</div>`;
@@ -852,6 +977,7 @@ const app = {
             const q = e.target.value.trim();
             if (q.length < 2) { this.showCategories(); return; }
             t = setTimeout(async () => {
+                haptic('selection');
                 try {
                     const { results } = await this.apiFetch(`/api/search?q=${encodeURIComponent(q)}`);
                     const list = document.getElementById('categories-list');
@@ -867,7 +993,7 @@ const app = {
                                 <div class="card-subtitle">${this.esc(item.preview || '')}</div>
                             </div>
                             <span class="card-arrow">›</span>`;
-                        card.onclick = () => { input.value = ''; this.showGuide(item.key); };
+                        card.onclick = () => { haptic('light'); input.value = ''; this.showGuide(item.key); };
                         list.appendChild(card);
                     });
                 } catch (e) { console.error('Search:', e); }
@@ -880,6 +1006,7 @@ const app = {
         const d = document.createElement('div');
         d.textContent = text; return d.innerHTML;
     },
+
     pluralize(n, one, few, many) {
         const m10 = n % 10, m100 = n % 100;
         if (m100 >= 11 && m100 <= 19) return many;
@@ -894,6 +1021,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     initTheme();
     fab.init();
     quickNav.init();
+    pullRefresh.init();
     if (tg?.BackButton) tg.BackButton.onClick(() => app.goBack());
     window.addEventListener('popstate', e => { e.preventDefault(); app.goBack(); });
     const ok = await app.checkAuth();
