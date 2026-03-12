@@ -17,8 +17,6 @@
             --separator: rgba(0,0,0,0.08);
             --radius: 14px;
             --card-bg: #ffffff;
-            --value-bg: rgba(51,144,236,0.1);
-            --value-color: #3390ec;
             --shimmer: rgba(0,0,0,0.04);
         }
         [data-theme="dark"] {
@@ -28,8 +26,6 @@
             --secondary: #2c2c2e;
             --separator: rgba(255,255,255,0.08);
             --card-bg: #2c2c2e;
-            --value-bg: rgba(10,132,255,0.15);
-            --value-color: #0a84ff;
             --shimmer: rgba(255,255,255,0.06);
         }
 
@@ -44,12 +40,10 @@
         }
         .app { max-width: 640px; margin: 0 auto; padding: 0 16px; }
 
-        /* ═══ HEADER ═══ */
         .header { position: sticky; top: 0; z-index: 100; background: var(--bg); padding: 16px 0 12px; }
         .header h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
         .header p { color: var(--hint); margin-top: 2px; font-size: 15px; }
 
-        /* ═══ SEARCH ═══ */
         .search { padding: 8px 0 16px; }
         .search input {
             width: 100%; padding: 10px 16px 10px 40px; font-size: 16px;
@@ -59,10 +53,8 @@
         }
         .search input:focus { outline: 2px solid var(--btn); outline-offset: -2px; }
 
-        /* ═══ LIST ═══ */
         .list { display: flex; flex-direction: column; gap: 6px; padding-bottom: 20px; }
 
-        /* ═══ CARD ═══ */
         .card {
             display: flex; align-items: center; gap: 14px; padding: 12px 16px;
             background: var(--card-bg); border-radius: var(--radius);
@@ -81,90 +73,56 @@
         .card-subtitle { font-size: 13px; color: var(--hint); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .card-arrow { color: var(--hint); font-size: 20px; flex-shrink: 0; opacity: 0.4; }
 
-        /* ═══ CONTENT BADGES ═══ */
+        /* Badges */
         .card-badges { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
         .badge {
             display: inline-flex; align-items: center; gap: 3px;
             padding: 2px 7px; border-radius: 6px;
-            font-size: 10px; font-weight: 600; letter-spacing: 0.3px;
-            line-height: 1.4;
+            font-size: 10px; font-weight: 600; line-height: 1.4;
         }
         .badge-photo { background: rgba(52,199,89,0.12); color: #34c759; }
         .badge-video { background: rgba(255,149,0,0.12); color: #ff9500; }
-        .badge-doc   { background: rgba(90,200,250,0.12); color: #32ade6; }
+        .badge-doc { background: rgba(90,200,250,0.12); color: #32ade6; }
         [data-theme="dark"] .badge-photo { background: rgba(48,209,88,0.18); color: #30d158; }
         [data-theme="dark"] .badge-video { background: rgba(255,159,10,0.18); color: #ff9f0a; }
-        [data-theme="dark"] .badge-doc   { background: rgba(100,210,255,0.18); color: #64d2ff; }
+        [data-theme="dark"] .badge-doc { background: rgba(100,210,255,0.18); color: #64d2ff; }
 
-        /* ═══ SKELETON LOADING ═══ */
-        .skeleton {
-            background: var(--secondary);
-            border-radius: 6px;
-            position: relative;
-            overflow: hidden;
-        }
+        /* Skeleton */
+        .skeleton { background: var(--secondary); border-radius: 6px; position: relative; overflow: hidden; }
         .skeleton::after {
-            content: '';
-            position: absolute;
-            inset: 0;
+            content: ''; position: absolute; inset: 0;
             background: linear-gradient(90deg, transparent 0%, var(--shimmer) 50%, transparent 100%);
             animation: shimmer 1.5s ease-in-out infinite;
         }
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
+        @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
         .skeleton-card {
             display: flex; align-items: center; gap: 14px; padding: 12px 16px;
-            background: var(--card-bg); border-radius: var(--radius);
-            border: 1px solid var(--separator);
+            background: var(--card-bg); border-radius: var(--radius); border: 1px solid var(--separator);
         }
         .skeleton-icon { width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0; }
         .skeleton-text-group { flex: 1; display: flex; flex-direction: column; gap: 8px; }
         .skeleton-line { height: 14px; border-radius: 4px; }
-        .skeleton-line-short { width: 55%; }
-        .skeleton-line-medium { width: 75%; }
-        .skeleton-line-long { width: 90%; }
-        .skeleton-line-full { width: 100%; }
 
-        .skeleton-guide-header {
-            display: flex; align-items: center; gap: 14px;
-            padding: 12px 0 16px; border-bottom: 1px solid var(--separator); margin-bottom: 16px;
-        }
-        .skeleton-guide-icon { width: 52px; height: 52px; border-radius: 14px; flex-shrink: 0; }
-        .skeleton-guide-title { height: 22px; width: 65%; border-radius: 6px; }
-        .skeleton-guide-body { display: flex; flex-direction: column; gap: 10px; }
-        .skeleton-guide-line { height: 16px; border-radius: 4px; }
-
-        /* ═══ PULL TO REFRESH ═══ */
+        /* Pull to refresh */
         .pull-indicator {
-            position: fixed; top: 0; left: 0; right: 0;
-            height: 0; overflow: hidden;
+            position: fixed; top: 0; left: 0; right: 0; height: 0; overflow: hidden;
             display: flex; align-items: center; justify-content: center; gap: 8px;
-            background: var(--secondary);
-            z-index: 90;
-            transition: height 0.25s ease;
-            pointer-events: none; /* Защита от блокировки кликов */
+            background: var(--secondary); z-index: 90; transition: height 0.25s ease;
         }
         .pull-indicator.active { transition: none; }
-        .pull-indicator.refreshing { height: 50px; transition: height 0.25s ease; }
+        .pull-indicator.refreshing { height: 50px; }
         .pull-spinner {
             width: 20px; height: 20px;
             border: 2.5px solid var(--separator); border-top-color: var(--link);
-            border-radius: 50%; transition: transform 0.2s;
+            border-radius: 50%;
         }
         .pull-indicator.refreshing .pull-spinner { animation: spin 0.8s linear infinite; }
         .pull-text { font-size: 13px; color: var(--hint); font-weight: 500; }
-        .pull-indicator .pull-arrow {
-            width: 20px; height: 20px; fill: var(--hint);
-            transition: transform 0.2s;
-        }
+        .pull-arrow { width: 20px; height: 20px; fill: var(--hint); transition: transform 0.2s; }
         .pull-indicator.ready .pull-arrow { transform: rotate(180deg); }
 
-        /* ═══ DRAGGABLE FAB ═══ */
-        .fab-container {
-            position: fixed; z-index: 300; display: none; touch-action: none;
-        }
+        /* FAB */
+        .fab-container { position: fixed; z-index: 300; display: none; touch-action: none; }
         .fab-container.visible { display: block; }
         .fab-back {
             display: flex; align-items: center; gap: 8px;
@@ -172,8 +130,7 @@
             color: var(--btn-text); background: var(--btn);
             border: none; border-radius: 50px; cursor: grab;
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            user-select: none; -webkit-user-select: none;
-            touch-action: none; position: relative;
+            user-select: none; touch-action: none; position: relative;
             transition: box-shadow 0.2s, transform 0.1s;
         }
         .fab-back.dragging { cursor: grabbing; box-shadow: 0 8px 32px rgba(0,0,0,0.4); transform: scale(1.05); }
@@ -203,20 +160,16 @@
         }
         .fab-drag-hint.show { opacity: 1; }
 
-        /* ═══ QUICK NAV ═══ */
+        /* Quick Nav */
         .quick-nav {
             position: fixed; z-index: 310; background: var(--card-bg);
             border-radius: 16px; padding: 8px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.25); border: 1px solid var(--separator);
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.2s ease, transform 0.2s ease;
+            opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
             min-width: 220px; max-width: 300px;
         }
         .quick-nav.active { opacity: 1; pointer-events: auto; }
-        .quick-nav-title {
-            font-size: 12px; font-weight: 600; color: var(--hint);
-            text-transform: uppercase; letter-spacing: 0.5px; padding: 4px 12px 8px;
-        }
+        .quick-nav-title { font-size: 12px; font-weight: 600; color: var(--hint); text-transform: uppercase; padding: 4px 12px 8px; }
         .quick-nav-item {
             display: flex; align-items: center; gap: 12px;
             padding: 10px 12px; border-radius: 10px; cursor: pointer;
@@ -230,13 +183,11 @@
         }
         .quick-nav-item-icon img { width: 28px; height: 28px; object-fit: contain; }
         .quick-nav-item-title { font-size: 15px; font-weight: 500; }
-        .quick-nav-item-home {
-            border-top: 1px solid var(--separator); margin-top: 4px; padding-top: 12px;
-        }
+        .quick-nav-item-home { border-top: 1px solid var(--separator); margin-top: 4px; padding-top: 12px; }
         .quick-nav-overlay { position: fixed; inset: 0; z-index: 305; display: none; }
         .quick-nav-overlay.active { display: block; }
 
-        /* ═══ GUIDE ═══ */
+        /* Guide */
         .guide { padding: 8px 0; }
         .guide-header {
             display: flex; align-items: center; gap: 14px;
@@ -249,8 +200,6 @@
         }
         .guide-icon img { width: 40px; height: 40px; object-fit: contain; }
         .guide-title { font-size: 22px; font-weight: 700; line-height: 1.2; }
-
-        /* ═══ GUIDE CONTENT ═══ */
         .guide-content { font-size: 18px; line-height: 1.6; word-wrap: break-word; }
         .guide-content strong { font-weight: 600; color: var(--link); }
         .guide-content em { font-style: italic; }
@@ -263,7 +212,6 @@
             border-radius: 12px; margin: 16px 0; cursor: pointer;
         }
 
-        /* ═══ VIDEO ═══ */
         .video-wrapper {
             position: relative; padding-bottom: 56.25%; height: 0;
             overflow: hidden; border-radius: 12px; margin: 16px 0; background: #000;
@@ -272,7 +220,6 @@
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;
         }
 
-        /* ═══ DOCUMENT ═══ */
         .guide-document {
             display: flex; align-items: center; gap: 12px; padding: 12px 16px;
             margin: 12px 0; background: var(--secondary); border-radius: 12px;
@@ -284,7 +231,6 @@
         .guide-document-name { font-weight: 600; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .guide-document-hint { font-size: 13px; color: var(--hint); }
 
-        /* ═══ LIGHTBOX ═══ */
         .lightbox {
             display: none; position: fixed; inset: 0; z-index: 500;
             background: rgba(0,0,0,0.92); align-items: center; justify-content: center; cursor: pointer;
@@ -298,23 +244,16 @@
             align-items: center; justify-content: center;
         }
 
-        /* ═══ ACCESS DENIED ═══ */
         .access-denied { text-align: center; padding: 80px 20px; }
         .access-denied-icon { font-size: 64px; margin-bottom: 16px; }
         .access-denied h2 { font-size: 22px; margin-bottom: 8px; }
         .access-denied p { color: var(--hint); font-size: 15px; line-height: 1.5; }
 
-        /* ═══ STATES ═══ */
         .hidden { display: none !important; }
-        .loading { text-align: center; padding: 60px 20px; color: var(--hint); font-size: 15px; }
-        .loading::before {
-            content: ""; display: block; width: 28px; height: 28px; margin: 0 auto 12px;
-            border: 3px solid var(--separator); border-top-color: var(--link);
-            border-radius: 50%; animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
         .error { color: #ff3b30; padding: 24px; text-align: center; background: rgba(255,59,48,0.08); border-radius: 12px; font-size: 15px; }
         .empty { text-align: center; padding: 60px 20px; color: var(--hint); font-size: 15px; }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         @media (max-width: 480px) {
             .header h1 { font-size: 24px; }
@@ -323,13 +262,11 @@
             .card-icon img { width: 45px; height: 45px; }
             .guide-title { font-size: 20px; }
             .fab-back { padding: 12px 22px; font-size: 15px; }
-            .skeleton-icon { width: 50px; height: 50px; border-radius: 10px; }
         }
     </style>
 </head>
 <body>
 
-<!-- PULL TO REFRESH -->
 <div class="pull-indicator" id="pull-indicator">
     <svg class="pull-arrow" viewBox="0 0 24 24"><path d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"/></svg>
     <span class="pull-text">Потяните для обновления</span>
@@ -345,7 +282,7 @@
         <div class="access-denied">
             <div class="access-denied-icon">🔒</div>
             <h2>Требуется авторизация</h2>
-            <p id="access-denied-msg">Откройте бота @blackrosesl1_bot, нажмите /start и используйте кнопку «📖 Открыть гайды».</p>
+            <p id="access-denied-msg">Откройте бота @blackrosesl1_bot и используйте кнопку «📖 Открыть гайды».</p>
         </div>
     </div>
 
@@ -372,7 +309,6 @@
     </div>
 </div>
 
-<!-- DRAGGABLE FAB -->
 <div class="fab-container" id="fab-container">
     <button class="fab-back" id="fab-back">
         <div class="fab-hold-ring"></div>
@@ -383,654 +319,723 @@
     </button>
 </div>
 
-<!-- QUICK NAV -->
 <div class="quick-nav-overlay" id="quick-nav-overlay"></div>
 <div class="quick-nav" id="quick-nav">
     <div class="quick-nav-title">Перейти в раздел</div>
     <div id="quick-nav-items"></div>
 </div>
 
-<!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox">
     <button class="lightbox-close" onclick="closeLightbox()">✕</button>
     <img id="lightbox-img" src="" alt="">
 </div>
 
 <script>
-const API = (() => {
-    const h = window.location.hostname;
-    return (h === 'localhost' || h === '127.0.0.1')
-        ? 'http://127.0.0.1:8000' : window.location.origin;
-})();
+(function() {
+    'use strict';
 
-const tg = window.Telegram?.WebApp;
-const getInitData = () => tg?.initData || '';
+    const API = (() => {
+        const h = window.location.hostname;
+        return (h === 'localhost' || h === '127.0.0.1') ? 'http://127.0.0.1:8000' : window.location.origin;
+    })();
 
-// ═══ HAPTIC FEEDBACK ═══
-function haptic(type = 'light') {
-    try {
-        if (tg?.HapticFeedback) {
-            if (['light','medium','heavy','rigid','soft'].includes(type)) {
-                tg.HapticFeedback.impactOccurred(type);
-            } else if (['success','warning','error'].includes(type)) {
-                tg.HapticFeedback.notificationOccurred(type);
-            } else if (type === 'selection') {
-                tg.HapticFeedback.selectionChanged();
-            }
-        }
-    } catch(e) {}
-}
+    const tg = window.Telegram?.WebApp;
+    const getInitData = () => tg?.initData || '';
 
-function initTheme() {
-    if (!tg) return;
-    try {
-        tg.ready(); tg.expand();
-        document.documentElement.setAttribute('data-theme', tg.colorScheme || 'light');
-        const r = document.documentElement.style, p = tg.themeParams || {};
-        if (p.bg_color) r.setProperty('--bg', p.bg_color);
-        if (p.text_color) r.setProperty('--text', p.text_color);
-        if (p.hint_color) r.setProperty('--hint', p.hint_color);
-        if (p.link_color) r.setProperty('--link', p.link_color);
-        if (p.button_color) r.setProperty('--btn', p.button_color);
-        if (p.button_text_color) r.setProperty('--btn-text', p.button_text_color);
-        if (p.secondary_bg_color) {
-            r.setProperty('--secondary', p.secondary_bg_color);
-            r.setProperty('--card-bg', p.secondary_bg_color);
-        }
-    } catch (e) { console.warn('Theme:', e); }
-}
-
-// ═══ SKELETON RENDERERS ═══
-function renderSkeletonCards(count = 4) {
-    let html = '';
-    const widths = [
-        ['75%','50%'], ['85%','60%'], ['65%','45%'], ['90%','55%'],
-        ['70%','40%'], ['80%','65%']
-    ];
-    for (let i = 0; i < count; i++) {
-        const [w1, w2] = widths[i % widths.length];
-        html += `<div class="skeleton-card">
-            <div class="skeleton skeleton-icon"></div>
-            <div class="skeleton-text-group">
-                <div class="skeleton skeleton-line" style="width:${w1}"></div>
-                <div class="skeleton skeleton-line" style="width:${w2};height:12px"></div>
-            </div>
-        </div>`;
-    }
-    return html;
-}
-
-function renderSkeletonGuide() {
-    return `<div class="skeleton-guide-header">
-        <div class="skeleton skeleton-guide-icon"></div>
-        <div class="skeleton skeleton-guide-title"></div>
-    </div>
-    <div class="skeleton-guide-body">
-        <div class="skeleton skeleton-guide-line" style="width:100%"></div>
-        <div class="skeleton skeleton-guide-line" style="width:92%"></div>
-        <div class="skeleton skeleton-guide-line" style="width:85%"></div>
-        <div class="skeleton skeleton-guide-line" style="width:60%"></div>
-        <div class="skeleton skeleton-guide-line" style="width:0;height:12px"></div>
-        <div class="skeleton skeleton-guide-line" style="width:95%"></div>
-        <div class="skeleton skeleton-guide-line" style="width:88%"></div>
-        <div class="skeleton skeleton-guide-line" style="width:78%"></div>
-        <div class="skeleton skeleton-guide-line" style="width:55%"></div>
-        <div class="skeleton skeleton-guide-line" style="width:0;height:12px"></div>
-        <div class="skeleton skeleton-guide-line" style="width:100%"></div>
-        <div class="skeleton skeleton-guide-line" style="width:70%"></div>
-    </div>`;
-}
-
-// ═══ LIGHTBOX ═══
-function openLightbox(src) {
-    haptic('light');
-    document.getElementById('lightbox-img').src = src;
-    document.getElementById('lightbox').classList.add('active');
-}
-function closeLightbox() {
-    document.getElementById('lightbox').classList.remove('active');
-}
-document.getElementById('lightbox').addEventListener('click', e => {
-    if (e.target === e.currentTarget) closeLightbox();
-});
-
-// ═══ RENDER ═══
-function renderCardIcon(url) {
-    return url ? `<img src="${url}" onerror="this.style.display='none'" alt="">` : '';
-}
-
-function renderBadges(item) {
-    let html = '';
-    const has = item.has_photo || item.has_video || item.has_document;
-    if (!has) return '';
-    html = '<div class="card-badges">';
-    if (item.has_photo) html += '<span class="badge badge-photo">📷 Фото</span>';
-    if (item.has_video) html += '<span class="badge badge-video">🎬 Видео</span>';
-    if (item.has_document) html += '<span class="badge badge-doc">📄 Файл</span>';
-    html += '</div>';
-    return html;
-}
-
-function renderVideo(url) {
-    if (!url) return '';
-    const yt = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-    if (yt) return `<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/${yt[1]}?playsinline=1" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe></div>`;
-    if (url.match(/\.(mp4|webm|ogg)(\?|$)/i)) {
-        const ext = url.match(/\.(mp4|webm|ogg)/i)[1];
-        return `<div class="video-wrapper"><video controls preload="metadata" playsinline controlslist="nodownload"><source src="${url}" type="video/${ext}">Ваш браузер не поддерживает видео</video></div>`;
-    }
-    const gd = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
-    if (gd) return `<div class="video-wrapper"><iframe src="https://drive.google.com/file/d/${gd[1]}/preview" allowfullscreen></iframe></div>`;
-    return `<a href="${url}" target="_blank" class="guide-document"><span class="guide-document-icon">🎬</span><div class="guide-document-info"><div class="guide-document-name">Видео</div><div class="guide-document-hint">Открыть в браузере</div></div></a>`;
-}
-
-function renderDocument(url) {
-    if (!url) return '';
-    const name = decodeURIComponent(url.split('/').pop().split('?')[0]) || 'Документ';
-    const ext = name.split('.').pop().toLowerCase();
-    const icons = { pdf:'📕', doc:'📘', docx:'📘', xls:'📊', xlsx:'📊', png:'🖼', jpg:'🖼', jpeg:'🖼', gif:'🖼', webp:'🖼' };
-    return `<a href="${url}" target="_blank" class="guide-document"><span class="guide-document-icon">${icons[ext]||'📄'}</span><div class="guide-document-info"><div class="guide-document-name">${name}</div><div class="guide-document-hint">Скачать · ${ext.toUpperCase()}</div></div></a>`;
-}
-
-// ═══ PULL TO REFRESH ═══
-const pullRefresh = {
-    indicator: null, textEl: null, arrowEl: null,
-    startY: 0, dist: 0, pulling: false, refreshing: false,
-    threshold: 70, maxPull: 110,
-
-    init() {
-        this.indicator = document.getElementById('pull-indicator');
-        this.textEl = this.indicator.querySelector('.pull-text');
-        this.arrowEl = this.indicator.querySelector('.pull-arrow');
-
-        document.addEventListener('touchstart', e => this.onStart(e), { passive: true });
-        document.addEventListener('touchmove', e => this.onMove(e), { passive: false });
-        document.addEventListener('touchend', e => this.onEnd(e));
-    },
-
-    canPull() {
-        return window.scrollY <= 2 && !this.refreshing
-            && !document.getElementById('guide-view').classList.contains('hidden')
-            || !document.getElementById('categories-view').classList.contains('hidden')
-            || !document.getElementById('guides-view').classList.contains('hidden');
-    },
-
-    onStart(e) {
-        if (window.scrollY > 2 || this.refreshing) return;
-        this.startY = e.touches[0].clientY;
-        this.pulling = true;
-        this.dist = 0;
-    },
-
-    onMove(e) {
-        if (!this.pulling || this.refreshing) return;
-        const y = e.touches[0].clientY;
-        this.dist = y - this.startY;
-
-        if (this.dist < 0) { this.dist = 0; return; }
-        if (window.scrollY > 2) { this.pulling = false; return; }
-
-        if (this.dist > 10) {
-            e.preventDefault();
-            const d = Math.min(this.dist, this.maxPull);
-            this.indicator.classList.add('active');
-            this.indicator.style.height = (d * 0.6) + 'px';
-
-            if (this.arrowEl) {
-                this.arrowEl.style.transform = `rotate(${this.dist >= this.threshold ? 180 : 0}deg)`;
-            }
-
-            if (this.dist >= this.threshold) {
-                this.textEl.textContent = 'Отпустите для обновления';
-                this.indicator.classList.add('ready');
-            } else {
-                this.textEl.textContent = 'Потяните для обновления';
-                this.indicator.classList.remove('ready');
-            }
-        }
-    },
-
-    async onEnd() {
-        if (!this.pulling) return;
-        this.pulling = false;
-        this.indicator.classList.remove('active', 'ready');
-
-        if (this.dist >= this.threshold && !this.refreshing) {
-            this.refreshing = true;
-            this.indicator.classList.add('refreshing');
-            this.textEl.textContent = 'Обновление...';
-            haptic('medium');
-
-            try {
-                await app.refreshCurrentView();
-                haptic('success');
-            } catch(e) {
-                haptic('error');
-            }
-
-            this.indicator.classList.remove('refreshing');
-            this.refreshing = false;
-        }
-
-        this.indicator.style.height = '0';
-        this.dist = 0;
-    }
-};
-
-// ═══ DRAGGABLE FAB ═══
-const fab = {
-    el: null, container: null, label: null, dragHint: null,
-    holdTimer: null, holdTriggered: false,
-    isDragging: false, dragStarted: false,
-    startX: 0, startY: 0, startLeft: 0, startTop: 0,
-    HOLD_DURATION: 3000, DRAG_THRESHOLD: 10,
-
-    init() {
-        this.container = document.getElementById('fab-container');
-        this.el = document.getElementById('fab-back');
-        this.label = document.getElementById('fab-label');
-        this.dragHint = document.getElementById('fab-drag-hint');
-        this.restorePosition();
-        this.el.addEventListener('pointerdown', e => this.onPointerDown(e));
-        document.addEventListener('pointermove', e => this.onPointerMove(e));
-        document.addEventListener('pointerup', e => this.onPointerUp(e));
-        document.addEventListener('pointercancel', () => this.cancelAll());
-        this.el.addEventListener('contextmenu', e => e.preventDefault());
-        if (!localStorage.getItem('fab_dragged')) this._showDragHint = true;
-    },
-
-    restorePosition() {
-        const saved = localStorage.getItem('fab_position');
-        if (saved) {
-            try {
-                const { right, bottom } = JSON.parse(saved);
-                this.container.style.right = right + 'px';
-                this.container.style.bottom = bottom + 'px';
-                this.container.style.left = 'auto';
-                this.container.style.top = 'auto';
-                return;
-            } catch (e) {}
-        }
-        this.container.style.bottom = '24px';
-        this.container.style.left = '50%';
-        this.container.style.transform = 'translateX(-50%)';
-    },
-
-    savePosition() {
-        const rect = this.container.getBoundingClientRect();
-        const right = window.innerWidth - rect.right;
-        const bottom = window.innerHeight - rect.bottom;
-        localStorage.setItem('fab_position', JSON.stringify({ right, bottom }));
-        localStorage.setItem('fab_dragged', '1');
-    },
-
-    onPointerDown(e) {
-        e.preventDefault();
-        this.el.setPointerCapture(e.pointerId);
-        this.holdTriggered = false; this.isDragging = false; this.dragStarted = false;
-        this.startX = e.clientX; this.startY = e.clientY;
-        const rect = this.container.getBoundingClientRect();
-        this.startLeft = rect.left; this.startTop = rect.top;
-        this.el.classList.add('holding');
-        this.holdTimer = setTimeout(() => {
-            if (!this.dragStarted) {
-                this.holdTriggered = true;
-                this.el.classList.remove('holding');
-                haptic('medium');
-                quickNav.show(this.container);
-            }
-        }, this.HOLD_DURATION);
-    },
-
-    onPointerMove(e) {
-        if (!this.el.hasPointerCapture?.(e.pointerId)) return;
-        const dx = e.clientX - this.startX, dy = e.clientY - this.startY;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist > this.DRAG_THRESHOLD && !this.holdTriggered) {
-            if (!this.dragStarted) {
-                this.dragStarted = true; this.isDragging = true;
-                this.cancelHold(); this.el.classList.add('dragging');
-                this.container.style.transform = 'none';
-                this.container.style.left = this.startLeft + 'px';
-                this.container.style.top = this.startTop + 'px';
-                this.container.style.right = 'auto'; this.container.style.bottom = 'auto';
-                if (this.dragHint) this.dragHint.classList.remove('show');
-            }
-            let newLeft = this.startLeft + dx, newTop = this.startTop + dy;
-            const w = this.container.offsetWidth, h = this.container.offsetHeight;
-            newLeft = Math.max(4, Math.min(window.innerWidth - w - 4, newLeft));
-            newTop = Math.max(4, Math.min(window.innerHeight - h - 4, newTop));
-            this.container.style.left = newLeft + 'px';
-            this.container.style.top = newTop + 'px';
-        }
-    },
-
-    onPointerUp(e) {
-        this.el.classList.remove('dragging'); this.cancelHold();
-        if (this.dragStarted) {
-            this.savePosition();
-            const rect = this.container.getBoundingClientRect();
-            const right = window.innerWidth - rect.right;
-            const bottom = window.innerHeight - rect.bottom;
-            this.container.style.left = 'auto'; this.container.style.top = 'auto';
-            this.container.style.right = right + 'px';
-            this.container.style.bottom = bottom + 'px';
-            this.container.style.transform = 'none';
-        } else if (!this.holdTriggered) {
-            haptic('light');
-            app.goBack();
-        }
-        this.isDragging = false; this.dragStarted = false;
-    },
-
-    cancelHold() {
-        if (this.holdTimer) { clearTimeout(this.holdTimer); this.holdTimer = null; }
-        this.el.classList.remove('holding');
-    },
-    cancelAll() {
-        this.cancelHold(); this.el.classList.remove('dragging');
-        this.isDragging = false; this.dragStarted = false;
-    },
-    show(labelText) {
-        this.container.classList.add('visible');
-        if (labelText) this.label.textContent = labelText;
-        if (this._showDragHint && this.dragHint) {
-            this._showDragHint = false;
-            setTimeout(() => this.dragHint.classList.add('show'), 500);
-            setTimeout(() => this.dragHint.classList.remove('show'), 4000);
-        }
-    },
-    hide() { this.container.classList.remove('visible'); this.cancelAll(); }
-};
-
-// ═══ QUICK NAV ═══
-const quickNav = {
-    el: document.getElementById('quick-nav'),
-    overlay: document.getElementById('quick-nav-overlay'),
-    itemsEl: document.getElementById('quick-nav-items'),
-    categories: [],
-
-    init() { this.overlay.addEventListener('click', () => this.hide()); },
-
-    show(anchorEl) {
-        if (!this.categories.length) return;
-        if (anchorEl) {
-            const rect = anchorEl.getBoundingClientRect();
-            const popupH = 300;
-            if (rect.top > popupH + 20) {
-                this.el.style.bottom = (window.innerHeight - rect.top + 8) + 'px';
-                this.el.style.top = 'auto';
-            } else {
-                this.el.style.top = (rect.bottom + 8) + 'px';
-                this.el.style.bottom = 'auto';
-            }
-            const centerX = rect.left + rect.width / 2, popupW = 260;
-            let left = centerX - popupW / 2;
-            left = Math.max(12, Math.min(window.innerWidth - popupW - 12, left));
-            this.el.style.left = left + 'px'; this.el.style.transform = 'none';
-        }
-        this.itemsEl.innerHTML = '';
-        this.categories.forEach(cat => {
-            const item = document.createElement('div');
-            item.className = 'quick-nav-item';
-            item.innerHTML = `<div class="quick-nav-item-icon">${renderCardIcon(cat.icon)}</div>
-                <div class="quick-nav-item-title">${cat.title}</div>`;
-            item.onclick = () => { haptic('light'); this.hide(); app.showGuides(cat.key, cat.title); };
-            this.itemsEl.appendChild(item);
-        });
-        const home = document.createElement('div');
-        home.className = 'quick-nav-item quick-nav-item-home';
-        home.innerHTML = `<div class="quick-nav-item-icon" style="background:var(--btn)">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--btn-text)"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-        </div><div class="quick-nav-item-title">🏠 Главное меню</div>`;
-        home.onclick = () => { haptic('light'); this.hide(); app.showCategories(); };
-        this.itemsEl.appendChild(home);
-        this.el.classList.add('active');
-        this.overlay.classList.add('active');
-    },
-
-    hide() { this.el.classList.remove('active'); this.overlay.classList.remove('active'); }
-};
-
-// ═══ APP ═══
-const app = {
-    currentCategory: null,
-    currentCategoryTitle: null,
-
-    async apiFetch(endpoint) {
-        const headers = {};
-        const initData = getInitData();
-        if (initData) headers['X-Telegram-Init-Data'] = initData;
-        const res = await fetch(`${API}${endpoint}`, { headers });
-        if (res.status === 403) {
-            const data = await res.json().catch(() => ({}));
-            this.showAccessDenied(data.detail);
-            throw new Error('ACCESS_DENIED');
-        }
-        if (!res.ok) throw new Error(`Ошибка ${res.status}`);
-        return res.json();
-    },
-
-    show(viewId) {
-        document.querySelectorAll('[id$="-view"]').forEach(el => el.classList.add('hidden'));
-        document.getElementById(viewId).classList.remove('hidden');
-        window.scrollTo({ top: 0 });
-        if (viewId === 'categories-view' || viewId === 'access-denied-view') {
-            fab.hide();
-        } else if (viewId === 'guides-view') {
-            fab.show('Категории');
-        } else if (viewId === 'guide-view') {
-            fab.show('Назад');
-        }
-        
-        if (tg?.BackButton) {
-            (viewId === 'categories-view' || viewId === 'access-denied-view')
-                ? tg.BackButton.hide() : tg.BackButton.show();
-        }
-
-        // ЗАЩИТА: На некоторых платформах iOS/TG Webview History API падает с SecurityError
+    // Haptic
+    function haptic(type) {
         try {
-            if (viewId !== 'categories-view') history.pushState({ view: viewId }, '', null);
-        } catch (e) {
-            console.warn('History API error ignored', e);
-        }
-    },
+            if (tg?.HapticFeedback) {
+                if (['light','medium','heavy','rigid','soft'].includes(type)) {
+                    tg.HapticFeedback.impactOccurred(type);
+                } else if (['success','warning','error'].includes(type)) {
+                    tg.HapticFeedback.notificationOccurred(type);
+                } else if (type === 'selection') {
+                    tg.HapticFeedback.selectionChanged();
+                }
+            }
+        } catch(e) {}
+    }
 
-    goBack() {
+    function initTheme() {
+        if (!tg) return;
+        try {
+            tg.ready();
+            tg.expand();
+            document.documentElement.setAttribute('data-theme', tg.colorScheme || 'light');
+            const r = document.documentElement.style;
+            const p = tg.themeParams || {};
+            if (p.bg_color) r.setProperty('--bg', p.bg_color);
+            if (p.text_color) r.setProperty('--text', p.text_color);
+            if (p.hint_color) r.setProperty('--hint', p.hint_color);
+            if (p.link_color) r.setProperty('--link', p.link_color);
+            if (p.button_color) r.setProperty('--btn', p.button_color);
+            if (p.button_text_color) r.setProperty('--btn-text', p.button_text_color);
+            if (p.secondary_bg_color) {
+                r.setProperty('--secondary', p.secondary_bg_color);
+                r.setProperty('--card-bg', p.secondary_bg_color);
+            }
+        } catch (e) { console.warn('Theme error:', e); }
+    }
+
+    // Skeleton
+    function renderSkeletonCards(count) {
+        let html = '';
+        for (let i = 0; i < count; i++) {
+            const w1 = 60 + Math.random() * 30 + '%';
+            const w2 = 40 + Math.random() * 20 + '%';
+            html += '<div class="skeleton-card">' +
+                '<div class="skeleton skeleton-icon"></div>' +
+                '<div class="skeleton-text-group">' +
+                '<div class="skeleton skeleton-line" style="width:' + w1 + '"></div>' +
+                '<div class="skeleton skeleton-line" style="width:' + w2 + ';height:12px"></div>' +
+                '</div></div>';
+        }
+        return html;
+    }
+
+    function renderSkeletonGuide() {
+        return '<div style="display:flex;align-items:center;gap:14px;padding:12px 0 16px;border-bottom:1px solid var(--separator);margin-bottom:16px">' +
+            '<div class="skeleton" style="width:52px;height:52px;border-radius:14px;flex-shrink:0"></div>' +
+            '<div class="skeleton" style="height:22px;width:65%;border-radius:6px"></div>' +
+            '</div>' +
+            '<div style="display:flex;flex-direction:column;gap:10px">' +
+            '<div class="skeleton" style="height:16px;width:100%;border-radius:4px"></div>' +
+            '<div class="skeleton" style="height:16px;width:92%;border-radius:4px"></div>' +
+            '<div class="skeleton" style="height:16px;width:85%;border-radius:4px"></div>' +
+            '<div class="skeleton" style="height:16px;width:60%;border-radius:4px"></div>' +
+            '<div class="skeleton" style="height:16px;width:95%;border-radius:4px"></div>' +
+            '<div class="skeleton" style="height:16px;width:78%;border-radius:4px"></div>' +
+            '</div>';
+    }
+
+    // Lightbox
+    window.openLightbox = function(src) {
         haptic('light');
-        const gv = document.getElementById('guide-view');
-        if (!gv.classList.contains('hidden')) app.showGuides();
-        else app.showCategories();
-    },
+        document.getElementById('lightbox-img').src = src;
+        document.getElementById('lightbox').classList.add('active');
+    };
+    window.closeLightbox = function() {
+        document.getElementById('lightbox').classList.remove('active');
+    };
+    document.getElementById('lightbox').addEventListener('click', function(e) {
+        if (e.target === e.currentTarget) closeLightbox();
+    });
 
-    showAccessDenied(msg) {
-        if (msg) document.getElementById('access-denied-msg').textContent = msg;
-        this.show('access-denied-view');
-    },
+    // Render helpers
+    function renderCardIcon(url) {
+        if (!url) return '';
+        return '<img src="' + url + '" onerror="this.style.display=\'none\'" alt="">';
+    }
 
-    async checkAuth() {
-        try { await this.apiFetch('/api/auth'); return true; }
-        catch { return false; }
-    },
+    function renderBadges(item) {
+        if (!item.has_photo && !item.has_video && !item.has_document) return '';
+        let html = '<div class="card-badges">';
+        if (item.has_photo) html += '<span class="badge badge-photo">📷 Фото</span>';
+        if (item.has_video) html += '<span class="badge badge-video">🎬 Видео</span>';
+        if (item.has_document) html += '<span class="badge badge-doc">📄 Файл</span>';
+        html += '</div>';
+        return html;
+    }
 
-    async refreshCurrentView() {
-        const catView = document.getElementById('categories-view');
-        const guidesView = document.getElementById('guides-view');
-        const guideView = document.getElementById('guide-view');
-
-        if (!catView.classList.contains('hidden')) {
-            await app.showCategories();
-        } else if (!guidesView.classList.contains('hidden')) {
-            await app.showGuides();
+    function renderVideo(url) {
+        if (!url) return '';
+        var yt = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+        if (yt) return '<div class="video-wrapper"><iframe src="https://www.youtube.com/embed/' + yt[1] + '?playsinline=1" allowfullscreen></iframe></div>';
+        if (/\.(mp4|webm|ogg)(\?|$)/i.test(url)) {
+            var ext = url.match(/\.(mp4|webm|ogg)/i)[1];
+            return '<div class="video-wrapper"><video controls preload="metadata" playsinline><source src="' + url + '" type="video/' + ext + '"></video></div>';
         }
-    },
+        return '<a href="' + url + '" target="_blank" class="guide-document"><span class="guide-document-icon">🎬</span><div class="guide-document-info"><div class="guide-document-name">Видео</div><div class="guide-document-hint">Открыть</div></div></a>';
+    }
 
-    async showCategories() {
-        this.show('categories-view');
-        const list = document.getElementById('categories-list');
-        list.innerHTML = renderSkeletonCards(4);
-        try {
-            const { categories } = await this.apiFetch('/api/categories');
-            if (!categories.length) { list.innerHTML = '<div class="empty">Нет категорий</div>'; return; }
-            quickNav.categories = categories;
-            list.innerHTML = '';
-            categories.forEach(cat => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                const w = this.pluralize(cat.count, 'гайд', 'гайда', 'гайдов');
-                card.innerHTML = `
-                    <div class="card-icon">${renderCardIcon(cat.icon)}</div>
-                    <div class="card-content">
-                        <div class="card-title">${this.esc(cat.title)}</div>
-                        <div class="card-subtitle">${cat.count} ${w}</div>
-                    </div>
-                    <span class="card-arrow">›</span>`;
-                
-                // ЗАЩИТА: явно вызываем app.showGuides
-                card.onclick = () => { haptic('light'); app.showGuides(cat.key, cat.title); };
-                list.appendChild(card);
-            });
-            haptic('success');
-        } catch (e) {
-            if (e.message !== 'ACCESS_DENIED') list.innerHTML = `<div class="error">${e.message}</div>`;
-        }
-    },
+    function renderDocument(url) {
+        if (!url) return '';
+        var name = decodeURIComponent(url.split('/').pop().split('?')[0]) || 'Документ';
+        var ext = name.split('.').pop().toLowerCase();
+        var icons = { pdf:'📕', doc:'📘', docx:'📘', xls:'📊', xlsx:'📊', png:'🖼', jpg:'🖼', jpeg:'🖼' };
+        return '<a href="' + url + '" target="_blank" class="guide-document"><span class="guide-document-icon">' + (icons[ext]||'📄') + '</span><div class="guide-document-info"><div class="guide-document-name">' + name + '</div><div class="guide-document-hint">Скачать · ' + ext.toUpperCase() + '</div></div></a>';
+    }
 
-    async showGuides(key, title) {
-        if (key) { this.currentCategory = key; this.currentCategoryTitle = title; }
-        if (!this.currentCategory) { app.showCategories(); return; }
-        this.show('guides-view');
-        document.getElementById('category-title').textContent = this.currentCategoryTitle || '';
-        const list = document.getElementById('guides-list');
-        list.innerHTML = renderSkeletonCards(6);
-        try {
-            const { items } = await this.apiFetch(`/api/category/${this.currentCategory}`);
-            if (!items.length) { list.innerHTML = '<div class="empty">Нет гайдов</div>'; return; }
-            list.innerHTML = '';
-            items.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <div class="card-icon">${renderCardIcon(item.icon)}</div>
-                    <div class="card-content">
-                        <div class="card-title">${this.esc(item.title)}</div>
-                        ${item.preview ? `<div class="card-subtitle">${this.esc(item.preview)}</div>` : ''}
-                        ${renderBadges(item)}
-                    </div>
-                    <span class="card-arrow">›</span>`;
-                    
-                // ЗАЩИТА: явно вызываем app.showGuide
-                card.onclick = () => { haptic('light'); app.showGuide(item.key); };
-                list.appendChild(card);
-            });
-            haptic('success');
-        } catch (e) {
-            if (e.message !== 'ACCESS_DENIED') list.innerHTML = `<div class="error">${e.message}</div>`;
-        }
-    },
-
-    async showGuide(key) {
-        this.show('guide-view');
-        const content = document.getElementById('guide-content');
-        const titleEl = document.getElementById('guide-title');
-        const iconEl = document.getElementById('guide-icon');
-        titleEl.textContent = ''; iconEl.innerHTML = '';
-        content.innerHTML = renderSkeletonGuide();
-        try {
-            const data = await this.apiFetch(`/api/guide/${key}`);
-            titleEl.textContent = data.title;
-            if (data.icon) iconEl.innerHTML = `<img src="${data.icon}" onerror="this.style.display='none'" alt="">`;
-            content.innerHTML = data.text || '<p>Контент отсутствует</p>';
-
-            (data.photo || []).forEach(src => {
-                if (!src || src.startsWith('Ag')) return;
-                const img = document.createElement('img');
-                img.src = src; img.className = 'guide-photo'; img.loading = 'lazy';
-                img.onerror = function() { this.remove(); };
-                img.onclick = function() { openLightbox(this.src); };
-                content.appendChild(img);
-            });
-
-            (data.video || []).forEach(url => {
-                if (!url) return;
-                const div = document.createElement('div');
-                div.innerHTML = renderVideo(url);
-                content.appendChild(div);
-            });
-
-            (data.document || []).forEach(url => {
-                if (!url) return;
-                const div = document.createElement('div');
-                div.innerHTML = renderDocument(url);
-                content.appendChild(div);
-            });
-
-            haptic('success');
-        } catch (e) {
-            if (e.message !== 'ACCESS_DENIED')
-                content.innerHTML = `<div class="error">${e.message}</div>`;
-        }
-    },
-
-    initSearch() {
-        const input = document.getElementById('search-input');
-        let t;
-        input.addEventListener('input', e => {
-            clearTimeout(t);
-            const q = e.target.value.trim();
-            if (q.length < 2) { app.showCategories(); return; }
-            t = setTimeout(async () => {
-                haptic('selection');
-                try {
-                    const { results } = await app.apiFetch(`/api/search?q=${encodeURIComponent(q)}`);
-                    const list = document.getElementById('categories-list');
-                    if (!results.length) { list.innerHTML = '<div class="empty">Ничего не найдено</div>'; return; }
-                    list.innerHTML = '';
-                    results.forEach(item => {
-                        const card = document.createElement('div');
-                        card.className = 'card';
-                        card.innerHTML = `
-                            <div class="card-icon">${renderCardIcon(item.icon)}</div>
-                            <div class="card-content">
-                                <div class="card-title">${app.esc(item.title)}</div>
-                                <div class="card-subtitle">${app.esc(item.preview || '')}</div>
-                            </div>
-                            <span class="card-arrow">›</span>`;
-                        card.onclick = () => { haptic('light'); input.value = ''; app.showGuide(item.key); };
-                        list.appendChild(card);
-                    });
-                } catch (e) { console.error('Search:', e); }
-            }, 300);
-        });
-    },
-
-    esc(text) {
+    function esc(text) {
         if (!text) return '';
-        const d = document.createElement('div');
-        d.textContent = text; return d.innerHTML;
-    },
+        var d = document.createElement('div');
+        d.textContent = text;
+        return d.innerHTML;
+    }
 
-    pluralize(n, one, few, many) {
-        const m10 = n % 10, m100 = n % 100;
+    function pluralize(n, one, few, many) {
+        var m10 = n % 10, m100 = n % 100;
         if (m100 >= 11 && m100 <= 19) return many;
         if (m10 === 1) return one;
         if (m10 >= 2 && m10 <= 4) return few;
         return many;
     }
-};
 
-// ═══ INIT ═══
-document.addEventListener('DOMContentLoaded', async () => {
-    initTheme();
-    fab.init();
-    quickNav.init();
-    pullRefresh.init();
-    if (tg?.BackButton) tg.BackButton.onClick(() => app.goBack());
-    window.addEventListener('popstate', e => { e.preventDefault(); app.goBack(); });
-    
-    const ok = await app.checkAuth();
-    if (ok) { app.showCategories(); app.initSearch(); }
-});
+    // Pull to refresh
+    var pullRefresh = {
+        indicator: null,
+        textEl: null,
+        startY: 0,
+        dist: 0,
+        pulling: false,
+        refreshing: false,
+        threshold: 70,
+
+        init: function() {
+            this.indicator = document.getElementById('pull-indicator');
+            this.textEl = this.indicator.querySelector('.pull-text');
+            var self = this;
+            document.addEventListener('touchstart', function(e) { self.onStart(e); }, { passive: true });
+            document.addEventListener('touchmove', function(e) { self.onMove(e); }, { passive: false });
+            document.addEventListener('touchend', function(e) { self.onEnd(e); });
+        },
+
+        onStart: function(e) {
+            if (window.scrollY > 2 || this.refreshing) return;
+            this.startY = e.touches[0].clientY;
+            this.pulling = true;
+            this.dist = 0;
+        },
+
+        onMove: function(e) {
+            if (!this.pulling || this.refreshing) return;
+            this.dist = e.touches[0].clientY - this.startY;
+            if (this.dist < 0) { this.dist = 0; return; }
+            if (window.scrollY > 2) { this.pulling = false; return; }
+            if (this.dist > 10) {
+                e.preventDefault();
+                var d = Math.min(this.dist, 110);
+                this.indicator.classList.add('active');
+                this.indicator.style.height = (d * 0.6) + 'px';
+                if (this.dist >= this.threshold) {
+                    this.textEl.textContent = 'Отпустите для обновления';
+                    this.indicator.classList.add('ready');
+                } else {
+                    this.textEl.textContent = 'Потяните для обновления';
+                    this.indicator.classList.remove('ready');
+                }
+            }
+        },
+
+        onEnd: function() {
+            if (!this.pulling) return;
+            this.pulling = false;
+            this.indicator.classList.remove('active', 'ready');
+            var self = this;
+            if (this.dist >= this.threshold && !this.refreshing) {
+                this.refreshing = true;
+                this.indicator.classList.add('refreshing');
+                this.textEl.textContent = 'Обновление...';
+                haptic('medium');
+                app.refreshCurrentView().then(function() {
+                    haptic('success');
+                    self.indicator.classList.remove('refreshing');
+                    self.refreshing = false;
+                    self.indicator.style.height = '0';
+                }).catch(function() {
+                    self.indicator.classList.remove('refreshing');
+                    self.refreshing = false;
+                    self.indicator.style.height = '0';
+                });
+            } else {
+                this.indicator.style.height = '0';
+            }
+            this.dist = 0;
+        }
+    };
+
+    // FAB
+    var fab = {
+        el: null,
+        container: null,
+        label: null,
+        dragHint: null,
+        holdTimer: null,
+        holdTriggered: false,
+        isDragging: false,
+        dragStarted: false,
+        startX: 0, startY: 0, startLeft: 0, startTop: 0,
+        HOLD_DURATION: 3000,
+        DRAG_THRESHOLD: 10,
+
+        init: function() {
+            this.container = document.getElementById('fab-container');
+            this.el = document.getElementById('fab-back');
+            this.label = document.getElementById('fab-label');
+            this.dragHint = document.getElementById('fab-drag-hint');
+            this.restorePosition();
+            var self = this;
+            this.el.addEventListener('pointerdown', function(e) { self.onPointerDown(e); });
+            document.addEventListener('pointermove', function(e) { self.onPointerMove(e); });
+            document.addEventListener('pointerup', function(e) { self.onPointerUp(e); });
+            document.addEventListener('pointercancel', function() { self.cancelAll(); });
+            this.el.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+            if (!localStorage.getItem('fab_dragged')) this._showDragHint = true;
+        },
+
+        restorePosition: function() {
+            var saved = localStorage.getItem('fab_position');
+            if (saved) {
+                try {
+                    var pos = JSON.parse(saved);
+                    this.container.style.right = pos.right + 'px';
+                    this.container.style.bottom = pos.bottom + 'px';
+                    this.container.style.left = 'auto';
+                    this.container.style.top = 'auto';
+                    return;
+                } catch (e) {}
+            }
+            this.container.style.bottom = '24px';
+            this.container.style.left = '50%';
+            this.container.style.transform = 'translateX(-50%)';
+        },
+
+        savePosition: function() {
+            var rect = this.container.getBoundingClientRect();
+            var right = window.innerWidth - rect.right;
+            var bottom = window.innerHeight - rect.bottom;
+            localStorage.setItem('fab_position', JSON.stringify({ right: right, bottom: bottom }));
+            localStorage.setItem('fab_dragged', '1');
+        },
+
+        onPointerDown: function(e) {
+            e.preventDefault();
+            this.el.setPointerCapture(e.pointerId);
+            this.holdTriggered = false;
+            this.isDragging = false;
+            this.dragStarted = false;
+            this.startX = e.clientX;
+            this.startY = e.clientY;
+            var rect = this.container.getBoundingClientRect();
+            this.startLeft = rect.left;
+            this.startTop = rect.top;
+            this.el.classList.add('holding');
+            var self = this;
+            this.holdTimer = setTimeout(function() {
+                if (!self.dragStarted) {
+                    self.holdTriggered = true;
+                    self.el.classList.remove('holding');
+                    haptic('medium');
+                    quickNav.show(self.container);
+                }
+            }, this.HOLD_DURATION);
+        },
+
+        onPointerMove: function(e) {
+            if (!this.el.hasPointerCapture || !this.el.hasPointerCapture(e.pointerId)) return;
+            var dx = e.clientX - this.startX;
+            var dy = e.clientY - this.startY;
+            var dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist > this.DRAG_THRESHOLD && !this.holdTriggered) {
+                if (!this.dragStarted) {
+                    this.dragStarted = true;
+                    this.isDragging = true;
+                    this.cancelHold();
+                    this.el.classList.add('dragging');
+                    this.container.style.transform = 'none';
+                    this.container.style.left = this.startLeft + 'px';
+                    this.container.style.top = this.startTop + 'px';
+                    this.container.style.right = 'auto';
+                    this.container.style.bottom = 'auto';
+                    if (this.dragHint) this.dragHint.classList.remove('show');
+                }
+                var newLeft = this.startLeft + dx;
+                var newTop = this.startTop + dy;
+                var w = this.container.offsetWidth;
+                var h = this.container.offsetHeight;
+                newLeft = Math.max(4, Math.min(window.innerWidth - w - 4, newLeft));
+                newTop = Math.max(4, Math.min(window.innerHeight - h - 4, newTop));
+                this.container.style.left = newLeft + 'px';
+                this.container.style.top = newTop + 'px';
+            }
+        },
+
+        onPointerUp: function(e) {
+            this.el.classList.remove('dragging');
+            this.cancelHold();
+            if (this.dragStarted) {
+                this.savePosition();
+                var rect = this.container.getBoundingClientRect();
+                var right = window.innerWidth - rect.right;
+                var bottom = window.innerHeight - rect.bottom;
+                this.container.style.left = 'auto';
+                this.container.style.top = 'auto';
+                this.container.style.right = right + 'px';
+                this.container.style.bottom = bottom + 'px';
+                this.container.style.transform = 'none';
+            } else if (!this.holdTriggered) {
+                haptic('light');
+                app.goBack();
+            }
+            this.isDragging = false;
+            this.dragStarted = false;
+        },
+
+        cancelHold: function() {
+            if (this.holdTimer) { clearTimeout(this.holdTimer); this.holdTimer = null; }
+            this.el.classList.remove('holding');
+        },
+
+        cancelAll: function() {
+            this.cancelHold();
+            this.el.classList.remove('dragging');
+            this.isDragging = false;
+            this.dragStarted = false;
+        },
+
+        show: function(labelText) {
+            this.container.classList.add('visible');
+            if (labelText) this.label.textContent = labelText;
+            if (this._showDragHint && this.dragHint) {
+                this._showDragHint = false;
+                var hint = this.dragHint;
+                setTimeout(function() { hint.classList.add('show'); }, 500);
+                setTimeout(function() { hint.classList.remove('show'); }, 4000);
+            }
+        },
+
+        hide: function() {
+            this.container.classList.remove('visible');
+            this.cancelAll();
+        }
+    };
+
+    // Quick Nav
+    var quickNav = {
+        el: document.getElementById('quick-nav'),
+        overlay: document.getElementById('quick-nav-overlay'),
+        itemsEl: document.getElementById('quick-nav-items'),
+        categories: [],
+
+        init: function() {
+            var self = this;
+            this.overlay.addEventListener('click', function() { self.hide(); });
+        },
+
+        show: function(anchorEl) {
+            if (!this.categories.length) return;
+            if (anchorEl) {
+                var rect = anchorEl.getBoundingClientRect();
+                if (rect.top > 320) {
+                    this.el.style.bottom = (window.innerHeight - rect.top + 8) + 'px';
+                    this.el.style.top = 'auto';
+                } else {
+                    this.el.style.top = (rect.bottom + 8) + 'px';
+                    this.el.style.bottom = 'auto';
+                }
+                var centerX = rect.left + rect.width / 2;
+                var left = centerX - 130;
+                left = Math.max(12, Math.min(window.innerWidth - 272, left));
+                this.el.style.left = left + 'px';
+            }
+            this.itemsEl.innerHTML = '';
+            var self = this;
+            this.categories.forEach(function(cat) {
+                var item = document.createElement('div');
+                item.className = 'quick-nav-item';
+                item.innerHTML = '<div class="quick-nav-item-icon">' + renderCardIcon(cat.icon) + '</div>' +
+                    '<div class="quick-nav-item-title">' + cat.title + '</div>';
+                item.onclick = function() { haptic('light'); self.hide(); app.showGuides(cat.key, cat.title); };
+                self.itemsEl.appendChild(item);
+            });
+            var home = document.createElement('div');
+            home.className = 'quick-nav-item quick-nav-item-home';
+            home.innerHTML = '<div class="quick-nav-item-icon" style="background:var(--btn)">' +
+                '<svg width="20" height="20" viewBox="0 0 24 24" fill="var(--btn-text)"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>' +
+                '</div><div class="quick-nav-item-title">🏠 Главное меню</div>';
+            home.onclick = function() { haptic('light'); self.hide(); app.showCategories(); };
+            this.itemsEl.appendChild(home);
+            this.el.classList.add('active');
+            this.overlay.classList.add('active');
+        },
+
+        hide: function() {
+            this.el.classList.remove('active');
+            this.overlay.classList.remove('active');
+        }
+    };
+
+    // App
+    var app = {
+        currentCategory: null,
+        currentCategoryTitle: null,
+
+        apiFetch: function(endpoint) {
+            var headers = {};
+            var initData = getInitData();
+            if (initData) headers['X-Telegram-Init-Data'] = initData;
+            return fetch(API + endpoint, { headers: headers })
+                .then(function(res) {
+                    if (res.status === 403) {
+                        return res.json().catch(function() { return {}; }).then(function(data) {
+                            app.showAccessDenied(data.detail);
+                            throw new Error('ACCESS_DENIED');
+                        });
+                    }
+                    if (!res.ok) throw new Error('Ошибка ' + res.status);
+                    return res.json();
+                });
+        },
+
+        show: function(viewId) {
+            document.querySelectorAll('[id$="-view"]').forEach(function(el) {
+                el.classList.add('hidden');
+            });
+            document.getElementById(viewId).classList.remove('hidden');
+            window.scrollTo({ top: 0 });
+            if (viewId === 'categories-view' || viewId === 'access-denied-view') {
+                fab.hide();
+            } else if (viewId === 'guides-view') {
+                fab.show('Категории');
+            } else if (viewId === 'guide-view') {
+                fab.show('Назад');
+            }
+            if (tg && tg.BackButton) {
+                if (viewId === 'categories-view' || viewId === 'access-denied-view') {
+                    tg.BackButton.hide();
+                } else {
+                    tg.BackButton.show();
+                }
+            }
+            if (viewId !== 'categories-view') {
+                history.pushState({ view: viewId }, '');
+            }
+        },
+
+        goBack: function() {
+            haptic('light');
+            var gv = document.getElementById('guide-view');
+            if (!gv.classList.contains('hidden')) {
+                this.showGuides();
+            } else {
+                this.showCategories();
+            }
+        },
+
+        showAccessDenied: function(msg) {
+            if (msg) document.getElementById('access-denied-msg').textContent = msg;
+            this.show('access-denied-view');
+        },
+
+        checkAuth: function() {
+            return this.apiFetch('/api/auth').then(function() { return true; }).catch(function() { return false; });
+        },
+
+        refreshCurrentView: function() {
+            var catView = document.getElementById('categories-view');
+            var guidesView = document.getElementById('guides-view');
+            if (!catView.classList.contains('hidden')) {
+                return this.showCategories();
+            } else if (!guidesView.classList.contains('hidden')) {
+                return this.showGuides();
+            }
+            return Promise.resolve();
+        },
+
+        showCategories: function() {
+            var self = this;
+            this.show('categories-view');
+            var list = document.getElementById('categories-list');
+            list.innerHTML = renderSkeletonCards(4);
+            return this.apiFetch('/api/categories').then(function(data) {
+                var categories = data.categories;
+                if (!categories || !categories.length) {
+                    list.innerHTML = '<div class="empty">Нет категорий</div>';
+                    return;
+                }
+                quickNav.categories = categories;
+                list.innerHTML = '';
+                categories.forEach(function(cat) {
+                    var card = document.createElement('div');
+                    card.className = 'card';
+                    var w = pluralize(cat.count, 'гайд', 'гайда', 'гайдов');
+                    card.innerHTML = '<div class="card-icon">' + renderCardIcon(cat.icon) + '</div>' +
+                        '<div class="card-content">' +
+                        '<div class="card-title">' + esc(cat.title) + '</div>' +
+                        '<div class="card-subtitle">' + cat.count + ' ' + w + '</div>' +
+                        '</div>' +
+                        '<span class="card-arrow">›</span>';
+                    card.onclick = function() {
+                        haptic('light');
+                        self.showGuides(cat.key, cat.title);
+                    };
+                    list.appendChild(card);
+                });
+                haptic('success');
+            }).catch(function(e) {
+                if (e.message !== 'ACCESS_DENIED') {
+                    list.innerHTML = '<div class="error">' + e.message + '</div>';
+                }
+            });
+        },
+
+        showGuides: function(key, title) {
+            var self = this;
+            if (key) {
+                this.currentCategory = key;
+                this.currentCategoryTitle = title;
+            }
+            if (!this.currentCategory) {
+                return this.showCategories();
+            }
+            this.show('guides-view');
+            document.getElementById('category-title').textContent = this.currentCategoryTitle || '';
+            var list = document.getElementById('guides-list');
+            list.innerHTML = renderSkeletonCards(6);
+            return this.apiFetch('/api/category/' + this.currentCategory).then(function(data) {
+                var items = data.items;
+                if (!items || !items.length) {
+                    list.innerHTML = '<div class="empty">Нет гайдов</div>';
+                    return;
+                }
+                list.innerHTML = '';
+                items.forEach(function(item) {
+                    var card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = '<div class="card-icon">' + renderCardIcon(item.icon) + '</div>' +
+                        '<div class="card-content">' +
+                        '<div class="card-title">' + esc(item.title) + '</div>' +
+                        (item.preview ? '<div class="card-subtitle">' + esc(item.preview) + '</div>' : '') +
+                        renderBadges(item) +
+                        '</div>' +
+                        '<span class="card-arrow">›</span>';
+                    card.onclick = function() {
+                        haptic('light');
+                        self.showGuide(item.key);
+                    };
+                    list.appendChild(card);
+                });
+                haptic('success');
+            }).catch(function(e) {
+                if (e.message !== 'ACCESS_DENIED') {
+                    list.innerHTML = '<div class="error">' + e.message + '</div>';
+                }
+            });
+        },
+
+        showGuide: function(key) {
+            var self = this;
+            this.show('guide-view');
+            var content = document.getElementById('guide-content');
+            var titleEl = document.getElementById('guide-title');
+            var iconEl = document.getElementById('guide-icon');
+            titleEl.textContent = '';
+            iconEl.innerHTML = '';
+            content.innerHTML = renderSkeletonGuide();
+            return this.apiFetch('/api/guide/' + key).then(function(data) {
+                titleEl.textContent = data.title;
+                if (data.icon) {
+                    iconEl.innerHTML = '<img src="' + data.icon + '" onerror="this.style.display=\'none\'" alt="">';
+                }
+                content.innerHTML = data.text || '<p>Контент отсутствует</p>';
+
+                (data.photo || []).forEach(function(src) {
+                    if (!src || src.startsWith('Ag')) return;
+                    var img = document.createElement('img');
+                    img.src = src;
+                    img.className = 'guide-photo';
+                    img.loading = 'lazy';
+                    img.onerror = function() { this.remove(); };
+                    img.onclick = function() { openLightbox(this.src); };
+                    content.appendChild(img);
+                });
+
+                (data.video || []).forEach(function(url) {
+                    if (!url) return;
+                    var div = document.createElement('div');
+                    div.innerHTML = renderVideo(url);
+                    content.appendChild(div);
+                });
+
+                (data.document || []).forEach(function(url) {
+                    if (!url) return;
+                    var div = document.createElement('div');
+                    div.innerHTML = renderDocument(url);
+                    content.appendChild(div);
+                });
+
+                haptic('success');
+            }).catch(function(e) {
+                if (e.message !== 'ACCESS_DENIED') {
+                    content.innerHTML = '<div class="error">' + e.message + '</div>';
+                }
+            });
+        },
+
+        initSearch: function() {
+            var self = this;
+            var input = document.getElementById('search-input');
+            var t;
+            input.addEventListener('input', function(e) {
+                clearTimeout(t);
+                var q = e.target.value.trim();
+                if (q.length < 2) {
+                    self.showCategories();
+                    return;
+                }
+                t = setTimeout(function() {
+                    haptic('selection');
+                    self.apiFetch('/api/search?q=' + encodeURIComponent(q)).then(function(data) {
+                        var results = data.results;
+                        var list = document.getElementById('categories-list');
+                        if (!results || !results.length) {
+                            list.innerHTML = '<div class="empty">Ничего не найдено</div>';
+                            return;
+                        }
+                        list.innerHTML = '';
+                        results.forEach(function(item) {
+                            var card = document.createElement('div');
+                            card.className = 'card';
+                            card.innerHTML = '<div class="card-icon">' + renderCardIcon(item.icon) + '</div>' +
+                                '<div class="card-content">' +
+                                '<div class="card-title">' + esc(item.title) + '</div>' +
+                                '<div class="card-subtitle">' + esc(item.preview || '') + '</div>' +
+                                '</div>' +
+                                '<span class="card-arrow">›</span>';
+                            card.onclick = function() {
+                                haptic('light');
+                                input.value = '';
+                                self.showGuide(item.key);
+                            };
+                            list.appendChild(card);
+                        });
+                    }).catch(function(e) {
+                        console.error('Search error:', e);
+                    });
+                }, 300);
+            });
+        }
+    };
+
+    // Make app global for back button
+    window.app = app;
+
+    // Init
+    document.addEventListener('DOMContentLoaded', function() {
+        initTheme();
+        fab.init();
+        quickNav.init();
+        pullRefresh.init();
+
+        if (tg && tg.BackButton) {
+            tg.BackButton.onClick(function() { app.goBack(); });
+        }
+
+        window.addEventListener('popstate', function(e) {
+            e.preventDefault();
+            app.goBack();
+        });
+
+        app.checkAuth().then(function(ok) {
+            if (ok) {
+                app.showCategories();
+                app.initSearch();
+            }
+        });
+    });
+
+})();
 </script>
 </body>
 </html>
