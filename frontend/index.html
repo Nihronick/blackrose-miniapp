@@ -144,6 +144,7 @@
             background: var(--secondary);
             z-index: 90;
             transition: height 0.25s ease;
+            pointer-events: none; /* Защита от блокировки кликов */
         }
         .pull-indicator.active { transition: none; }
         .pull-indicator.refreshing { height: 50px; transition: height 0.25s ease; }
@@ -533,15 +534,9 @@ function renderDocument(url) {
 
 // ═══ PULL TO REFRESH ═══
 const pullRefresh = {
-    indicator: null,
-    textEl: null,
-    arrowEl: null,
-    startY: 0,
-    dist: 0,
-    pulling: false,
-    refreshing: false,
-    threshold: 70,
-    maxPull: 110,
+    indicator: null, textEl: null, arrowEl: null,
+    startY: 0, dist: 0, pulling: false, refreshing: false,
+    threshold: 70, maxPull: 110,
 
     init() {
         this.indicator = document.getElementById('pull-indicator');
@@ -578,7 +573,6 @@ const pullRefresh = {
         if (this.dist > 10) {
             e.preventDefault();
             const d = Math.min(this.dist, this.maxPull);
-            const pct = d / this.maxPull;
             this.indicator.classList.add('active');
             this.indicator.style.height = (d * 0.6) + 'px';
 
@@ -828,18 +822,25 @@ const app = {
         } else if (viewId === 'guide-view') {
             fab.show('Назад');
         }
+        
         if (tg?.BackButton) {
             (viewId === 'categories-view' || viewId === 'access-denied-view')
                 ? tg.BackButton.hide() : tg.BackButton.show();
         }
-        if (viewId !== 'categories-view') history.pushState({ view: viewId }, '');
+
+        // ЗАЩИТА: На некоторых платформах iOS/TG Webview History API падает с SecurityError
+        try {
+            if (viewId !== 'categories-view') history.pushState({ view: viewId }, '', null);
+        } catch (e) {
+            console.warn('History API error ignored', e);
+        }
     },
 
     goBack() {
         haptic('light');
         const gv = document.getElementById('guide-view');
-        if (!gv.classList.contains('hidden')) this.showGuides();
-        else this.showCategories();
+        if (!gv.classList.contains('hidden')) app.showGuides();
+        else app.showCategories();
     },
 
     showAccessDenied(msg) {
@@ -858,11 +859,9 @@ const app = {
         const guideView = document.getElementById('guide-view');
 
         if (!catView.classList.contains('hidden')) {
-            await this.showCategories();
+            await app.showCategories();
         } else if (!guidesView.classList.contains('hidden')) {
-            await this.showGuides();
-        } else if (!guideView.classList.contains('hidden')) {
-            // На странице гайда — не перезагружаем
+            await app.showGuides();
         }
     },
 
@@ -886,7 +885,9 @@ const app = {
                         <div class="card-subtitle">${cat.count} ${w}</div>
                     </div>
                     <span class="card-arrow">›</span>`;
-                card.onclick = () => { haptic('light'); this.showGuides(cat.key, cat.title); };
+                
+                // ЗАЩИТА: явно вызываем app.showGuides
+                card.onclick = () => { haptic('light'); app.showGuides(cat.key, cat.title); };
                 list.appendChild(card);
             });
             haptic('success');
@@ -897,7 +898,7 @@ const app = {
 
     async showGuides(key, title) {
         if (key) { this.currentCategory = key; this.currentCategoryTitle = title; }
-        if (!this.currentCategory) { this.showCategories(); return; }
+        if (!this.currentCategory) { app.showCategories(); return; }
         this.show('guides-view');
         document.getElementById('category-title').textContent = this.currentCategoryTitle || '';
         const list = document.getElementById('guides-list');
@@ -917,7 +918,9 @@ const app = {
                         ${renderBadges(item)}
                     </div>
                     <span class="card-arrow">›</span>`;
-                card.onclick = () => { haptic('light'); this.showGuide(item.key); };
+                    
+                // ЗАЩИТА: явно вызываем app.showGuide
+                card.onclick = () => { haptic('light'); app.showGuide(item.key); };
                 list.appendChild(card);
             });
             haptic('success');
@@ -975,11 +978,11 @@ const app = {
         input.addEventListener('input', e => {
             clearTimeout(t);
             const q = e.target.value.trim();
-            if (q.length < 2) { this.showCategories(); return; }
+            if (q.length < 2) { app.showCategories(); return; }
             t = setTimeout(async () => {
                 haptic('selection');
                 try {
-                    const { results } = await this.apiFetch(`/api/search?q=${encodeURIComponent(q)}`);
+                    const { results } = await app.apiFetch(`/api/search?q=${encodeURIComponent(q)}`);
                     const list = document.getElementById('categories-list');
                     if (!results.length) { list.innerHTML = '<div class="empty">Ничего не найдено</div>'; return; }
                     list.innerHTML = '';
@@ -989,11 +992,11 @@ const app = {
                         card.innerHTML = `
                             <div class="card-icon">${renderCardIcon(item.icon)}</div>
                             <div class="card-content">
-                                <div class="card-title">${this.esc(item.title)}</div>
-                                <div class="card-subtitle">${this.esc(item.preview || '')}</div>
+                                <div class="card-title">${app.esc(item.title)}</div>
+                                <div class="card-subtitle">${app.esc(item.preview || '')}</div>
                             </div>
                             <span class="card-arrow">›</span>`;
-                        card.onclick = () => { haptic('light'); input.value = ''; this.showGuide(item.key); };
+                        card.onclick = () => { haptic('light'); input.value = ''; app.showGuide(item.key); };
                         list.appendChild(card);
                     });
                 } catch (e) { console.error('Search:', e); }
@@ -1024,6 +1027,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     pullRefresh.init();
     if (tg?.BackButton) tg.BackButton.onClick(() => app.goBack());
     window.addEventListener('popstate', e => { e.preventDefault(); app.goBack(); });
+    
     const ok = await app.checkAuth();
     if (ok) { app.showCategories(); app.initSearch(); }
 });
